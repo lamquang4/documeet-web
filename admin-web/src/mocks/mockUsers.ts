@@ -1,0 +1,106 @@
+import type { UserResponse } from "../types/type";
+
+export const mockUsers: UserResponse[] = [
+  {
+    userId: "user-003",
+    governmentId: "234567890123",
+    phoneNumber: "0987654321",
+    status: "DISABLED",
+    failedLoginCount: 0,
+    createdDate: "2026-02-10T14:20:00",
+  },
+  {
+    userId: "user-004",
+    unit: {
+      unitId: "unit-002",
+      unitName: "Cục Công nghệ thông tin",
+    },
+    role: {
+      roleId: "1",
+      roleName: "Lãnh đạo",
+    },
+    governmentId: "345678901234",
+    fullName: "Lê Văn C",
+    email: "levanc@example.com",
+    phoneNumber: "0934567890",
+    status: "ACTIVE",
+    failedLoginCount: 1,
+    lastLoginDate: "2026-03-02T16:45:00",
+    createdDate: "2026-01-20T11:30:00",
+  },
+  {
+    userId: "user-005",
+    unit: {
+      unitId: "unit-001",
+      unitName: "Bộ Công An",
+    },
+    role: {
+      roleId: "1",
+      roleName: "Quản trị hệ thống",
+    },
+    governmentId: "456789012345",
+    fullName: "Nguyễn Văn A",
+    email: "nguyenvana@example.com",
+    phoneNumber: "0912345678",
+    status: "ACTIVE",
+    failedLoginCount: 0,
+    lastLoginDate: "2026-03-03T09:10:00",
+    createdDate: "2026-01-05T08:00:00",
+  },
+  {
+    userId: "user-006",
+    unit: {
+      unitId: "unit-002",
+      unitName: "Cục Công nghệ thông tin",
+    },
+    role: {
+      roleId: "2",
+      roleName: "Cán bộ",
+    },
+    governmentId: "567890123456",
+    fullName: "Trần Thị B",
+    email: "tranthib@example.com",
+    phoneNumber: "0978123456",
+    status: "LOCKED",
+    failedLoginCount: 5,
+    lockoutEndTime: "2026-03-05T10:00:00",
+    createdDate: "2026-02-15T13:45:00",
+  },
+  {
+    userId: "user-007",
+    unit: {
+      unitId: "unit-003",
+      unitName: "Phòng Hạ tầng kỹ thuật",
+    },
+    role: {
+      roleId: "2",
+      roleName: "Cán bộ",
+    },
+    governmentId: "678901234567",
+    fullName: "Hoàng Văn E",
+    email: "hoangvane@example.com",
+    phoneNumber: "0945678901",
+    status: "ACTIVE",
+    failedLoginCount: 0,
+    lastLoginDate: "2026-03-01T08:20:00",
+    createdDate: "2026-02-01T10:15:00",
+  },
+  {
+    userId: "user-008",
+    unit: {
+      unitId: "unit-002",
+      unitName: "Cục Công nghệ thông tin",
+    },
+    role: {
+      roleId: "3",
+      roleName: "Kiểm soát viên",
+    },
+    governmentId: "789012345678",
+    fullName: "Đặng Minh F",
+    email: "dangminhf@example.com",
+    phoneNumber: "0922334455",
+    status: "DISABLED",
+    failedLoginCount: 3,
+    createdDate: "2026-02-25T17:00:00",
+  },
+];
