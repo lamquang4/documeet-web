@@ -36,7 +36,7 @@ export const mockUsers: UserResponse[] = [
     },
     role: {
       roleId: "1",
-      roleName: "Quản trị hệ thống",
+      roleName: "Quản trị viên",
     },
     governmentId: "456789012345",
     fullName: "Nguyễn Văn A",
@@ -64,6 +64,7 @@ export const mockUsers: UserResponse[] = [
     status: "LOCKED",
     failedLoginCount: 5,
     lockoutEndTime: "2026-03-05T10:00:00",
+    lastLoginDate: "2026-03-02T16:45:00",
     createdDate: "2026-02-15T13:45:00",
   },
   {
@@ -93,7 +94,7 @@ export const mockUsers: UserResponse[] = [
     },
     role: {
       roleId: "3",
-      roleName: "Kiểm soát viên",
+      roleName: "Cán bộ",
     },
     governmentId: "789012345678",
     fullName: "Đặng Minh F",

@@ -125,6 +125,7 @@ export type AuditLogResponse = {
   };
   ipAddress: string;
   userAgent: string;
+  module: string;
   actionType: string;
   description?: string;
   status: "SUCCESS" | "FAILED" | "WARNING";

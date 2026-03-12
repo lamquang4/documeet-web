@@ -88,8 +88,9 @@ function UserList() {
                   paramName="status"
                 />
               </th>
-              <th className="p-[1rem]  ">Ngày mở khóa</th>
               <th className="p-[1rem]  ">Lần đăng nhập cuối</th>
+              <th className="p-[1rem]  ">Ngày mở khóa</th>
+
               <th className="p-[1rem]  ">Hành động</th>
             </tr>
           </thead>

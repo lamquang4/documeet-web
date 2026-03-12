@@ -15,6 +15,16 @@ function LogList() {
     { name: "Cảnh báo", value: "WARNING" },
   ];
 
+  const arrayModule = [
+    { name: "Tất cả", value: null },
+    ...Array.from(new Set(mockAuditLogs.map((log) => log.module))).map(
+      (module) => ({
+        name: module,
+        value: module,
+      }),
+    ),
+  ];
+
   const logs = mockAuditLogs;
   const isLoading = false;
   const totalItems = 12;
@@ -40,6 +50,13 @@ function LogList() {
               <th className="p-[1rem]">Tài khoản</th>
               <th className="p-[1rem]">Mô tả</th>
               <th className="p-[1rem]">Thiết bị</th>
+              <th className="p-[1rem]  ">
+                <FilterDropDownMenu
+                  title="Chức năng"
+                  array={arrayModule}
+                  paramName="module"
+                />
+              </th>
               <th className="p-[1rem]">IP</th>
               <th className="p-[1rem]  ">
                 <FilterDropDownMenu
@@ -77,6 +94,7 @@ function LogList() {
                     </div>
                   </td>
 
+                  <td className="p-[1rem] font-semibold">{log.module}</td>
                   <td className="p-[1rem]">{log.ipAddress}</td>
 
                   <td className="p-[1rem] font-semibold">

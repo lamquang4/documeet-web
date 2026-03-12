@@ -11,7 +11,7 @@ type Props = {
 };
 
 function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
-  const account = mockUsers[0];
+  const account = mockUsers[2];
   return (
     <>
       {account && (

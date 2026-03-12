@@ -9,6 +9,7 @@ import { VscTrash } from "react-icons/vsc";
 import Pagination from "../ui/Pagination";
 import Image from "../ui/Image";
 import ToolTip from "../ui/ToolTip";
+import toast from "react-hot-toast";
 
 function RoleList() {
   const roles = mockRoles;
@@ -18,8 +19,13 @@ function RoleList() {
   const currentPage = 1;
   const limit = 12;
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, maxSecurityLevel: number) => {
     if (!id) {
+      return;
+    }
+
+    if (maxSecurityLevel === 3) {
+      toast.error("Chức vụ có mức quyền lực cao nhất nên không được phép xóa");
       return;
     }
   };
@@ -42,7 +48,7 @@ function RoleList() {
             <tr className="bg-[#E9EDF2] text-left">
               <th className="p-[1rem]">Mã</th>
               <th className="p-[1rem]">Tên</th>
-              <th className="p-[1rem]">Thứ tự quyền lực</th>
+              <th className="p-[1rem]">Mức quyền lực</th>
               <th className="p-[1rem]">Mô tả</th>
 
               <th className="p-[1rem]">Hành động</th>
@@ -75,7 +81,11 @@ function RoleList() {
                         </div>
                       </Link>
 
-                      <button onClick={() => handleDelete(role.roleId || "")}>
+                      <button
+                        onClick={() =>
+                          handleDelete(role.roleId || "", role.maxSecurityLevel)
+                        }
+                      >
                         <div className="relative group">
                           <VscTrash size={22} className="text-[#d9534f]" />
 

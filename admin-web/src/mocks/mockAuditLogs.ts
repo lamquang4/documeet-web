@@ -3,6 +3,8 @@ import type { AuditLogResponse } from "../types/type";
 export const mockAuditLogs: AuditLogResponse[] = [
   {
     logId: "1001",
+    module: "AUTH",
+    actionType: "LOGIN",
     user: {
       governmentId: "012345678901",
       fullName: "Nguyễn Văn A",
@@ -17,13 +19,14 @@ export const mockAuditLogs: AuditLogResponse[] = [
     },
     ipAddress: "14.161.23.5",
     userAgent: "Mobile Safari",
-    actionType: "LOGIN_SUCCESS",
     description: "Đăng nhập thành công vào hệ thống",
     status: "SUCCESS",
     createdDate: "2026-02-22T08:15:00",
   },
   {
     logId: "1002",
+    module: "AUTH",
+    actionType: "LOGIN",
     device: {
       deviceUUID: "ANDROID-UUID-999",
       deviceName: "Samsung Galaxy S24",
@@ -33,13 +36,14 @@ export const mockAuditLogs: AuditLogResponse[] = [
     },
     ipAddress: "14.161.23.5",
     userAgent: "Chrome Mobile",
-    actionType: "LOGIN_FAILED",
     description: "Sai mật khẩu tài khoản 098877665544",
     status: "FAILED",
     createdDate: "2026-02-22T08:20:00",
   },
   {
     logId: "1003",
+    module: "DOCUMENT",
+    actionType: "VIEW",
     user: {
       governmentId: "098877665544",
       fullName: "Trần Thị B",
@@ -54,13 +58,14 @@ export const mockAuditLogs: AuditLogResponse[] = [
     },
     ipAddress: "171.244.55.12",
     userAgent: "Mobile Safari",
-    actionType: "VIEW_DOC",
     description: "Xem tài liệu 'Kế hoạch nội bộ 2026'",
     status: "SUCCESS",
     createdDate: "2026-02-22T09:15:00",
   },
   {
     logId: "1004",
+    module: "DOCUMENT",
+    actionType: "SCREENSHOT_ATTEMPT",
     user: {
       governmentId: "098877665544",
       fullName: "Trần Thị B",
@@ -75,13 +80,14 @@ export const mockAuditLogs: AuditLogResponse[] = [
     },
     ipAddress: "171.244.55.12",
     userAgent: "Mobile Safari",
-    actionType: "SCREENSHOT_ATTEMPT",
     description: "Phát hiện hành vi chụp màn hình tài liệu mật",
     status: "WARNING",
     createdDate: "2026-02-22T09:16:12",
   },
   {
     logId: "1005",
+    module: "VOTE",
+    actionType: "CAST",
     user: {
       governmentId: "123456789012",
       fullName: "Lê Văn C",
@@ -96,13 +102,14 @@ export const mockAuditLogs: AuditLogResponse[] = [
     },
     ipAddress: "103.45.67.89",
     userAgent: "Chrome Mobile",
-    actionType: "CAST_VOTE",
     description: "Thực hiện bỏ phiếu VoteID=12",
     status: "SUCCESS",
     createdDate: "2026-02-22T10:05:00",
   },
   {
     logId: "1006",
+    module: "MEETING",
+    actionType: "CHECKIN",
     user: {
       governmentId: "111222333444",
       fullName: "Phạm Thị D",
@@ -117,7 +124,6 @@ export const mockAuditLogs: AuditLogResponse[] = [
     },
     ipAddress: "192.168.1.25",
     userAgent: "Chrome Mobile",
-    actionType: "CHECKIN_MEETING",
     description: "Check-in cuộc họp tháng 2",
     status: "SUCCESS",
     createdDate: "2026-02-22T10:30:00",

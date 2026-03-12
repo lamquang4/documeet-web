@@ -149,12 +149,15 @@ function DeviceList() {
 
                   <td className="p-[1rem]">
                     {device.isOnline ? (
-                      <span className="flex items-center gap-1 text-green-600 text-sm font-medium">
-                        <div className="w-2 h-2 rounded-full bg-green-500"></div>{" "}
+                      <span className="flex items-center gap-1 text-primary font-medium">
+                        <div className="w-2 h-2 rounded-full bg-primary"></div>{" "}
                         Online
                       </span>
                     ) : (
-                      <span className="text-gray-500 text-sm">Offline</span>
+                      <span className="flex items-center gap-1 text-gray-400 font-medium">
+                        <div className="w-2 h-2 rounded-full bg-gray-400"></div>{" "}
+                        Offline
+                      </span>
                     )}
                   </td>
 

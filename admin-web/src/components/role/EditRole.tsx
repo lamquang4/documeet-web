@@ -94,7 +94,7 @@ function EditRole() {
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
                 <label htmlFor="" className="text-[0.9rem] font-medium">
-                  Mức độ bảo mật
+                  Mức quyền lực
                 </label>
                 <select
                   name="maxSecurityLevel"
@@ -106,7 +106,6 @@ function EditRole() {
                   <option value={1}>1</option>
                   <option value={2}>2</option>
                   <option value={3}>3</option>
-                  <option value={4}>4</option>
                 </select>
               </div>
 

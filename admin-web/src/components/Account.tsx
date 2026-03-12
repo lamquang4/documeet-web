@@ -1,7 +1,7 @@
 import { mockUsers } from "../mocks/mockUsers";
 
 function Account() {
-  const account = mockUsers[0];
+  const account = mockUsers[2];
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] bg-[#F1F4F9] h-full">
       <form className="flex flex-col gap-7 w-full">
