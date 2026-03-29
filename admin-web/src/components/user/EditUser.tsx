@@ -87,7 +87,7 @@ function EditUser() {
 
         <div className="flex gap-[25px] w-full flex-col">
           <div className="md:p-[25px] p-[15px] bg-white rounded-md flex flex-col gap-[20px] w-full">
-            <h5 className="font-bold text-[#74767d]">Thông tin tài khoản</h5>
+            <h5 className="font-bold text-[#74767d]">Thông tin người dùng</h5>
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
