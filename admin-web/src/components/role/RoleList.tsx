@@ -9,7 +9,6 @@ import { VscTrash } from "react-icons/vsc";
 import Pagination from "../ui/Pagination";
 import Image from "../ui/Image";
 import ToolTip from "../ui/ToolTip";
-import toast from "react-hot-toast";
 
 function RoleList() {
   const roles = mockRoles;
@@ -19,13 +18,8 @@ function RoleList() {
   const currentPage = 1;
   const limit = 12;
 
-  const handleDelete = async (id: string, maxSecurityLevel: number) => {
+  const handleDelete = async (id: string) => {
     if (!id) {
-      return;
-    }
-
-    if (maxSecurityLevel === 3) {
-      toast.error("Chức vụ có mức quyền lực cao nhất nên không được phép xóa");
       return;
     }
   };
@@ -45,10 +39,9 @@ function RoleList() {
 
         <table className="w-[350%] table-fixed border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
           <thead>
-            <tr className="bg-[#E9EDF2] text-left">
+            <tr className="text-left">
               <th className="p-[1rem]">Mã</th>
               <th className="p-[1rem]">Tên</th>
-              <th className="p-[1rem]">Mức quyền lực</th>
               <th className="p-[1rem]">Mô tả</th>
 
               <th className="p-[1rem]">Hành động</th>
@@ -67,8 +60,6 @@ function RoleList() {
                   <td className="p-[1rem] text-[0.9rem]">{role.roleCode}</td>
                   <td className="p-[1rem]  ">{role.roleName}</td>
 
-                  <td className="p-[1rem]  ">{role.maxSecurityLevel}</td>
-
                   <td className="p-[1rem]  ">{role.description}</td>
 
                   <td className="p-[1rem]  ">
@@ -81,11 +72,7 @@ function RoleList() {
                         </div>
                       </Link>
 
-                      <button
-                        onClick={() =>
-                          handleDelete(role.roleId || "", role.maxSecurityLevel)
-                        }
-                      >
+                      <button onClick={() => handleDelete(role.roleId || "")}>
                         <div className="relative group">
                           <VscTrash size={22} className="text-[#d9534f]" />
 

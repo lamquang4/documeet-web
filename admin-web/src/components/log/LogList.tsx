@@ -1,4 +1,4 @@
-import { mockAuditLogs } from "../../mocks/mockAuditLogs";
+import { mockAuditLogs } from "../../mocks/mockLogs";
 import ListBody from "../list/ListBody";
 import ListHeader from "../list/ListHeader";
 import InputSearch from "../ui/InputSearch";
@@ -6,15 +6,9 @@ import Loading from "../ui/Loading";
 import Image from "../ui/Image";
 import Pagination from "../ui/Pagination";
 import FilterDropDownMenu from "../ui/FilterDropDownMenu";
+import { LOG_STATUS_OPTIONS } from "../../constant/filterOptions";
 
 function LogList() {
-  const arrayStatus = [
-    { name: "Tất cả", value: null },
-    { name: "Thành công", value: "SUCCESS" },
-    { name: "Thất bại", value: "FAILED" },
-    { name: "Cảnh báo", value: "WARNING" },
-  ];
-
   const arrayModule = [
     { name: "Tất cả", value: null },
     ...Array.from(new Set(mockAuditLogs.map((log) => log.module))).map(
@@ -46,7 +40,7 @@ function LogList() {
 
         <table className="w-[350%] table-fixed border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
           <thead>
-            <tr className="bg-[#E9EDF2] text-left">
+            <tr className="text-left">
               <th className="p-[1rem]">Tài khoản</th>
               <th className="p-[1rem]">Mô tả</th>
               <th className="p-[1rem]">Thiết bị</th>
@@ -61,7 +55,7 @@ function LogList() {
               <th className="p-[1rem]  ">
                 <FilterDropDownMenu
                   title="Tình trạng"
-                  array={arrayStatus}
+                  array={LOG_STATUS_OPTIONS}
                   paramName="status"
                 />
               </th>
@@ -90,7 +84,7 @@ function LogList() {
                   <td className="p-[1rem]">
                     <div className="flex flex-col gap-2">
                       <p>{log.device?.deviceName}</p>
-                      <p>{log.device?.platform}</p>
+                      <p>{log.device?.deviceUUID}</p>
                     </div>
                   </td>
 
@@ -100,7 +94,6 @@ function LogList() {
                   <td className="p-[1rem] font-semibold">
                     {log.status === "SUCCESS" && <span>Thành công</span>}
                     {log.status === "FAILED" && <span>Thất bại</span>}
-                    {log.status === "WARNING" && <span>Cảnh báo</span>}
                   </td>
 
                   <td className="p-[1rem]">

@@ -1,13 +1,15 @@
 import type { UserResponse } from "../types/type";
 
 export const mockUsers: UserResponse[] = [
-  {
-    userId: "user-003",
-    governmentId: "234567890123",
-    phoneNumber: "0987654321",
+    {
+    userId: "user-008",
+    governmentId: "789012345678",
+    fullName: "Đặng Minh F",
+    email: "dangminhf@example.com",
+    phoneNumber: "0922334455",
     status: "DISABLED",
-    failedLoginCount: 0,
-    createdDate: "2026-02-10T14:20:00",
+    failedLoginCount: 3,
+    createdDate: "2026-02-25T17:00:00",
   },
   {
     userId: "user-004",

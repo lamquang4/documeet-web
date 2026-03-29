@@ -11,9 +11,9 @@ function StaticCard({ array }: Props) {
           key={index}
           className="relative break-words rounded-lg border border-gray-200 h-[20vh] flex items-center justify-between px-4 bg-white"
         >
-          <div className="space-y-3">
-            <h5 className="font-medium">{item.title}</h5>
-            <h4 className="font-semibold">{item.number}</h4>
+          <div className="space-y-3 font-semibold">
+            <h5>{item.title}</h5>
+            <h4>{item.number}</h4>
           </div>
 
           {item.icon1 && (

@@ -12,13 +12,8 @@ import Image from "../ui/Image";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import ToolTip from "../ui/ToolTip";
+import { UNIT_STATUS_OPTIONS } from "../../constant/filterOptions";
 function UnitList() {
-  const arrayStatus = [
-    { name: "Tất cả", value: null },
-    { name: "Hoạt động", value: "ACTIVE" },
-    { name: "Không hoạt động", value: "INACTIVE" },
-  ];
-
   const units = mockUnits;
   const isLoading = false;
   const totalItems = 12;
@@ -52,16 +47,14 @@ function UnitList() {
 
         <table className="w-[350%] table-fixed border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
           <thead>
-            <tr className="bg-[#E9EDF2] text-left">
+            <tr className="text-left">
               <th className="p-[1rem]">Mã đơn vị</th>
               <th className="p-[1rem]">Tên đơn vị</th>
-              <th className="p-[1rem]">Cấp bậc đơn vị</th>
-              <th className="p-[1rem]">Đơn vị cha</th>
 
               <th className="p-[1rem]  ">
                 <FilterDropDownMenu
                   title="Tình trạng"
-                  array={arrayStatus}
+                  array={UNIT_STATUS_OPTIONS}
                   paramName="status"
                 />
               </th>
@@ -80,10 +73,6 @@ function UnitList() {
                 <tr key={unit.unitId} className="hover:bg-[#f2f3f8]">
                   <td className="p-[1rem] text-[0.9rem]">{unit.unitCode}</td>
                   <td className="p-[1rem]  ">{unit.unitName}</td>
-
-                  <td className="p-[1rem]  ">{unit.level}</td>
-
-                  <td className="p-[1rem]  ">{unit.parent?.parentName}</td>
 
                   <td className="p-[1rem] font-semibold">
                     {unit.status === "ACTIVE" && "Hoạt động"}

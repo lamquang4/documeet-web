@@ -11,18 +11,12 @@ import ListBody from "../list/ListBody";
 import { mockUsers } from "../../mocks/mockUsers";
 import Loading from "../ui/Loading";
 import Image from "../ui/Image";
-import { mockRoles } from "../../mocks/mockRoles";
 import ToolTip from "../ui/ToolTip";
+import { mockRolesFilter } from "../../mocks/mockRolesFilter";
+import { USER_STATUS_OPTIONS } from "../../constant/filterOptions";
 
 function UserList() {
-  const arrayStatus = [
-    { name: "Tất cả", value: null },
-    { name: "Hoạt động", value: "ACTIVE" },
-    { name: "Bị khóa", value: "LOCKED" },
-    { name: "Vô hiệu hóa", value: "DISABLED" },
-  ];
-
-  const roles = mockRoles;
+  const roles = mockRolesFilter;
 
   const arrayRoles = [
     { name: "Tất cả", value: null },
@@ -69,7 +63,7 @@ function UserList() {
 
         <table className="w-[350%] table-fixed border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
           <thead>
-            <tr className="bg-[#E9EDF2] text-left">
+            <tr className="text-left">
               <th className="p-[1rem]">Số định danh cá nhân</th>
               <th className="p-[1rem]">Số điện thoại</th>
               <th className="p-[1rem]">Họ tên</th>
@@ -84,7 +78,7 @@ function UserList() {
               <th className="p-[1rem]  ">
                 <FilterDropDownMenu
                   title="Tình trạng"
-                  array={arrayStatus}
+                  array={USER_STATUS_OPTIONS}
                   paramName="status"
                 />
               </th>

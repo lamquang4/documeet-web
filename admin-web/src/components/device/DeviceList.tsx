@@ -15,45 +15,34 @@ import {
   TbLock,
 } from "react-icons/tb";
 import ToolTip from "../ui/ToolTip";
+import {
+  DEVICE_ONLINE_OPTIONS,
+  DEVICE_STATUS_OPTIONS,
+  DEVICE_TRUSTED_OPTIONS,
+} from "../../constant/filterOptions";
+import { mockDeviceSummary } from "../../mocks/mockDeviceSummary";
 function DeviceList() {
-  const arrayStatus = [
-    { name: "Tất cả", value: null },
-    { name: "Hoạt động", value: "ACTIVE" },
-    { name: "Đã thu hồi", value: "REVOKED" },
-    { name: "Đã xóa toàn bộ", value: "WIPED" },
-  ];
+  const summary = mockDeviceSummary;
 
-  const arrayTrusted = [
-    { name: "Tất cả", value: null },
-    { name: "Tin cậy", value: "true" },
-    { name: "Chưa xác thực", value: "false" },
-  ];
-
-  const arrayOnline = [
-    { name: "Tất cả", value: null },
-    { name: "Online", value: "true" },
-    { name: "Offline", value: "false" },
-  ];
-
-  const array1 = [
+  const arraySummaries = [
     {
       title: "Tất cả thiết bị",
-      number: 12,
+      number: summary.totalDevices,
       icon1: <TbDeviceMobile size={30} />,
     },
     {
       title: "Thiết bị online",
-      number: 4,
+      number: summary.onlineDevices,
       icon1: <TbDeviceMobileBolt size={30} />,
     },
     {
       title: "Thiết bị chưa xác thực",
-      number: 2,
+      number: summary.unverifiedDevices,
       icon1: <TbDeviceMobileX size={30} />,
     },
     {
       title: "Thiết bị tin cậy",
-      number: 6,
+      number: summary.trustedDevices,
       icon1: <TbDeviceMobileCheck size={30} />,
     },
   ];
@@ -76,7 +65,7 @@ function DeviceList() {
       <ListHeader
         title="Thiết bị đăng ký"
         totalItems={totalItems}
-        arrayData={array1}
+        arrayData={arraySummaries}
       />
 
       <ListBody>
@@ -86,14 +75,14 @@ function DeviceList() {
 
         <table className="w-[350%] table-fixed border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
           <thead>
-            <tr className="bg-[#E9EDF2] text-left">
+            <tr className="text-left">
               <th className="p-[1rem]">Tài khoản</th>
               <th className="p-[1rem]">Tên thiết bị</th>
               <th className="p-[1rem]">Nền tảng</th>
               <th className="p-[1rem]">
                 <FilterDropDownMenu
                   title="Độ tin cậy"
-                  array={arrayTrusted}
+                  array={DEVICE_TRUSTED_OPTIONS}
                   paramName="isTrusted"
                 />
               </th>
@@ -101,7 +90,7 @@ function DeviceList() {
               <th className="p-[1rem]  ">
                 <FilterDropDownMenu
                   title="Online"
-                  array={arrayOnline}
+                  array={DEVICE_ONLINE_OPTIONS}
                   paramName="isOnline"
                 />
               </th>
@@ -109,7 +98,7 @@ function DeviceList() {
               <th className="p-[1rem]  ">
                 <FilterDropDownMenu
                   title="Tình trạng"
-                  array={arrayStatus}
+                  array={DEVICE_STATUS_OPTIONS}
                   paramName="status"
                 />
               </th>

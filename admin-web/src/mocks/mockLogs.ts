@@ -1,6 +1,6 @@
-import type { AuditLogResponse } from "../types/type";
+import type { LogResponse } from "../types/type";
 
-export const mockAuditLogs: AuditLogResponse[] = [
+export const mockAuditLogs: LogResponse[] = [
   {
     logId: "1001",
     module: "AUTH",
@@ -13,8 +13,6 @@ export const mockAuditLogs: AuditLogResponse[] = [
     device: {
       deviceUUID: "IOS-UUID-123",
       deviceName: "iPhone 15 Pro",
-      platform: "IOS",
-      osVersion: "iOS 17.2",
       isTrusted: true,
     },
     ipAddress: "14.161.23.5",
@@ -30,8 +28,6 @@ export const mockAuditLogs: AuditLogResponse[] = [
     device: {
       deviceUUID: "ANDROID-UUID-999",
       deviceName: "Samsung Galaxy S24",
-      platform: "ANDROID",
-      osVersion: "Android 14",
       isTrusted: false,
     },
     ipAddress: "14.161.23.5",
@@ -52,8 +48,6 @@ export const mockAuditLogs: AuditLogResponse[] = [
     device: {
       deviceUUID: "IOS-UUID-789",
       deviceName: "iPhone 14",
-      platform: "IOS",
-      osVersion: "iOS 17.1",
       isTrusted: true,
     },
     ipAddress: "171.244.55.12",
@@ -74,14 +68,12 @@ export const mockAuditLogs: AuditLogResponse[] = [
     device: {
       deviceUUID: "IOS-UUID-789",
       deviceName: "iPhone 14",
-      platform: "IOS",
-      osVersion: "iOS 17.1",
       isTrusted: true,
     },
     ipAddress: "171.244.55.12",
     userAgent: "Mobile Safari",
     description: "Phát hiện hành vi chụp màn hình tài liệu mật",
-    status: "WARNING",
+    status: "FAILED", // sửa WARNING thành FAILED để hợp lệ
     createdDate: "2026-02-22T09:16:12",
   },
   {
@@ -96,8 +88,6 @@ export const mockAuditLogs: AuditLogResponse[] = [
     device: {
       deviceUUID: "ANDROID-UUID-456",
       deviceName: "Xiaomi 14 Pro",
-      platform: "ANDROID",
-      osVersion: "Android 14",
       isTrusted: false,
     },
     ipAddress: "103.45.67.89",
@@ -118,8 +108,6 @@ export const mockAuditLogs: AuditLogResponse[] = [
     device: {
       deviceUUID: "ANDROID-UUID-888",
       deviceName: "Oppo Find X6",
-      platform: "ANDROID",
-      osVersion: "Android 13",
       isTrusted: true,
     },
     ipAddress: "192.168.1.25",

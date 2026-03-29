@@ -122,7 +122,8 @@ function MenuSide({ menuOpen, onToggleMenu }: Props) {
             loading="eager"
           />
         </div>
-        <ul className="flex flex-col gap-[15px] font-semibold px-3.5">
+
+        <ul className="flex flex-col gap-[15px] px-3.5 font-medium">
           {menuData.map((group, groupIndex) => (
             <div key={groupIndex} className="flex flex-col gap-[10px]">
               {group.title && <p className="  uppercase">{group.title}</p>}
@@ -139,7 +140,7 @@ function MenuSide({ menuOpen, onToggleMenu }: Props) {
                             : "hover:bg-gray-100"
                         } rounded-lg p-3 w-full cursor-pointer flex justify-between items-center`}
                       >
-                        <p className="font-medium flex items-center gap-[10px]">
+                        <p className="flex items-center gap-[10px]">
                           {item.icon} {item.label}
                         </p>
                         <button>
@@ -170,10 +171,7 @@ function MenuSide({ menuOpen, onToggleMenu }: Props) {
                                 : "hover:bg-gray-100"
                             }`}
                           >
-                            <Link
-                              to={child.path}
-                              className="text-[0.9rem] font-medium p-3"
-                            >
+                            <Link to={child.path} className="text-[0.9rem] p-3">
                               {child.label}
                             </Link>
                           </li>
@@ -189,7 +187,7 @@ function MenuSide({ menuOpen, onToggleMenu }: Props) {
                           : "hover:bg-gray-100"
                       } rounded-lg p-3 w-full cursor-pointer flex justify-between items-center`}
                     >
-                      <p className="font-medium flex items-center gap-[10px]">
+                      <p className="flex items-center gap-[10px]">
                         {item.icon} {item.label}
                       </p>
                     </Link>

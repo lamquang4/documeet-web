@@ -1,7 +1,7 @@
-import { mockUsers } from "../mocks/mockUsers";
+import { mockAccounts } from "../mocks/mockAccount";
 
 function Account() {
-  const account = mockUsers[2];
+  const account = mockAccounts;
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] bg-[#F1F4F9] h-full">
       <form className="flex flex-col gap-7 w-full">
@@ -76,21 +76,7 @@ function Account() {
                 <input
                   type="text"
                   name="unitName"
-                  value={account.unit?.unitName}
-                  readOnly
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
-                />
-              </div>
-
-              <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
-                  Chức vụ
-                </label>
-
-                <input
-                  type="text"
-                  name="roleName"
-                  value={account.role?.roleName}
+                  value={account.unitName}
                   readOnly
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />

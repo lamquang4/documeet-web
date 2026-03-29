@@ -3,7 +3,7 @@ import Image from "../../ui/Image";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { mockUsers } from "../../../mocks/mockUsers";
+import { mockAccounts } from "../../../mocks/mockAccount";
 
 type Props = {
   menuOpen: boolean;
@@ -11,12 +11,12 @@ type Props = {
 };
 
 function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
-  const account = mockUsers[2];
+  const account = mockAccounts;
   return (
     <>
       {account && (
         <div
-          className="text-[0.9rem] relative group"
+          className="text-[0.9rem] relative group font-medium"
           onMouseOver={onToggleMenu}
           onMouseOut={onToggleMenu}
         >
@@ -33,14 +33,16 @@ function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
           </div>
 
           {menuOpen && (
-            <div className="absolute top-full right-0 w-[185px] z-20 bg-white shadow-md rounded-md border border-gray-200">
+            <div
+              className={`absolute top-full right-0 w-[185px] z-20 bg-white shadow-md rounded-md border border-gray-200 transition-all duration-100 origin-top`}
+            >
               <p className="border-b p-2.5 border-gray-300 max-w-[210px] overflow-hidden text-ellipsis whitespace-nowrap text-center">
                 Xin chào, {account.fullName}
               </p>
 
               <Link
                 to={"/account/profile"}
-                className="w-ful block hover:bg-gray-100 px-3 py-3.5"
+                className="block hover:bg-gray-100 px-3 py-3.5"
               >
                 <div className="flex items-center gap-[8px]">
                   <FaRegCircleUser size={18} />
@@ -49,7 +51,7 @@ function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
               </Link>
 
               <button className="w-full block hover:bg-gray-100 px-3 py-3.5">
-                <div className="flex items-center gap-[8px] text-[#C62028] font-medium">
+                <div className="flex items-center gap-[8px] text-[#d9534f] font-normal">
                   <RiLogoutBoxLine size={18} />
                   <p>Đăng xuất</p>
                 </div>

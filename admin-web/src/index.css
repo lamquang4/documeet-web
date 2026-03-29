@@ -4,6 +4,8 @@
 @theme {
   --color-primary: #74c69d;
   --color-secondary: white;
+  --color-text: #444;
+  --color-bg-main: #f1f4f9;
 }
 
 * {
@@ -12,7 +14,15 @@
 }
 
 body {
-  color: #444;
+  color: var(--color-text);
+}
+
+table thead tr {
+  background-color: var(--color-bg-main);
+}
+
+table thead tr th {
+  font-weight: 650;
 }
 
 .custom-scroll::-webkit-scrollbar {

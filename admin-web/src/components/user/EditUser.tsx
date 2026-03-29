@@ -4,9 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { mockUsers } from "../../mocks/mockUsers";
 import { validateEmail } from "../../utils/validateEmail";
 import { validatePhone } from "../../utils/validatePhone";
-import { mockRoles } from "../../mocks/mockRoles";
-import { mockUnits } from "../../mocks/mockUnits";
 import SearchableSelect from "../ui/SearchableSelect";
+import { mockRolesSelect } from "../../mocks/mockRolesSelect";
+import { mockUnitsSelect } from "../../mocks/mockUnisSelect";
 
 function EditUser() {
   const navigate = useNavigate();
@@ -22,8 +22,8 @@ function EditUser() {
   });
 
   const user = mockUsers[1];
-  const roles = mockRoles;
-  const units = mockUnits;
+  const roles = mockRolesSelect;
+  const units = mockUnitsSelect;
   const isLoading = false;
   const isLoadingUpdate = false;
 
@@ -74,14 +74,10 @@ function EditUser() {
       return;
     }
 
-    try {
-      setData((prev) => ({
-        ...prev,
-        password: "",
-      }));
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message);
-    }
+    setData((prev) => ({
+      ...prev,
+      password: "",
+    }));
   };
 
   return (
@@ -158,6 +154,8 @@ function EditUser() {
                 Đơn vị
               </label>
               <SearchableSelect
+                isLoading={false}
+                setKeyword={() => {}}
                 options={unitOptions}
                 value={data.unitId}
                 onChange={(val) =>

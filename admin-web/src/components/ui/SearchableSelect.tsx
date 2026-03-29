@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 
 type Option = {
@@ -6,83 +6,102 @@ type Option = {
   label: string;
 };
 
-type SearchableSelectProps = {
-  options: Option[];
+type Props = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  options: Option[];
+  setKeyword: (val: string) => void;
+  isLoading: boolean;
 };
 
-export default function SearchableSelect({
-  options,
+function SearchableSelect({
   value,
   onChange,
   placeholder = "Chọn...",
-}: SearchableSelectProps) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const containerRef = useRef<HTMLDivElement>(null);
+  options,
+  setKeyword,
+  isLoading,
+}: Props) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
 
   const selectedOption = options.find((opt) => opt.value === value);
 
-  const filteredOptions = options.filter((opt) =>
-    opt.label.toLowerCase().includes(search.trim().toLowerCase()),
-  );
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  // xử lý setKeyword tìm kiếm gửi backend
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
+    if (!open) return;
+
+    const debounce = setTimeout(() => {
+      setKeyword(search);
+    }, 300);
+
+    return () => clearTimeout(debounce);
+  }, [search, open, setKeyword]);
+
+  // đóng menu khi bấm ngoài
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
       if (
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
         setOpen(false);
       }
-    }
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
-    <div className="relative w-full" ref={containerRef}>
+    <div className="relative w-full cursor-pointer" ref={containerRef}>
       <div
-        onClick={() => setOpen(!open)}
-        className="border border-gray-300 p-[6px_0px_6px_10px] flex items-center justify-between w-full"
+        onClick={() => {
+          setOpen((prev) => !prev);
+          setSearch("");
+        }}
+        className={`border p-[6px_10px] flex items-center justify-between w-full ${open ? "border-gray-400" : "border-gray-300"}`}
       >
         <p>{selectedOption ? selectedOption.label : placeholder}</p>
         <MdKeyboardArrowDown size={18} />
       </div>
 
       {open && (
-        <div className="absolute z-10 w-full bg-white border border-gray-300 mt-1 shadow-md max-h-60 overflow-y-auto">
-          <div className="p-2">
+        <div className="absolute z-10 w-full bg-white border border-gray-300 shadow-md max-h-60 overflow-y-auto">
+          <div>
             <input
-              type="text"
-              placeholder="Tìm kiếm..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+              className="border-b border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none"
+              placeholder="Tìm kiếm..."
             />
+
+            {isLoading && <p className="p-[6px_10px]">Đang tìm...</p>}
+
+            {!isLoading && options.length === 0 && (
+              <p className="p-[6px_10px]">Không tìm thấy</p>
+            )}
+
+            {!isLoading &&
+              options.map((opt) => (
+                <div
+                  key={opt.value}
+                  onClick={() => {
+                    onChange(opt.value);
+                    setOpen(false);
+                  }}
+                  className="p-[6px_10px] text-[0.9rem] hover:bg-gray-100 cursor-pointer"
+                >
+                  {opt.label}
+                </div>
+              ))}
           </div>
-
-          {filteredOptions.length === 0 && (
-            <p className="p-[6px_10px]">Không tìm thấy</p>
-          )}
-
-          {filteredOptions.map((opt) => (
-            <div
-              key={opt.value}
-              onClick={() => {
-                onChange(opt.value);
-                setOpen(false);
-                setSearch("");
-              }}
-              className="p-[6px_10px] text-[0.9rem] hover:bg-gray-100 cursor-pointer"
-            >
-              {opt.label}
-            </div>
-          ))}
         </div>
       )}
     </div>
   );
 }
+export default memo(SearchableSelect);

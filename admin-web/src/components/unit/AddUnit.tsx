@@ -1,22 +1,21 @@
 import { useState } from "react";
-import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import SearchableSelect from "../ui/SearchableSelect";
-import { mockUnits } from "../../mocks/mockUnits";
+import MultiSearchableSelect from "../ui/MultiSearchableSelect";
+import { mockUsersSelect } from "../../mocks/mockUsersSelect";
 
 function AddUnit() {
   const [data, setData] = useState({
-    parentId: "",
     unitCode: "",
     unitName: "",
-    level: 1,
     status: "",
+    userIds: [] as string[],
   });
 
-  const units = mockUnits;
-  const unitOptions = units.map((unit) => ({
-    value: unit.unitId,
-    label: unit.unitName,
+  const users = mockUsersSelect;
+
+  const userOptions = users.map((user) => ({
+    value: user.userId,
+    label: user.fullName + (user.unitName ? ` - ${user.unitName}` : ""),
   }));
 
   const isLoading = false;
@@ -36,22 +35,17 @@ function AddUnit() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      setData({
-        parentId: "",
-        unitCode: "",
-        unitName: "",
-        level: 1,
-        status: "",
-      });
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message);
-    }
+    setData({
+      unitCode: "",
+      unitName: "",
+      status: "",
+      userIds: [] as string[],
+    });
   };
   return (
-    <div className="py-[30px] sm:px-[25px] px-[15px] bg-[#F1F4F9] h-full">
+    <div className="py-[30px] sm:px-[25px] px-[15px] bg-[#F1F4F9] h-auto">
       <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>
-        <h2 className="text-[#74767d]">Thêm chức vụ</h2>
+        <h2 className="text-[#74767d]">Thêm đơn vị</h2>
 
         <div className="flex gap-[25px] w-full flex-col">
           <div className="md:p-[25px] p-[15px] bg-white rounded-md flex flex-col gap-[20px] w-full">
@@ -85,56 +79,43 @@ function AddUnit() {
               />
             </div>
 
-            <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
-              <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
-                  Cấp bậc đơn vị
-                </label>
-                <select
-                  name="level"
-                  value={data.level}
-                  onChange={handleChange}
-                  required
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
-                >
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
-                  Tình trạng
-                </label>
-                <select
-                  name="status"
-                  value={data.status}
-                  onChange={handleChange}
-                  required
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
-                >
-                  <option value="">Chọn tình trạng</option>
-                  <option value="ACTIVE">Hoạt động</option>
-                  <option value="INACTIVE">Không hoạt động</option>
-                </select>
-              </div>
+            <div className="flex flex-col gap-1 w-full">
+              <label htmlFor="" className="text-[0.9rem] font-medium">
+                Tình trạng
+              </label>
+              <select
+                name="status"
+                value={data.status}
+                onChange={handleChange}
+                required
+                className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+              >
+                <option value="">Chọn tình trạng</option>
+                <option value="ACTIVE">Hoạt động</option>
+                <option value="INACTIVE">Không hoạt động</option>
+              </select>
             </div>
+          </div>
+
+          <div className="md:p-[25px] p-[15px] bg-white rounded-md flex flex-col gap-[20px] w-full">
+            <h5 className="font-bold text-[#74767d]">Người trong đơn vị</h5>
 
             <div className="flex flex-col gap-1 w-full">
               <label htmlFor="" className="text-[0.9rem] font-medium">
-                Đơn vị cha
+                Người dùng
               </label>
-              <SearchableSelect
-                options={unitOptions}
-                value={data.parentId}
+              <MultiSearchableSelect
+                value={data.userIds}
+                isLoading={false}
+                setKeyword={() => {}}
+                options={userOptions}
                 onChange={(val) =>
                   setData((prev) => ({
                     ...prev,
-                    parentId: val,
+                    userIds: val,
                   }))
                 }
-                placeholder="Chọn đơn vị cha"
+                placeholder="Chọn người dùng"
               />
             </div>
           </div>
