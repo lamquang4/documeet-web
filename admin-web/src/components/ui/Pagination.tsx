@@ -59,7 +59,7 @@ function Pagination({ totalPages, currentPage, limit, totalItems }: Props) {
   return (
     <>
       {totalItems > 0 && (
-        <div className="flex items-center justify-center bg-white px-[15px] py-3 w-full flex-wrap gap-5 sm:gap-3 text-[0.9rem]">
+        <div className="flex items-center justify-center bg-white px-[15px] py-3 w-full flex-wrap gap-5 sm:gap-3 text-[0.9rem] font-medium">
           <div className="flex gap-2 items-center">
             Số dòng mỗi trang
             <select

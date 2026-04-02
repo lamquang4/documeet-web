@@ -159,10 +159,10 @@ function DeviceList() {
                       <span className="px-2 py-1">Hoạt động</span>
                     )}
                     {device.status === "REVOKED" && (
-                      <span className="px-2 py-1">Đã thu hồi</span>
+                      <span className="px-2 py-1">Thu hồi</span>
                     )}
                     {device.status === "WIPED" && (
-                      <span className="px-2 py-1 ">Đã xóa toàn bộ</span>
+                      <span className="px-2 py-1 ">Xóa từ xa</span>
                     )}
                   </td>
 
@@ -177,7 +177,7 @@ function DeviceList() {
                           <div className="relative group">
                             <TbLock size={22} className="text-[#74767d]" />
 
-                            <ToolTip text="Thu hồi thiết bị" />
+                            <ToolTip text="Thu hồi" />
                           </div>
                         </button>
                       )}
@@ -195,7 +195,7 @@ function DeviceList() {
                               className="text-[#d9534f]"
                             />
 
-                            <ToolTip text="Xóa toàn bộ dữ liệu" />
+                            <ToolTip text="Xóa từ xa" />
                           </div>
                         </button>
                       )}
@@ -208,7 +208,7 @@ function DeviceList() {
                 <td colSpan={8} className="w-full h-[70vh]">
                   <div className="flex justify-center items-center">
                     <Image
-                      source={"/assets/notfound1.png"}
+                      source={"/assets/notfound1.webp"}
                       alt={""}
                       className={"w-[135px]"}
                       loading="lazy"

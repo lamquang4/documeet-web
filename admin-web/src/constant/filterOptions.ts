@@ -16,17 +16,11 @@ export const USER_STATUS_OPTIONS = [
   { name: "Vô hiệu hóa", value: "DISABLED" },
 ];
 
-export const LOG_STATUS_OPTIONS = [
-  COMMON_ALL_OPTION,
-  { name: "Thành công", value: "SUCCESS" },
-  { name: "Thất bại", value: "FAILED" },
-];
-
 export const DEVICE_STATUS_OPTIONS = [
   COMMON_ALL_OPTION,
   { name: "Hoạt động", value: "ACTIVE" },
-  { name: "Đã thu hồi", value: "REVOKED" },
-  { name: "Đã xóa toàn bộ", value: "WIPED" },
+  { name: "Thu hồi", value: "REVOKED" },
+  { name: "Xóa từ xa", value: "WIPED" },
 ];
 
 export const DEVICE_TRUSTED_OPTIONS = [

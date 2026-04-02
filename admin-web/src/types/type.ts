@@ -133,27 +133,6 @@ export type DeviceSummaryResponse = {
   trustedDevices: number; // Tin cậy
 };
 
-export type LogResponse = {
-  logId: string;
-  user?: {
-    governmentId: string;
-    fullName: string;
-    unitName: string;
-  };
-  device?: {
-    deviceUUID: string;
-    deviceName: string;
-    isTrusted: boolean;
-  };
-  ipAddress?: string;
-  userAgent?: string;
-  module: string; // AUTH, DOCUMENT, MEETING, VOTE, SYSTEM
-  actionType: string;
-  status: "SUCCESS" | "FAILED";
-  description: string;
-  createdDate: string;
-};
-
 export type RoleFilterResponse = {
   roleCode: string;
   roleName: string;

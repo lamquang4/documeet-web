@@ -6,7 +6,6 @@ import { IoIosArrowUp } from "react-icons/io";
 import { TbCategoryPlus } from "react-icons/tb";
 import { FiUsers } from "react-icons/fi";
 import { Link, useLocation } from "react-router-dom";
-import { LuHistory } from "react-icons/lu";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { HiOutlineDevicePhoneMobile } from "react-icons/hi2";
 type Props = {
@@ -43,61 +42,56 @@ type MenuGroup = {
   items: MenuItem[];
 };
 
+const menuData: MenuGroup[] = [
+  {
+    title: "Người dùng",
+    items: [
+      {
+        icon: <FiUsers size={20} />,
+        label: "Người dùng",
+        path: "/users",
+      },
+      {
+        icon: <TbCategoryPlus size={20} />,
+        label: "Chức vụ",
+        key: "3a",
+        children: [
+          { label: "Danh sách chức vụ", path: "/roles" },
+          { label: "Thêm chức vụ", path: "/role/add-role" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Đơn vị",
+    items: [
+      {
+        icon: <HiOutlineOfficeBuilding size={20} />,
+        label: "Đơn vị",
+        key: "3b",
+        children: [
+          { label: "Danh sách đơn vị", path: "/units" },
+          { label: "Thêm đơn vị", path: "/unit/add-unit" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Thiết bị",
+    items: [
+      {
+        icon: <HiOutlineDevicePhoneMobile size={20} />,
+        label: "Thiết bị đăng ký",
+        path: "/devices",
+      },
+    ],
+  },
+];
+
 function MenuSide({ menuOpen, onToggleMenu }: Props) {
   const location = useLocation();
   const pathname = location.pathname;
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
-
-  const menuData: MenuGroup[] = [
-    {
-      title: "Người dùng",
-      items: [
-        {
-          icon: <FiUsers size={20} />,
-          label: "Người dùng",
-          path: "/users",
-        },
-        {
-          icon: <TbCategoryPlus size={20} />,
-          label: "Chức vụ",
-          key: "3a",
-          children: [
-            { label: "Danh sách chức vụ", path: "/roles" },
-            { label: "Thêm chức vụ", path: "/role/add-role" },
-          ],
-        },
-      ],
-    },
-    {
-      title: "Đơn vị",
-      items: [
-        {
-          icon: <HiOutlineOfficeBuilding size={20} />,
-          label: "Đơn vị",
-          key: "3b",
-          children: [
-            { label: "Danh sách đơn vị", path: "/units" },
-            { label: "Thêm đơn vị", path: "/unit/add-unit" },
-          ],
-        },
-      ],
-    },
-    {
-      title: "Hệ thống",
-      items: [
-        {
-          icon: <HiOutlineDevicePhoneMobile size={20} />,
-          label: "Thiết bị đăng ký",
-          path: "/devices",
-        },
-        {
-          icon: <LuHistory size={20} />,
-          label: "Nhật ký",
-          path: "/logs",
-        },
-      ],
-    },
-  ];
 
   const toggleOpen = (menu: string) => {
     setOpenMenus((prev) => ({

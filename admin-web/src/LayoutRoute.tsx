@@ -10,7 +10,6 @@ import UnitListPage from "./pages/UnitListPage";
 import EditUnitPage from "./pages/EditUnitPage";
 import AddUnitPage from "./pages/AddUnitPage";
 import DeviceListPage from "./pages/DeviceListPage";
-import LogListPage from "./pages/LogListPage";
 
 function LayoutRoute() {
   return (
@@ -31,7 +30,6 @@ function LayoutRoute() {
       <Route path="/unit/edit-unit/:id" element={<EditUnitPage />} />
 
       <Route path="/devices" element={<DeviceListPage />} />
-      <Route path="/logs" element={<LogListPage />} />
     </Routes>
   );
 }
