@@ -1,6 +1,7 @@
 import { memo, useState } from "react";
 import { FaSortDown } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import Button from "./Button";
 
 type Props = {
   title: string;
@@ -51,7 +52,7 @@ function FilterDropDownMenu({ title, array, paramName }: Props) {
               currentValue ===
               (item.value !== null ? item.value.toString() : null);
             return (
-              <button
+              <Button
                 key={index}
                 onClick={() => handleClick(item.value)}
                 className={`w-full text-left text-[0.9rem] px-3 py-2.5 ${
@@ -59,7 +60,7 @@ function FilterDropDownMenu({ title, array, paramName }: Props) {
                 }`}
               >
                 {item.name}
-              </button>
+              </Button>
             );
           })}
         </div>

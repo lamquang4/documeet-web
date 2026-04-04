@@ -1,4 +1,6 @@
 import { mockAccounts } from "../mocks/mockAccount";
+import Input from "./ui/Input";
+import Label from "./ui/Label";
 
 function Account() {
   const account = mockAccounts;
@@ -13,27 +15,27 @@ function Account() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Số định danh cá nhân
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   name="governmentId"
                   value={account.governmentId}
-                  readOnly
+                  isReadOnly={true}
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Số điện thoại
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   name="phoneNumber"
                   value={account.phoneNumber}
-                  readOnly
+                  isReadOnly={true}
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -41,27 +43,27 @@ function Account() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Họ tên
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   name="fullName"
                   value={account.fullName}
-                  readOnly
+                  isReadOnly={true}
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Email
-                </label>
-                <input
+                </Label>
+                <Input
                   type="email"
                   name="email"
                   value={account.email}
-                  readOnly
+                  isReadOnly={true}
                   className="lowercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -69,15 +71,15 @@ function Account() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Đơn vị
-                </label>
+                </Label>
 
-                <input
+                <Input
                   type="text"
                   name="unitName"
                   value={account.unitName}
-                  readOnly
+                  isReadOnly={true}
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>

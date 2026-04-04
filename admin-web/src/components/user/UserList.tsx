@@ -14,6 +14,7 @@ import Image from "../ui/Image";
 import ToolTip from "../ui/ToolTip";
 import { mockRolesFilter } from "../../mocks/mockRolesFilter";
 import { USER_STATUS_OPTIONS } from "../../constant/filterOptions";
+import Button from "../ui/Button";
 
 function UserList() {
   const roles = mockRolesFilter;
@@ -127,7 +128,7 @@ function UserList() {
 
                   <td className="p-[1rem]  ">
                     <div className="flex items-center gap-[15px]">
-                      <button
+                      <Button
                         onClick={() =>
                           handleUpdateStatus(
                             user.userId,
@@ -158,7 +159,7 @@ function UserList() {
                             }
                           />
                         </div>
-                      </button>
+                      </Button>
 
                       <Link to={`/user/edit-user/${user.userId}`}>
                         <div className="relative group">
@@ -168,12 +169,12 @@ function UserList() {
                         </div>
                       </Link>
 
-                      <button onClick={() => handleDelete(user.userId || "")}>
+                      <Button onClick={() => handleDelete(user.userId || "")}>
                         <div className="relative group">
                           <VscTrash size={22} className="text-[#d9534f]" />
                           <ToolTip text={"Xóa người dùng"} />
                         </div>
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>

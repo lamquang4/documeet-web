@@ -21,6 +21,7 @@ import {
   DEVICE_TRUSTED_OPTIONS,
 } from "../../constant/filterOptions";
 import { mockDeviceSummary } from "../../mocks/mockDeviceSummary";
+import Button from "../ui/Button";
 function DeviceList() {
   const summary = mockDeviceSummary;
 
@@ -169,7 +170,7 @@ function DeviceList() {
                   <td className="p-[1rem]  ">
                     <div className="flex items-center gap-[15px]">
                       {device.status === "ACTIVE" && (
-                        <button
+                        <Button
                           onClick={() =>
                             handleUpdateStatus(device.deviceId, "REVOKED")
                           }
@@ -179,12 +180,12 @@ function DeviceList() {
 
                             <ToolTip text="Thu hồi" />
                           </div>
-                        </button>
+                        </Button>
                       )}
 
                       {(device.status === "REVOKED" ||
                         device.status === "ACTIVE") && (
-                        <button
+                        <Button
                           onClick={() =>
                             handleUpdateStatus(device.deviceId, "WIPED")
                           }
@@ -197,7 +198,7 @@ function DeviceList() {
 
                             <ToolTip text="Xóa từ xa" />
                           </div>
-                        </button>
+                        </Button>
                       )}
                     </div>
                   </td>

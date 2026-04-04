@@ -9,6 +9,7 @@ import { VscTrash } from "react-icons/vsc";
 import Pagination from "../ui/Pagination";
 import Image from "../ui/Image";
 import ToolTip from "../ui/ToolTip";
+import Button from "../ui/Button";
 
 function RoleList() {
   const roles = mockRoles;
@@ -72,13 +73,13 @@ function RoleList() {
                         </div>
                       </Link>
 
-                      <button onClick={() => handleDelete(role.roleId || "")}>
+                      <Button onClick={() => handleDelete(role.roleId || "")}>
                         <div className="relative group">
                           <VscTrash size={22} className="text-[#d9534f]" />
 
                           <ToolTip text="Xóa chức vụ" />
                         </div>
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>

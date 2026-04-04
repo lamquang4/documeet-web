@@ -1,6 +1,7 @@
 
 import { memo, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import Input from "./Input";
 
 function InputSearch() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ function InputSearch() {
   }, [searchParams]);
   return (
     <form onSubmit={handleSearch}>
-      <input
+      <Input
         type="search"
         placeholder="Tìm kiếm..."
         value={search}

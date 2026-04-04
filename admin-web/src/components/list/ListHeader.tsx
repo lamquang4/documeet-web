@@ -10,6 +10,7 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
+import Button from "../ui/Button";
 
 interface Props {
   title: string;
@@ -119,12 +120,12 @@ function ListHeader({
             />
           </div>
 
-          <button
+          <Button
             type="submit"
             className="p-[6px_12px] text-[0.9rem] bg-primary text-white"
           >
             Tìm kiếm
-          </button>
+          </Button>
         </form>
       )}
     </div>

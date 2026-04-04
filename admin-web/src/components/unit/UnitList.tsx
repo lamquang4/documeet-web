@@ -13,6 +13,7 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import ToolTip from "../ui/ToolTip";
 import { UNIT_STATUS_OPTIONS } from "../../constant/filterOptions";
+import Button from "../ui/Button";
 function UnitList() {
   const units = mockUnits;
   const isLoading = false;
@@ -80,7 +81,7 @@ function UnitList() {
                   </td>
                   <td className="p-[1rem]  ">
                     <div className="flex items-center gap-[15px]">
-                      <button
+                      <Button
                         onClick={() =>
                           handleUpdateStatus(
                             unit.unitId,
@@ -110,7 +111,7 @@ function UnitList() {
                             }
                           />
                         </div>
-                      </button>
+                      </Button>
 
                       <Link to={`/unit/edit-unit/${unit.unitId}`}>
                         <div className="relative group">
@@ -120,13 +121,13 @@ function UnitList() {
                         </div>
                       </Link>
 
-                      <button onClick={() => handleDelete(unit.unitId || "")}>
+                      <Button onClick={() => handleDelete(unit.unitId || "")}>
                         <div className="relative group">
                           <VscTrash size={22} className="text-[#d9534f]" />
 
                           <ToolTip text="Xóa đơn vị" />
                         </div>
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>

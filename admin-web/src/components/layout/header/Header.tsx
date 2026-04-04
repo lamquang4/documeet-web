@@ -2,6 +2,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { TbMaximize } from "react-icons/tb";
 import ProfileMenu from "./ProfileMenu";
 import { useCallback, useState } from "react";
+import Button from "../../ui/Button";
 
 type Props = {
   onToggleMenu: () => void;
@@ -27,20 +28,20 @@ function Header({ onToggleMenu }: Props) {
     <>
       <header className="sticky top-0 z-10 flex w-full bg-white border-b-gray-200 items-center border-b">
         <div className="w-full flex justify-between items-center sm:px-[20px] py-3.5 px-[15px]">
-          <button
+          <Button
             onClick={onToggleMenu}
             className="w-8.5 h-8.5 rounded-lg border border-gray-200 justify-center items-center flex"
           >
             <AiOutlineMenu size={18} />
-          </button>
+          </Button>
 
           <div className="flex gap-[15px] sm:gap-[20px] items-center">
-            <button
+            <Button
               onClick={handleFullscreen}
               className="w-8.5 h-8.5 rounded-lg border border-gray-200 justify-center items-center flex relative"
             >
               <TbMaximize size={18} />
-            </button>
+            </Button>
 
             <ProfileMenu
               onToggleMenu={toggleProfileMenu}

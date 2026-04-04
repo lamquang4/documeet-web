@@ -4,6 +4,9 @@ import { HiOutlineEyeOff, HiOutlineEye } from "react-icons/hi";
 import Loading from "./ui/Loading";
 import Overplay from "./ui/Overplay";
 import toast from "react-hot-toast";
+import Label from "./ui/Label";
+import Input from "./ui/Input";
+import Button from "./ui/Button";
 function LoginForm() {
   const [data, setData] = useState({ governmentId: "", password: "" });
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -47,44 +50,44 @@ function LoginForm() {
 
                 <form className="space-y-[15px]" onSubmit={handleSubmit}>
                   <div className="space-y-[5px]">
-                    <label
+                    <Label
                       htmlFor=""
                       className="block text-[0.9rem] font-medium"
                     >
                       Số định danh cá nhân
                       <span className="text-red-500">*</span>
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       type="text"
                       name="governmentId"
                       value={data.governmentId}
                       onChange={handleChange}
                       className="text-[0.9rem] block w-full px-3 py-2 outline-none border border-gray-300"
                       placeholder="Nhập số định danh cá nhân"
-                      required
+                      isRequired={true}
                     />
                   </div>
 
                   <div className="space-y-[5px]">
-                    <label
+                    <Label
                       htmlFor=""
                       className="block text-[0.9rem] font-medium"
                     >
                       Mật khẩu <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
 
                     <div className="relative">
-                      <input
+                      <Input
                         type={!showPassword ? "password" : "text"}
                         name="password"
                         value={data.password}
                         onChange={handleChange}
                         placeholder="Nhập mật khẩu"
                         className="text-[0.9rem] block w-full px-3 pr-12 py-2 outline-none border border-gray-300"
-                        required
+                        isRequired={true}
                       />
 
-                      <button
+                      <Button
                         type="button"
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
                         onClick={toggleShowPassword}
@@ -94,17 +97,17 @@ function LoginForm() {
                         ) : (
                           <HiOutlineEyeOff size={22} />
                         )}
-                      </button>
+                      </Button>
                     </div>
                   </div>
 
-                  <button
-                    disabled={isLoading}
+                  <Button
+                    isDisabled={isLoading}
                     type="submit"
                     className="w-full bg-primary text-[0.9rem] text-white focus:outline-none font-semibold rounded-sm px-5 py-2.5 text-center mt-6"
                   >
                     Đăng nhập
-                  </button>
+                  </Button>
                 </form>
               </div>
 

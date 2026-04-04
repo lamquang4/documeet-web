@@ -8,6 +8,7 @@ import { FiUsers } from "react-icons/fi";
 import { Link, useLocation } from "react-router-dom";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { HiOutlineDevicePhoneMobile } from "react-icons/hi2";
+import Button from "../ui/Button";
 type Props = {
   menuOpen: boolean;
   onToggleMenu: () => void;
@@ -137,7 +138,7 @@ function MenuSide({ menuOpen, onToggleMenu }: Props) {
                         <p className="flex items-center gap-[10px]">
                           {item.icon} {item.label}
                         </p>
-                        <button>
+                        <Button>
                           {openMenus[item.key] ||
                           item.children.some(
                             (child) => pathname === child.path,
@@ -146,7 +147,7 @@ function MenuSide({ menuOpen, onToggleMenu }: Props) {
                           ) : (
                             <IoIosArrowUp size={18} />
                           )}
-                        </button>
+                        </Button>
                       </div>
                       <ul
                         className={`max-h-0 overflow-hidden invisible transition-all duration-600 ease-in-out pl-[25px] ${

@@ -4,6 +4,7 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { mockAccounts } from "../../../mocks/mockAccount";
+import Button from "../../ui/Button";
 
 type Props = {
   menuOpen: boolean;
@@ -50,12 +51,12 @@ function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
                 </div>
               </Link>
 
-              <button className="w-full block hover:bg-gray-100 px-3 py-3.5">
+              <Button className="w-full block hover:bg-gray-100 px-3 py-3.5">
                 <div className="flex items-center gap-[8px] text-[#d9534f] font-normal">
                   <RiLogoutBoxLine size={18} />
                   <p>Đăng xuất</p>
                 </div>
-              </button>
+              </Button>
             </div>
           )}
         </div>

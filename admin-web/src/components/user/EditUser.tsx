@@ -7,6 +7,10 @@ import { validatePhone } from "../../utils/validatePhone";
 import SearchableSelect from "../ui/SearchableSelect";
 import { mockRolesSelect } from "../../mocks/mockRolesSelect";
 import { mockUnitsSelect } from "../../mocks/mockUnisSelect";
+import Button from "../ui/Button";
+import Select from "../ui/Select";
+import Label from "../ui/Label";
+import Input from "../ui/Input";
 
 function EditUser() {
   const navigate = useNavigate();
@@ -91,29 +95,29 @@ function EditUser() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Số định danh cá nhân
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   name="governmentId"
                   value={data.governmentId}
                   onChange={handleChange}
-                  required
+                  isRequired={true}
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Số điện thoại
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   name="phoneNumber"
                   value={data.phoneNumber}
                   onChange={handleChange}
-                  required
+                  isRequired={true}
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -121,38 +125,38 @@ function EditUser() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Họ tên
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   name="fullname"
                   value={data.fullName}
                   onChange={handleChange}
-                  required
+                  isRequired={true}
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Email
-                </label>
-                <input
+                </Label>
+                <Input
                   type="email"
                   name="email"
                   value={data.email}
                   onChange={handleChange}
-                  required
+                  isRequired={true}
                   className="lowercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-1 w-full">
-              <label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="" className="text-[0.9rem] font-medium">
                 Đơn vị
-              </label>
+              </Label>
               <SearchableSelect
                 isLoading={false}
                 setKeyword={() => {}}
@@ -170,14 +174,14 @@ function EditUser() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Chức vụ
-                </label>
-                <select
+                </Label>
+                <Select
                   name="roleId"
                   value={data.roleId}
                   onChange={handleChange}
-                  required
+                  isRequired={true}
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 >
                   <option value="">Chọn chức vụ</option>
@@ -186,38 +190,38 @@ function EditUser() {
                       {role.roleName}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div className="flex flex-col gap-1 w-full">
-                <label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" className="text-[0.9rem] font-medium">
                   Tình trạng
-                </label>
-                <select
+                </Label>
+                <Select
                   name="status"
                   value={data.status}
                   onChange={handleChange}
-                  required
+                  isRequired={true}
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400"
                 >
                   <option value="">Chọn tình trạng</option>
                   <option value="ACTIVE">Hoạt động</option>
                   <option value="LOCKED">Bị khóa</option>
                   <option value="DISABLED">Vô hiệu hóa</option>
-                </select>
+                </Select>
               </div>
             </div>
           </div>
         </div>
 
         <div className="flex justify-center gap-6">
-          <button
-            disabled={isLoadingUpdate}
+          <Button
+            isDisabled={isLoadingUpdate}
             type="submit"
             className="p-[6px_10px] bg-teal-500 text-white text-[0.9rem] font-medium text-center hover:bg-teal-600 rounded-sm"
           >
             {isLoadingUpdate ? "Đang cập nhật..." : "Cập nhật"}
-          </button>
+          </Button>
           <Link
             to="/users"
             className="p-[6px_10px] bg-red-500 text-white text-[0.9rem] text-center hover:bg-red-600 rounded-sm"

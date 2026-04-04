@@ -1,6 +1,8 @@
 import { memo } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import Button from "./Button";
+import Select from "./Select";
 interface Props {
   totalPages: number;
   currentPage: number;
@@ -62,7 +64,7 @@ function Pagination({ totalPages, currentPage, limit, totalItems }: Props) {
         <div className="flex items-center justify-center bg-white px-[15px] py-3 w-full flex-wrap gap-5 sm:gap-3 text-[0.9rem] font-medium">
           <div className="flex gap-2 items-center">
             Số dòng mỗi trang
-            <select
+            <Select
               value={limit}
               onChange={handleLimitChange}
               className="p-1 border border-gray-300 focus:border-black text-[0.9rem]"
@@ -71,7 +73,7 @@ function Pagination({ totalPages, currentPage, limit, totalItems }: Props) {
               <option value="24">24</option>
               <option value="36">36</option>
               <option value="48">48</option>
-            </select>
+            </Select>
           </div>
 
           <div>
@@ -85,33 +87,33 @@ function Pagination({ totalPages, currentPage, limit, totalItems }: Props) {
               className="isolate inline-flex gap-0.5"
               aria-label="Pagination"
             >
-              <button
+              <Button
                 type="button"
                 className="h-8.5 w-8.5 inline-flex justify-center items-center gap-x-2 text-[0.9rem] border border-gray-300 hover:bg-gray-100"
                 aria-label="Previous"
                 title="Previous"
-                disabled={currentPage <= 1}
+                isDisabled={currentPage <= 1}
                 onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
               >
                 <GrFormPrevious />
-              </button>
+              </Button>
 
               {getPageNumbers().map((page, index) => {
                 if (page === "...") {
                   return (
-                    <button
+                    <Button
                       type="button"
-                      disabled
+                      isDisabled={true}
                       key={`ellipsis-${index}`}
                       className="group h-8.5 w-8.5 flex justify-center items-center   text-[0.9rem] border border-gray-300"
                     >
                       ...
-                    </button>
+                    </Button>
                   );
                 }
 
                 return (
-                  <button
+                  <Button
                     key={page}
                     onClick={() => goToPage(page as number)}
                     className={`h-8.5 w-8.5 flex justify-center items-center font-medium text-[0.9rem] border border-gray-300 ${
@@ -121,19 +123,19 @@ function Pagination({ totalPages, currentPage, limit, totalItems }: Props) {
                     }`}
                   >
                     {page}
-                  </button>
+                  </Button>
                 );
               })}
 
-              <button
-                disabled={currentPage >= totalPages}
+              <Button
+                isDisabled={currentPage >= totalPages}
                 onClick={() =>
                   currentPage < totalPages && goToPage(currentPage + 1)
                 }
                 className="h-8.5 w-8.5 inline-flex justify-center items-center gap-x-2 text-[0.9rem] border border-gray-300 hover:bg-gray-100"
               >
                 <GrFormNext />
-              </button>
+              </Button>
             </nav>
           </div>
         </div>

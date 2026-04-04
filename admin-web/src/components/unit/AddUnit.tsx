@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import MultiSearchableSelect from "../ui/MultiSearchableSelect";
 import { mockUsersSelect } from "../../mocks/mockUsersSelect";
+import Button from "../ui/Button";
+import Label from "../ui/Label";
+import Input from "../ui/Input";
+import Select from "../ui/Select";
 
 function AddUnit() {
   const [data, setData] = useState({
@@ -52,48 +56,48 @@ function AddUnit() {
             <h5 className="font-bold text-[#74767d]">Thông tin đơn vị</h5>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="" className="text-[0.9rem] font-medium">
                 Mã đơn vị
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 name="unitCode"
                 value={data.unitCode}
                 onChange={handleChange}
-                required
+                isRequired={true}
                 className="uppercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="" className="text-[0.9rem] font-medium">
                 Tên đơn vị
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 name="unitName"
                 value={data.unitName}
                 onChange={handleChange}
-                required
+                isRequired={true}
                 className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               />
             </div>
 
             <div className="flex flex-col gap-1 w-full">
-              <label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="" className="text-[0.9rem] font-medium">
                 Tình trạng
-              </label>
-              <select
+              </Label>
+              <Select
                 name="status"
                 value={data.status}
                 onChange={handleChange}
-                required
+                isRequired={true}
                 className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               >
                 <option value="">Chọn tình trạng</option>
                 <option value="ACTIVE">Hoạt động</option>
                 <option value="INACTIVE">Không hoạt động</option>
-              </select>
+              </Select>
             </div>
           </div>
 
@@ -101,9 +105,9 @@ function AddUnit() {
             <h5 className="font-bold text-[#74767d]">Người trong đơn vị</h5>
 
             <div className="flex flex-col gap-1 w-full">
-              <label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="" className="text-[0.9rem] font-medium">
                 Người dùng
-              </label>
+              </Label>
               <MultiSearchableSelect
                 value={data.userIds}
                 isLoading={false}
@@ -122,13 +126,13 @@ function AddUnit() {
         </div>
 
         <div className="flex justify-center gap-6">
-          <button
-            disabled={isLoading}
+          <Button
+            isDisabled={isLoading}
             type="submit"
             className="p-[6px_10px] bg-teal-500 text-white text-[0.9rem] font-medium text-center hover:bg-teal-600 rounded-sm"
           >
             {isLoading ? "Đang thêm..." : "Thêm"}
-          </button>
+          </Button>
           <Link
             to="/units"
             className="p-[6px_10px] bg-red-500 text-white text-[0.9rem] text-center hover:bg-red-600 rounded-sm"
