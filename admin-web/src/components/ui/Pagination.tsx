@@ -6,20 +6,20 @@ import Select from "./Select";
 interface Props {
   totalPages: number;
   currentPage: number;
-  limit: number;
+  size: number;
   totalItems: number;
 }
-function Pagination({ totalPages, currentPage, limit, totalItems }: Props) {
+function Pagination({ totalPages, currentPage, size, totalItems }: Props) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const start = (currentPage - 1) * limit + 1;
-  const end = Math.min(start + limit - 1, totalItems);
+  const start = (currentPage - 1) * size + 1;
+  const end = Math.min(start + size - 1, totalItems);
 
   const goToPage = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", page.toString());
-    params.set("limit", limit.toString());
+    params.set("size", size.toString());
 
     navigate(`?${params.toString()}`);
   };
@@ -50,10 +50,10 @@ function Pagination({ totalPages, currentPage, limit, totalItems }: Props) {
     return pages;
   };
 
-  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newLimit = parseInt(e.target.value, 10);
+  const handlesizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newsize = parseInt(e.target.value, 10);
     const params = new URLSearchParams(searchParams.toString());
-    params.set("limit", newLimit.toString());
+    params.set("size", newsize.toString());
     params.set("page", "1");
     navigate(`?${params.toString()}`);
   };
@@ -65,8 +65,8 @@ function Pagination({ totalPages, currentPage, limit, totalItems }: Props) {
           <div className="flex gap-2 items-center">
             Số dòng mỗi trang
             <Select
-              value={limit}
-              onChange={handleLimitChange}
+              value={size}
+              onChange={handlesizeChange}
               className="p-1 border border-gray-300 focus:border-black text-[0.9rem]"
             >
               <option value="12">12</option>

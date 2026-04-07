@@ -126,13 +126,6 @@ export type DeviceResponse = {
   lastIpAddress?: string; // từ session gần nhất
 };
 
-export type DeviceSummaryResponse = {
-  totalDevices: number; // Tất cả thiết bị
-  onlineDevices: number; // Thiết bị online
-  unverifiedDevices: number; // Chưa xác thực
-  trustedDevices: number; // Tin cậy
-};
-
 export type RoleFilterResponse = {
   roleCode: string;
   roleName: string;

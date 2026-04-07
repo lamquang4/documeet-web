@@ -19,7 +19,7 @@ export const mockUsers: UserResponse[] = [
     },
     role: {
       roleId: "1",
-      roleName: "Lãnh đạo",
+      roleName: "Cán bộ",
     },
     governmentId: "345678901234",
     fullName: "Lê Văn C",

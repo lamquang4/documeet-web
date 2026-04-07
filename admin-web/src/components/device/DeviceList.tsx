@@ -7,53 +7,21 @@ import Pagination from "../ui/Pagination";
 import Image from "../ui/Image";
 import FilterDropDownMenu from "../ui/FilterDropDownMenu";
 import { LuPaintbrush } from "react-icons/lu";
-import {
-  TbDeviceMobile,
-  TbDeviceMobileBolt,
-  TbDeviceMobileCheck,
-  TbDeviceMobileX,
-  TbLock,
-} from "react-icons/tb";
+import { TbLock } from "react-icons/tb";
 import ToolTip from "../ui/ToolTip";
 import {
   DEVICE_ONLINE_OPTIONS,
   DEVICE_STATUS_OPTIONS,
   DEVICE_TRUSTED_OPTIONS,
 } from "../../constant/filterOptions";
-import { mockDeviceSummary } from "../../mocks/mockDeviceSummary";
 import Button from "../ui/Button";
 function DeviceList() {
-  const summary = mockDeviceSummary;
-
-  const arraySummaries = [
-    {
-      title: "Tất cả thiết bị",
-      number: summary.totalDevices,
-      icon1: <TbDeviceMobile size={30} />,
-    },
-    {
-      title: "Thiết bị online",
-      number: summary.onlineDevices,
-      icon1: <TbDeviceMobileBolt size={30} />,
-    },
-    {
-      title: "Thiết bị chưa xác thực",
-      number: summary.unverifiedDevices,
-      icon1: <TbDeviceMobileX size={30} />,
-    },
-    {
-      title: "Thiết bị tin cậy",
-      number: summary.trustedDevices,
-      icon1: <TbDeviceMobileCheck size={30} />,
-    },
-  ];
-
   const devices = mockDevices;
   const isLoading = false;
   const totalItems = 12;
   const totalPages = 2;
   const currentPage = 1;
-  const limit = 12;
+  const size = 12;
 
   const handleUpdateStatus = async (id: string, status: string) => {
     if (!id && !status) {
@@ -63,11 +31,7 @@ function DeviceList() {
 
   return (
     <>
-      <ListHeader
-        title="Thiết bị đăng ký"
-        totalItems={totalItems}
-        arrayData={arraySummaries}
-      />
+      <ListHeader title="Thiết bị đăng ký" totalItems={totalItems} />
 
       <ListBody>
         <div className="p-[1.2rem]">
@@ -225,7 +189,7 @@ function DeviceList() {
       <Pagination
         totalPages={totalPages}
         currentPage={currentPage}
-        limit={limit}
+        size={size}
         totalItems={totalItems}
       />
     </>

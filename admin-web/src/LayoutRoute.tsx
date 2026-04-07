@@ -10,6 +10,7 @@ import UnitListPage from "./pages/UnitListPage";
 import EditUnitPage from "./pages/EditUnitPage";
 import AddUnitPage from "./pages/AddUnitPage";
 import DeviceListPage from "./pages/DeviceListPage";
+import AddUserPage from "./pages/AddUserPage";
 
 function LayoutRoute() {
   return (
@@ -18,6 +19,7 @@ function LayoutRoute() {
 
       <Route path="/account/profile" element={<AccountPage />} />
 
+      <Route path="/user/add-user" element={<AddUserPage />} />
       <Route path="/users" element={<UserListPage />} />
       <Route path="/user/edit-user/:id" element={<EditUserPage />} />
 

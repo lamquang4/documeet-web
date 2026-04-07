@@ -32,7 +32,7 @@ function UserList() {
   const totalItems = 12;
   const totalPages = 2;
   const currentPage = 1;
-  const limit = 12;
+  const size = 12;
 
   const handleDelete = async (id: string) => {
     if (!id) {
@@ -55,7 +55,11 @@ function UserList() {
 
   return (
     <>
-      <ListHeader title="Người dùng" totalItems={totalItems} />
+      <ListHeader
+        title="Người dùng"
+        totalItems={totalItems}
+        addLink="/user/add-user"
+      />
 
       <ListBody>
         <div className="p-[1.2rem]">
@@ -200,7 +204,7 @@ function UserList() {
       <Pagination
         totalPages={totalPages}
         currentPage={currentPage}
-        limit={limit}
+        size={size}
         totalItems={totalItems}
       />
     </>
