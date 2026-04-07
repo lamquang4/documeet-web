@@ -130,7 +130,7 @@ function EditUser() {
                 </Label>
                 <Input
                   type="text"
-                  name="fullname"
+                  name="fullName"
                   value={data.fullName}
                   onChange={handleChange}
                   isRequired={true}
