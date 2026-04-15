@@ -6,18 +6,18 @@ import Pagination from "../ui/Pagination";
 import FilterDropDownMenu from "../ui/FilterDropDownMenu";
 import InputSearch from "../ui/InputSearch";
 import { Link } from "react-router-dom";
-import ListHeader from "../list/ListHeader";
-import ListBody from "../list/ListBody";
+import ListHeader from "../ui/list/ListHeader";
+import ListBody from "../ui/list/ListBody";
 import { mockUsers } from "../../mocks/mockUsers";
 import Loading from "../ui/Loading";
 import Image from "../ui/Image";
 import ToolTip from "../ui/ToolTip";
-import { mockRolesFilter } from "../../mocks/mockRolesFilter";
 import { USER_STATUS_OPTIONS } from "../../constant/filterOptions";
 import Button from "../ui/Button";
+import { mockRoles } from "../../mocks/mockRoles";
 
 function UserList() {
-  const roles = mockRolesFilter;
+  const roles = mockRoles;
 
   const arrayRoles = [
     { name: "Tất cả", value: null },
@@ -142,15 +142,21 @@ function UserList() {
                       >
                         <div className="relative group">
                           {user.status === "DISABLED" && (
-                            <SiTicktick size={18} className="text-green-500" />
+                            <SiTicktick
+                              size={18}
+                              className="text-icon-primary"
+                            />
                           )}
 
                           {user.status === "ACTIVE" && (
-                            <TbLock size={22} className="text-[#74767d]" />
+                            <TbLock size={22} className="text-icon-default" />
                           )}
 
                           {user.status === "LOCKED" && (
-                            <TbLockOpen size={22} className="text-[#74767d]" />
+                            <TbLockOpen
+                              size={22}
+                              className="text-icon-default"
+                            />
                           )}
 
                           <ToolTip
@@ -167,7 +173,7 @@ function UserList() {
 
                       <Link to={`/user/edit-user/${user.userId}`}>
                         <div className="relative group">
-                          <LiaEdit size={22} className="text-[#076ffe]" />
+                          <LiaEdit size={22} className="text-icon-secondary" />
 
                           <ToolTip text={"Chỉnh sửa người dùng"} />
                         </div>
@@ -175,7 +181,7 @@ function UserList() {
 
                       <Button onClick={() => handleDelete(user.userId || "")}>
                         <div className="relative group">
-                          <VscTrash size={22} className="text-[#d9534f]" />
+                          <VscTrash size={22} className="text-icon-danger" />
                           <ToolTip text={"Xóa người dùng"} />
                         </div>
                       </Button>

@@ -1,17 +1,9 @@
 import React from "react";
 
-type Props = {
-  htmlFor?: string;
-  children: React.ReactNode;
-  className?: string;
-};
+type Props = React.LabelHTMLAttributes<HTMLLabelElement>;
 
-function Label({ htmlFor, children, className }: Props) {
-  return (
-    <label htmlFor={htmlFor} className={className}>
-      {children}
-    </label>
-  );
+function Label({ children, ...props }: Props) {
+  return <label {...props}>{children}</label>;
 }
 
 export default Label;

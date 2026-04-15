@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { mockRoles } from "../../mocks/mockRoles";
-import ListBody from "../list/ListBody";
-import ListHeader from "../list/ListHeader";
+import ListBody from "../ui/list/ListBody";
+import ListHeader from "../ui/list/ListHeader";
 import InputSearch from "../ui/InputSearch";
 import Loading from "../ui/Loading";
 import { LiaEdit } from "react-icons/lia";
@@ -67,7 +67,7 @@ function RoleList() {
                     <div className="flex items-center gap-[15px]">
                       <Link to={`/role/edit-role/${role.roleId}`}>
                         <div className="relative group">
-                          <LiaEdit size={22} className="text-[#076ffe]" />
+                          <LiaEdit size={22} className="text-icon-secondary" />
 
                           <ToolTip text="Chỉnh sửa chức vụ" />
                         </div>
@@ -75,7 +75,7 @@ function RoleList() {
 
                       <Button onClick={() => handleDelete(role.roleId || "")}>
                         <div className="relative group">
-                          <VscTrash size={22} className="text-[#d9534f]" />
+                          <VscTrash size={22} className="text-icon-danger" />
 
                           <ToolTip text="Xóa chức vụ" />
                         </div>

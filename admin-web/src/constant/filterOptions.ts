@@ -29,6 +29,7 @@ export const DEVICE_TRUSTED_OPTIONS = [
   { name: "Chưa xác thực", value: "false" },
 ];
 
+// de lai cho tuong lai
 export const DEVICE_ONLINE_OPTIONS = [
   COMMON_ALL_OPTION,
   { name: "Online", value: "true" },

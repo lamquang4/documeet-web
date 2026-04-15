@@ -1,6 +1,6 @@
 import { mockDevices } from "../../mocks/mockDevices";
-import ListBody from "../list/ListBody";
-import ListHeader from "../list/ListHeader";
+import ListBody from "../ui/list/ListBody";
+import ListHeader from "../ui/list/ListHeader";
 import InputSearch from "../ui/InputSearch";
 import Loading from "../ui/Loading";
 import Pagination from "../ui/Pagination";
@@ -10,7 +10,6 @@ import { LuPaintbrush } from "react-icons/lu";
 import { TbLock } from "react-icons/tb";
 import ToolTip from "../ui/ToolTip";
 import {
-  DEVICE_ONLINE_OPTIONS,
   DEVICE_STATUS_OPTIONS,
   DEVICE_TRUSTED_OPTIONS,
 } from "../../constant/filterOptions";
@@ -52,13 +51,6 @@ function DeviceList() {
                 />
               </th>
 
-              <th className="p-[1rem]  ">
-                <FilterDropDownMenu
-                  title="Online"
-                  array={DEVICE_ONLINE_OPTIONS}
-                  paramName="isOnline"
-                />
-              </th>
               <th className="p-[1rem]">Lần dùng cuối</th>
               <th className="p-[1rem]  ">
                 <FilterDropDownMenu
@@ -102,20 +94,6 @@ function DeviceList() {
                   </td>
 
                   <td className="p-[1rem]">
-                    {device.isOnline ? (
-                      <span className="flex items-center gap-1 text-primary font-medium">
-                        <div className="w-2 h-2 rounded-full bg-primary"></div>{" "}
-                        Online
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1 text-gray-400 font-medium">
-                        <div className="w-2 h-2 rounded-full bg-gray-400"></div>{" "}
-                        Offline
-                      </span>
-                    )}
-                  </td>
-
-                  <td className="p-[1rem]">
                     {new Date(device.lastUsedDate).toLocaleString("vi-VN")}
                   </td>
 
@@ -140,7 +118,7 @@ function DeviceList() {
                           }
                         >
                           <div className="relative group">
-                            <TbLock size={22} className="text-[#74767d]" />
+                            <TbLock size={22} className="text-icon-default" />
 
                             <ToolTip text="Thu hồi" />
                           </div>
@@ -157,7 +135,7 @@ function DeviceList() {
                           <div className="relative group">
                             <LuPaintbrush
                               size={22}
-                              className="text-[#d9534f]"
+                              className="text-icon-danger"
                             />
 
                             <ToolTip text="Xóa từ xa" />

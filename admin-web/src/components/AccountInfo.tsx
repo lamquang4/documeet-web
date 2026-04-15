@@ -22,7 +22,7 @@ function Account() {
                   type="text"
                   name="governmentId"
                   value={account.governmentId}
-                  isReadOnly={true}
+                  readOnly
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -35,7 +35,7 @@ function Account() {
                   type="text"
                   name="phoneNumber"
                   value={account.phoneNumber}
-                  isReadOnly={true}
+                  readOnly
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -50,7 +50,7 @@ function Account() {
                   type="text"
                   name="fullName"
                   value={account.fullName}
-                  isReadOnly={true}
+                  readOnly
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -63,7 +63,7 @@ function Account() {
                   type="email"
                   name="email"
                   value={account.email}
-                  isReadOnly={true}
+                  readOnly
                   className="lowercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -79,7 +79,7 @@ function Account() {
                   type="text"
                   name="unitName"
                   value={account.unitName}
-                  isReadOnly={true}
+                  readOnly
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>

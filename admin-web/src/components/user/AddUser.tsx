@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import { validateEmail } from "../../utils/validateEmail";
 import { validatePhone } from "../../utils/validatePhone";
 import SearchableSelect from "../ui/SearchableSelect";
-import { mockRolesSelect } from "../../mocks/mockRolesSelect";
 import { mockUnitsSelect } from "../../mocks/mockUnisSelect";
 import Button from "../ui/Button";
 import Select from "../ui/Select";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
+import { mockRoles } from "../../mocks/mockRoles";
 
 function AddUser() {
   const [data, setData] = useState({
@@ -22,7 +22,7 @@ function AddUser() {
     status: "",
   });
 
-  const roles = mockRolesSelect;
+  const roles = mockRoles;
   const units = mockUnitsSelect;
   const isLoading = false;
 
@@ -83,7 +83,7 @@ function AddUser() {
                   name="governmentId"
                   value={data.governmentId}
                   onChange={handleChange}
-                  isRequired={true}
+                  required
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -97,7 +97,7 @@ function AddUser() {
                   name="phoneNumber"
                   value={data.phoneNumber}
                   onChange={handleChange}
-                  isRequired={true}
+                  required
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -113,7 +113,7 @@ function AddUser() {
                   name="fullName"
                   value={data.fullName}
                   onChange={handleChange}
-                  isRequired={true}
+                  required
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -127,7 +127,7 @@ function AddUser() {
                   name="email"
                   value={data.email}
                   onChange={handleChange}
-                  isRequired={true}
+                  required
                   className="lowercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -161,7 +161,7 @@ function AddUser() {
                   name="roleId"
                   value={data.roleId}
                   onChange={handleChange}
-                  isRequired={true}
+                  required
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 >
                   <option value="">Chọn chức vụ</option>
@@ -181,7 +181,7 @@ function AddUser() {
                   name="status"
                   value={data.status}
                   onChange={handleChange}
-                  isRequired={true}
+                  required
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400"
                 >
                   <option value="">Chọn tình trạng</option>
@@ -196,15 +196,15 @@ function AddUser() {
 
         <div className="flex justify-center gap-6">
           <Button
-            isDisabled={isLoading}
+            disabled={isLoading}
             type="submit"
-            className="p-[6px_10px] bg-teal-500 text-white text-[0.9rem] font-medium text-center hover:bg-teal-600 rounded-sm"
+            className="p-[6px_10px] bg-btn-primary text-white text-[0.9rem] font-medium text-center  rounded-sm"
           >
             {isLoading ? "Đang thêm..." : "Thêm"}
           </Button>
           <Link
             to="/users"
-            className="p-[6px_10px] bg-red-500 text-white text-[0.9rem] text-center hover:bg-red-600 rounded-sm"
+            className="p-[6px_10px] bg-btn-danger text-white text-[0.9rem] text-center   rounded-sm"
           >
             Trờ về
           </Link>

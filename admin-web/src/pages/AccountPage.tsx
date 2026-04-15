@@ -1,10 +1,10 @@
-import Account from "../components/Account";
+import AccountInfo from "../components/AccountInfo";
 import LayoutPage from "../components/layout/LayoutPage";
 
 function AccountPage() {
   return (
     <LayoutPage>
-      <Account />
+      <AccountInfo />
     </LayoutPage>
   );
 }

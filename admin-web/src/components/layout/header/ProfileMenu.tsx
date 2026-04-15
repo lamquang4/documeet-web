@@ -51,8 +51,8 @@ function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
                 </div>
               </Link>
 
-              <Button className="w-full block hover:bg-gray-100 px-3 py-3.5">
-                <div className="flex items-center gap-[8px] text-[#d9534f] font-normal">
+              <Button className="w-full block hover:bg-gray-100 px-3 py-3.5 text-btn-danger">
+                <div className="flex items-center gap-[8px] font-normal">
                   <RiLogoutBoxLine size={18} />
                   <p>Đăng xuất</p>
                 </div>

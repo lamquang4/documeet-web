@@ -64,7 +64,7 @@ function LoginForm() {
                       onChange={handleChange}
                       className="text-[0.9rem] block w-full px-3 py-2 outline-none border border-gray-300"
                       placeholder="Nhập số định danh cá nhân"
-                      isRequired={true}
+                      required
                     />
                   </div>
 
@@ -84,7 +84,7 @@ function LoginForm() {
                         onChange={handleChange}
                         placeholder="Nhập mật khẩu"
                         className="text-[0.9rem] block w-full px-3 pr-12 py-2 outline-none border border-gray-300"
-                        isRequired={true}
+                        required
                       />
 
                       <Button
@@ -102,7 +102,7 @@ function LoginForm() {
                   </div>
 
                   <Button
-                    isDisabled={isLoading}
+                    disabled={isLoading}
                     type="submit"
                     className="w-full bg-primary text-[0.9rem] text-white focus:outline-none font-semibold rounded-sm px-5 py-2.5 text-center mt-6"
                   >

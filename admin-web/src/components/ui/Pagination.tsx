@@ -91,8 +91,7 @@ function Pagination({ totalPages, currentPage, size, totalItems }: Props) {
                 type="button"
                 className="h-8.5 w-8.5 inline-flex justify-center items-center gap-x-2 text-[0.9rem] border border-gray-300 hover:bg-gray-100"
                 aria-label="Previous"
-                title="Previous"
-                isDisabled={currentPage <= 1}
+                disabled={currentPage <= 1}
                 onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
               >
                 <GrFormPrevious />
@@ -103,7 +102,7 @@ function Pagination({ totalPages, currentPage, size, totalItems }: Props) {
                   return (
                     <Button
                       type="button"
-                      isDisabled={true}
+                      disabled
                       key={`ellipsis-${index}`}
                       className="group h-8.5 w-8.5 flex justify-center items-center   text-[0.9rem] border border-gray-300"
                     >
@@ -128,7 +127,7 @@ function Pagination({ totalPages, currentPage, size, totalItems }: Props) {
               })}
 
               <Button
-                isDisabled={currentPage >= totalPages}
+                disabled={currentPage >= totalPages}
                 onClick={() =>
                   currentPage < totalPages && goToPage(currentPage + 1)
                 }

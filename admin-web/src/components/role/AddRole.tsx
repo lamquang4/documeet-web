@@ -53,7 +53,7 @@ function AddRole() {
                 name="roleCode"
                 value={data.roleCode}
                 onChange={handleChange}
-                isRequired={true}
+                required
                 className="uppercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               />
             </div>
@@ -67,7 +67,7 @@ function AddRole() {
                 name="roleName"
                 value={data.roleName}
                 onChange={handleChange}
-                isRequired={true}
+                required
                 className="  border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               />
             </div>
@@ -90,16 +90,16 @@ function AddRole() {
 
         <div className="flex justify-center gap-6">
           <Button
-            isDisabled={isLoading}
+            disabled={isLoading}
             type="submit"
-            className="p-[6px_10px] bg-teal-500 text-white text-[0.9rem] font-medium text-center hover:bg-teal-600 rounded-sm"
+            className="p-[6px_10px] bg-btn-primary text-white text-[0.9rem] font-medium text-center rounded-sm"
           >
             {isLoading ? "Đang thêm..." : "Thêm"}
           </Button>
 
           <Link
             to="/roles"
-            className="p-[6px_10px] bg-red-500 text-white text-[0.9rem] text-center hover:bg-red-600 rounded-sm"
+            className="p-[6px_10px] bg-btn-danger text-white text-[0.9rem] text-center   rounded-sm"
           >
             Trờ về
           </Link>

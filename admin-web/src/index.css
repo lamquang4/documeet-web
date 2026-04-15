@@ -2,10 +2,22 @@
 @import "tailwindcss";
 
 @theme {
+  /* UI hệ thống */
   --color-primary: #74c69d;
-  --color-secondary: white;
-  --color-text: #444;
-  --color-bg-main: #f1f4f9;
+  --color-secondary: #fff;
+  --color-text-primary: #444;
+  --color-bg-primary: #f1f4f9;
+
+  /* button */
+  --color-btn-primary: #74c69d;
+  --color-btn-secondary: #076ffe;
+  --color-btn-danger: #d9534f;
+
+  /* icon */
+  --color-icon-primary: #74c69d;
+  --color-icon-secondary: #076ffe;
+  --color-icon-danger: #d9534f;
+  --color-icon-default: #74767d;
 }
 
 * {
@@ -14,11 +26,11 @@
 }
 
 body {
-  color: var(--color-text);
+  color: var(--color-text-primary);
 }
 
 table thead tr {
-  background-color: var(--color-bg-main);
+  background-color: var(--color-bg-primary);
 }
 
 table thead tr th {

@@ -14,7 +14,7 @@ export type UpdateUserRequest = {
   status: "ACTIVE" | "LOCKED" | "DISABLED";
 };
 
-export type AddRoleRequest = {
+export type CreateRoleRequest = {
   roleCode: string;
   roleName: string;
   description?: string;
@@ -26,16 +26,18 @@ export type UpdateRoleRequest = {
   description?: string;
 };
 
-export type AddUnitRequest = {
+export type CreateUnitRequest = {
   unitCode: string;
   unitName: string;
   status: "ACTIVE" | "INACTIVE";
+  userIds?: string[];
 };
 
 export type UpdatedUnitRequest = {
   unitCode: string;
   unitName: string;
   status: "ACTIVE" | "INACTIVE";
+  userIds?: string[];
 };
 
 // Response
@@ -43,7 +45,7 @@ export type LoginResponse = {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
-  sessionId: string; // UserLoginSessions
+  sessionId: string;
   isTrustedDevice: boolean;
   user: {
     userId: string;
@@ -62,13 +64,14 @@ export type AccountResponse = {
   status: "ACTIVE" | "LOCKED" | "DISABLED";
 };
 
+// người dùng
 export type UserResponse = {
   userId: string;
   unit?: {
     unitId: string;
     unitName: string;
   };
-  role?: {
+  role: {
     roleId: string;
     roleName: string;
   };
@@ -83,6 +86,13 @@ export type UserResponse = {
   createdDate: string;
 };
 
+export type UsersSelectResponse = {
+  userId: string;
+  fullName: string;
+  unitName?: string;
+};
+
+// chức vụ
 export type RoleResponse = {
   roleId: string;
   roleCode: string;
@@ -90,6 +100,7 @@ export type RoleResponse = {
   description?: string;
 };
 
+// đơn vị
 export type UnitResponse = {
   unitId: string;
   unitCode: string;
@@ -105,6 +116,12 @@ export type UnitDetailResponse = {
   userIds: string[];
 };
 
+export type UnitsSelectResponse = {
+  unitId: string;
+  unitName: string;
+};
+
+// thiết bị đăng ký
 export type DeviceResponse = {
   deviceId: string;
   user: {
@@ -112,37 +129,12 @@ export type DeviceResponse = {
     phoneNumber: string;
     fullName: string;
   };
-  deviceUUID: string;
+  deviceIMEI: string;
   deviceName: string;
   platform: string;
   osVersion: string;
-  isTrusted: boolean;
   status: "ACTIVE" | "REVOKED" | "WIPED";
   lastUsedDate: string;
   registeredDate: string;
-  // userLoginSession
-  isOnline: boolean;
-  lastActiveAt?: string; // từ session gần nhất
-  lastIpAddress?: string; // từ session gần nhất
-};
-
-export type RoleFilterResponse = {
-  roleCode: string;
-  roleName: string;
-};
-
-export type UnitsSelectResponse = {
-  unitId: string;
-  unitName: string;
-};
-
-export type RolesSelectResponse = {
-  roleId: string;
-  roleName: string;
-};
-
-export type UsersSelectResponse = {
-  userId: string;
-  fullName: string;
-  unitName?: string;
+  isTrusted: boolean;
 };

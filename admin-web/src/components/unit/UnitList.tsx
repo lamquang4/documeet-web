@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { mockUnits } from "../../mocks/mockUnits";
-import ListBody from "../list/ListBody";
-import ListHeader from "../list/ListHeader";
+import ListBody from "../ui/list/ListBody";
+import ListHeader from "../ui/list/ListHeader";
 import FilterDropDownMenu from "../ui/FilterDropDownMenu";
 import InputSearch from "../ui/InputSearch";
 import { VscTrash } from "react-icons/vsc";
@@ -93,13 +93,13 @@ function UnitList() {
                           {unit.status === "ACTIVE" && (
                             <FaRegEyeSlash
                               size={22}
-                              className="text-[#74767d]"
+                              className="text-icon-default"
                             />
                           )}
                           {unit.status === "INACTIVE" && (
                             <MdOutlineRemoveRedEye
                               size={22}
-                              className="text-[#74767d]"
+                              className="text-icon-default"
                             />
                           )}
 
@@ -115,7 +115,7 @@ function UnitList() {
 
                       <Link to={`/unit/edit-unit/${unit.unitId}`}>
                         <div className="relative group">
-                          <LiaEdit size={22} className="text-[#076ffe]" />
+                          <LiaEdit size={22} className="text-icon-secondary" />
 
                           <ToolTip text="Chỉnh sửa đơn vị" />
                         </div>
@@ -123,7 +123,7 @@ function UnitList() {
 
                       <Button onClick={() => handleDelete(unit.unitId || "")}>
                         <div className="relative group">
-                          <VscTrash size={22} className="text-[#d9534f]" />
+                          <VscTrash size={22} className="text-icon-danger" />
 
                           <ToolTip text="Xóa đơn vị" />
                         </div>
