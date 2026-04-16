@@ -142,21 +142,15 @@ function UserList() {
                       >
                         <div className="relative group">
                           {user.status === "DISABLED" && (
-                            <SiTicktick
-                              size={18}
-                              className="text-icon-primary"
-                            />
+                            <SiTicktick size={18} className="text-primary" />
                           )}
 
                           {user.status === "ACTIVE" && (
-                            <TbLock size={22} className="text-icon-default" />
+                            <TbLock size={22} className="text-neutral" />
                           )}
 
                           {user.status === "LOCKED" && (
-                            <TbLockOpen
-                              size={22}
-                              className="text-icon-default"
-                            />
+                            <TbLockOpen size={22} className="text-neutral" />
                           )}
 
                           <ToolTip
@@ -173,7 +167,7 @@ function UserList() {
 
                       <Link to={`/user/edit-user/${user.userId}`}>
                         <div className="relative group">
-                          <LiaEdit size={22} className="text-icon-secondary" />
+                          <LiaEdit size={22} className="text-info" />
 
                           <ToolTip text={"Chỉnh sửa người dùng"} />
                         </div>
@@ -181,7 +175,7 @@ function UserList() {
 
                       <Button onClick={() => handleDelete(user.userId || "")}>
                         <div className="relative group">
-                          <VscTrash size={22} className="text-icon-danger" />
+                          <VscTrash size={22} className="text-danger" />
                           <ToolTip text={"Xóa người dùng"} />
                         </div>
                       </Button>

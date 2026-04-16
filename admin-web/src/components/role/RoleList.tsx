@@ -67,7 +67,7 @@ function RoleList() {
                     <div className="flex items-center gap-[15px]">
                       <Link to={`/role/edit-role/${role.roleId}`}>
                         <div className="relative group">
-                          <LiaEdit size={22} className="text-icon-secondary" />
+                          <LiaEdit size={22} className="text-info" />
 
                           <ToolTip text="Chỉnh sửa chức vụ" />
                         </div>
@@ -75,7 +75,7 @@ function RoleList() {
 
                       <Button onClick={() => handleDelete(role.roleId || "")}>
                         <div className="relative group">
-                          <VscTrash size={22} className="text-icon-danger" />
+                          <VscTrash size={22} className="text-danger" />
 
                           <ToolTip text="Xóa chức vụ" />
                         </div>

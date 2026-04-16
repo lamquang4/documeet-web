@@ -69,7 +69,7 @@ function EditUnit() {
     }));
   };
   return (
-    <div className="py-[30px] sm:px-[25px] px-[15px] bg-[#F1F4F9] h-auto">
+    <div className="py-[30px] sm:px-[25px] px-[15px] h-auto">
       <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>
         <h2 className="text-[#74767d]">Chỉnh sửa đơn vị</h2>
 
@@ -151,13 +151,13 @@ function EditUnit() {
           <Button
             disabled={isLoadingUpdate}
             type="submit"
-            className="p-[6px_10px] bg-btn-primary text-white text-[0.9rem] font-medium text-center  rounded-sm"
+            className="p-[6px_10px] bg-primary text-white text-[0.9rem] font-medium text-center  rounded-sm"
           >
             {isLoadingUpdate ? "Đang cập nhật..." : "Cập nhật"}
           </Button>
           <Link
             to="/units"
-            className="p-[6px_10px] bg-btn-danger text-white text-[0.9rem] text-center   rounded-sm"
+            className="p-[6px_10px] bg-danger text-white text-[0.9rem] text-center   rounded-sm"
           >
             Trờ về
           </Link>

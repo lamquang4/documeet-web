@@ -118,7 +118,7 @@ function DeviceList() {
                           }
                         >
                           <div className="relative group">
-                            <TbLock size={22} className="text-icon-default" />
+                            <TbLock size={22} className="text-neutral" />
 
                             <ToolTip text="Thu hồi" />
                           </div>
@@ -133,10 +133,7 @@ function DeviceList() {
                           }
                         >
                           <div className="relative group">
-                            <LuPaintbrush
-                              size={22}
-                              className="text-icon-danger"
-                            />
+                            <LuPaintbrush size={22} className="text-danger" />
 
                             <ToolTip text="Xóa từ xa" />
                           </div>

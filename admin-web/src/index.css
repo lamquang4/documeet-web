@@ -2,22 +2,13 @@
 @import "tailwindcss";
 
 @theme {
-  /* UI hệ thống */
   --color-primary: #74c69d;
-  --color-secondary: #fff;
+  --color-info: #076ffe;
+  --color-danger: #d9534f;
+  --color-neutral: #74767d;
+
   --color-text-primary: #444;
   --color-bg-primary: #f1f4f9;
-
-  /* button */
-  --color-btn-primary: #74c69d;
-  --color-btn-secondary: #076ffe;
-  --color-btn-danger: #d9534f;
-
-  /* icon */
-  --color-icon-primary: #74c69d;
-  --color-icon-secondary: #076ffe;
-  --color-icon-danger: #d9534f;
-  --color-icon-default: #74767d;
 }
 
 * {

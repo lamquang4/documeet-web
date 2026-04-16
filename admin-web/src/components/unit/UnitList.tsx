@@ -91,15 +91,12 @@ function UnitList() {
                       >
                         <div className="relative group">
                           {unit.status === "ACTIVE" && (
-                            <FaRegEyeSlash
-                              size={22}
-                              className="text-icon-default"
-                            />
+                            <FaRegEyeSlash size={22} className="text-neutral" />
                           )}
                           {unit.status === "INACTIVE" && (
                             <MdOutlineRemoveRedEye
                               size={22}
-                              className="text-icon-default"
+                              className="text-neutral"
                             />
                           )}
 
@@ -115,7 +112,7 @@ function UnitList() {
 
                       <Link to={`/unit/edit-unit/${unit.unitId}`}>
                         <div className="relative group">
-                          <LiaEdit size={22} className="text-icon-secondary" />
+                          <LiaEdit size={22} className="text-info" />
 
                           <ToolTip text="Chỉnh sửa đơn vị" />
                         </div>
@@ -123,7 +120,7 @@ function UnitList() {
 
                       <Button onClick={() => handleDelete(unit.unitId || "")}>
                         <div className="relative group">
-                          <VscTrash size={22} className="text-icon-danger" />
+                          <VscTrash size={22} className="text-danger" />
 
                           <ToolTip text="Xóa đơn vị" />
                         </div>
