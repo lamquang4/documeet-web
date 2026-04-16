@@ -142,7 +142,7 @@ function UserList() {
                       >
                         <div className="relative group">
                           {user.status === "DISABLED" && (
-                            <SiTicktick size={18} className="text-primary" />
+                            <SiTicktick size={18} className="text-success" />
                           )}
 
                           {user.status === "ACTIVE" && (

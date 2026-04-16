@@ -3,6 +3,8 @@
 
 @theme {
   --color-primary: #74c69d;
+
+  --color-success: #74c69d;
   --color-info: #076ffe;
   --color-danger: #d9534f;
   --color-neutral: #74767d;

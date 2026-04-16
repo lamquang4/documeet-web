@@ -198,7 +198,7 @@ function AddUser() {
           <Button
             disabled={isLoading}
             type="submit"
-            className="p-[6px_10px] bg-primary text-white text-[0.9rem] font-medium text-center  rounded-sm"
+            className="p-[6px_10px] bg-success text-white text-[0.9rem] font-medium text-center rounded-sm"
           >
             {isLoading ? "Đang thêm..." : "Thêm"}
           </Button>

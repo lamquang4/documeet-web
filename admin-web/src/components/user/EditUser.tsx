@@ -218,7 +218,7 @@ function EditUser() {
           <Button
             disabled={isLoadingUpdate}
             type="submit"
-            className="p-[6px_10px] bg-primary text-white text-[0.9rem] font-medium text-center  rounded-sm"
+            className="p-[6px_10px] bg-success text-white text-[0.9rem] font-medium text-center rounded-sm"
           >
             {isLoadingUpdate ? "Đang cập nhật..." : "Cập nhật"}
           </Button>

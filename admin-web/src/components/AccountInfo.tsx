@@ -5,7 +5,7 @@ import Label from "./ui/Label";
 function Account() {
   const account = mockAccounts;
   return (
-    <div className="py-[30px] sm:px-[25px] px-[15px] bg-[#F1F4F9] h-full">
+    <div className="py-[30px] sm:px-[25px] px-[15px] h-full">
       <form className="flex flex-col gap-7 w-full">
         <h2 className="text-[#74767d]">Tài khoản</h2>
 
