@@ -3,8 +3,8 @@ import Image from "../../ui/Image";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { mockAccounts } from "../../../mocks/mockAccount";
 import Button from "../../ui/Button";
+import { useLogout } from "../../../hooks/queries/useAuth";
 
 type Props = {
   menuOpen: boolean;
@@ -12,7 +12,10 @@ type Props = {
 };
 
 function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
-  const account = mockAccounts;
+  const account = JSON.parse(localStorage.getItem("user") || "null");
+
+  const logout = useLogout();
+  const isLoading = logout.isPending;
   return (
     <>
       {account && (
@@ -51,7 +54,11 @@ function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
                 </div>
               </Link>
 
-              <Button className="w-full block hover:bg-gray-100 px-3 py-3.5 text-danger">
+              <Button
+                onClick={() => logout.mutate()}
+                disabled={isLoading}
+                className="w-full block hover:bg-gray-100 px-3 py-3.5 text-danger"
+              >
                 <div className="flex items-center gap-[8px] font-normal">
                   <RiLogoutBoxLine size={18} />
                   <p>Đăng xuất</p>

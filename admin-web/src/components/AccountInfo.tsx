@@ -1,9 +1,11 @@
-import { mockAccounts } from "../mocks/mockAccount";
+import { useGetUserById } from "../hooks/queries/useUsers";
 import Input from "./ui/Input";
 import Label from "./ui/Label";
 
 function Account() {
-  const account = mockAccounts;
+  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+  const { data: userRes } = useGetUserById(storedUser?.userId);
+  const account = userRes?.data;
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-full">
       <form className="flex flex-col gap-7 w-full">
@@ -21,7 +23,7 @@ function Account() {
                 <Input
                   type="text"
                   name="governmentId"
-                  value={account.governmentId}
+                  value={account?.governmentId}
                   readOnly
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
@@ -34,7 +36,7 @@ function Account() {
                 <Input
                   type="text"
                   name="phoneNumber"
-                  value={account.phoneNumber}
+                  value={account?.phoneNumber}
                   readOnly
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
@@ -49,7 +51,7 @@ function Account() {
                 <Input
                   type="text"
                   name="fullName"
-                  value={account.fullName}
+                  value={account?.fullName}
                   readOnly
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
@@ -62,7 +64,7 @@ function Account() {
                 <Input
                   type="email"
                   name="email"
-                  value={account.email}
+                  value={account?.email}
                   readOnly
                   className="lowercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
@@ -78,7 +80,7 @@ function Account() {
                 <Input
                   type="text"
                   name="unitName"
-                  value={account.unitName}
+                  value={account?.unit?.unitName}
                   readOnly
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />

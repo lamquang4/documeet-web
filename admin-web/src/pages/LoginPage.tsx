@@ -1,7 +1,7 @@
-import LoginForm from "../components/LoginForm";
+import AuthContainer from "../components/auth/AuthContainer";
 
 function LoginPage() {
-  return <LoginForm />;
+  return <AuthContainer />;
 }
 
 export default LoginPage;

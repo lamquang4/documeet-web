@@ -1,10 +1,32 @@
 // Request
-export type LoginRequest = {
+export interface LoginRequest {
   governmentId: string; // cccd
   password: string;
-};
+  deviceId: string;
+}
 
-export type UpdateUserRequest = {
+export interface LogoutRequest {
+  refreshToken: string;
+  sessionId: string;
+}
+
+export interface VerifyOtpRequest {
+  mfaToken: string;
+  otp: string;
+}
+
+export interface CreateUserRequest {
+  unitId: string;
+  roleId: string;
+  governmentId: string; // cccd
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  passwordHash: string;
+  repasswordHash: string;
+}
+
+export interface UpdateUserRequest {
   unitId: string;
   roleId: string;
   governmentId: string; // cccd
@@ -12,60 +34,91 @@ export type UpdateUserRequest = {
   email: string;
   phoneNumber: string;
   status: "ACTIVE" | "LOCKED" | "DISABLED";
-};
+  passwordHash?: string;
+}
 
-export type CreateRoleRequest = {
+export interface CreateRoleRequest {
   roleCode: string;
   roleName: string;
   description?: string;
-};
+}
 
-export type UpdateRoleRequest = {
+export interface UpdateRoleRequest {
   roleCode: string;
   roleName: string;
   description?: string;
-};
+}
 
-export type CreateUnitRequest = {
+export interface CreateUnitRequest {
+  unitCode: string;
+  unitName: string;
+  userIds?: string[];
+}
+
+export interface UpdatedUnitRequest {
   unitCode: string;
   unitName: string;
   status: "ACTIVE" | "INACTIVE";
   userIds?: string[];
-};
+}
 
-export type UpdatedUnitRequest = {
-  unitCode: string;
-  unitName: string;
-  status: "ACTIVE" | "INACTIVE";
-  userIds?: string[];
-};
+export interface UpdateUnitStatusRequest {
+  status: string;
+}
 
 // Response
-export type LoginResponse = {
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message: string;
+}
+
+export interface ErrorResponse {
+  status: number;
+  error: string;
+  errorCode: number;
+  message: string;
+  path: string;
+  timestamp: string;
+}
+
+export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
   sessionId: string;
-  isTrustedDevice: boolean;
+  tokenType: string;
+  requireMfa: boolean;
+  mfaToken: string;
   user: {
     userId: string;
+    email: string;
     fullName: string;
     role: string;
   };
-};
+}
 
-export type AccountResponse = {
+export interface AccountResponse {
   userId: string;
   unitName: string;
   governmentId: string;
   fullName: string;
   email: string;
   phoneNumber: string;
-  status: "ACTIVE" | "LOCKED" | "DISABLED";
-};
+}
 
 // người dùng
-export type UserResponse = {
+export interface UserResponse {
   userId: string;
   unit?: {
     unitId: string;
@@ -84,45 +137,45 @@ export type UserResponse = {
   lastLoginDate?: string;
   lockoutEndTime?: string;
   createdDate: string;
-};
+}
 
-export type UsersSelectResponse = {
+export interface SelectedUserForUnitResponse {
   userId: string;
   fullName: string;
   unitName?: string;
-};
+}
 
 // chức vụ
-export type RoleResponse = {
+export interface RoleResponse {
   roleId: string;
   roleCode: string;
   roleName: string;
   description?: string;
-};
+}
 
 // đơn vị
-export type UnitResponse = {
+export interface UnitResponse {
   unitId: string;
   unitCode: string;
   unitName: string;
   status: "ACTIVE" | "INACTIVE";
-};
+}
 
-export type UnitDetailResponse = {
+export interface UnitDetailResponse {
   unitId: string;
   unitCode: string;
   unitName: string;
   status: "ACTIVE" | "INACTIVE";
   userIds: string[];
-};
+}
 
-export type UnitsSelectResponse = {
+export interface SelectedUnitForUserResponse {
   unitId: string;
   unitName: string;
-};
+}
 
 // thiết bị đăng ký
-export type DeviceResponse = {
+export interface DeviceResponse {
   deviceId: string;
   user: {
     governmentId: string;
@@ -133,8 +186,45 @@ export type DeviceResponse = {
   deviceName: string;
   platform: string;
   osVersion: string;
+  isTrusted: boolean;
   status: "ACTIVE" | "REVOKED" | "WIPED";
   lastUsedDate: string;
   registeredDate: string;
-  isTrusted: boolean;
-};
+}
+
+// otp
+export interface OtpResponse {
+  email: string;
+  message: string;
+  expiresAt: string;
+}
+
+export interface OtpVerifiedResponse {
+  isVerified: boolean;
+}
+
+// token
+export interface AccessTokenPayload {
+  sub: string; // governmentId
+  sessionId: string;
+  iat: number; // issued at (epoch seconds)
+  exp: number; // expiration (epoch seconds)
+}
+
+export interface RefreshTokenPayload {
+  sub: string; // governmentId
+  iat: number;
+  exp: number;
+}
+
+export interface MfaTokenPayload {
+  sub: string; // governmentId
+  type: "MFA";
+  userId: string;
+  email: string;
+  deviceId: string;
+  ipAddress: string;
+  userAgent: string;
+  iat: number;
+  exp: number;
+}

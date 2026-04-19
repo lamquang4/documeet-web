@@ -1,37 +1,123 @@
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import UserListPage from "./pages/UserListPage";
-import EditUserPage from "./pages/EditUserPage";
+import UpdateUserPage from "./pages/UpdateUserPage";
 import AccountPage from "./pages/AccountPage";
 import RoleListPage from "./pages/RoleListPage";
-import EditRolePage from "./pages/EditRolePage";
-import AddRolePage from "./pages/AddRolePage";
+import UpdateRolePage from "./pages/UpdateRolePage";
+import CreateRolePage from "./pages/CreateRolePage";
 import UnitListPage from "./pages/UnitListPage";
-import EditUnitPage from "./pages/EditUnitPage";
-import AddUnitPage from "./pages/AddUnitPage";
+import UpdateUnitPage from "./pages/UpdateUnitPage";
+import CreateUnitPage from "./pages/CreateUnitPage";
 import DeviceListPage from "./pages/DeviceListPage";
-import AddUserPage from "./pages/AddUserPage";
+import CreateUserPage from "./pages/CreateUserPage";
+import PrivateRoute from "./components/PrivateRoute";
+import PublicRoute from "./components/PublicRoute";
 
 function LayoutRoute() {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
 
-      <Route path="/account/profile" element={<AccountPage />} />
+      <Route
+        path="/account/profile"
+        element={
+          <PrivateRoute>
+            <AccountPage />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/user/add-user" element={<AddUserPage />} />
-      <Route path="/users" element={<UserListPage />} />
-      <Route path="/user/edit-user/:id" element={<EditUserPage />} />
+      <Route
+        path="/users"
+        element={
+          <PrivateRoute>
+            <UserListPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/users/add"
+        element={
+          <PrivateRoute>
+            <CreateUserPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/users/edit/:id"
+        element={
+          <PrivateRoute>
+            <UpdateUserPage />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/roles" element={<RoleListPage />} />
-      <Route path="/role/add-role" element={<AddRolePage />} />
-      <Route path="/role/edit-role/:id" element={<EditRolePage />} />
+      <Route
+        path="/roles"
+        element={
+          <PrivateRoute>
+            <RoleListPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/roles/add"
+        element={
+          <PrivateRoute>
+            <CreateRolePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/roles/edit/:id"
+        element={
+          <PrivateRoute>
+            <UpdateRolePage />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/units" element={<UnitListPage />} />
-      <Route path="/unit/add-unit" element={<AddUnitPage />} />
-      <Route path="/unit/edit-unit/:id" element={<EditUnitPage />} />
+      <Route
+        path="/units"
+        element={
+          <PrivateRoute>
+            <UnitListPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/units/create"
+        element={
+          <PrivateRoute>
+            <CreateUnitPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/units/edit/:id"
+        element={
+          <PrivateRoute>
+            <UpdateUnitPage />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/devices" element={<DeviceListPage />} />
+      <Route
+        path="/devices"
+        element={
+          <PrivateRoute>
+            <DeviceListPage />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 }

@@ -1,8 +1,6 @@
-import { Link } from "react-router-dom";
-import { mockRoles } from "../../mocks/mockRoles";
+import { Link, useSearchParams } from "react-router-dom";
 import ListBody from "../ui/list/ListBody";
 import ListHeader from "../ui/list/ListHeader";
-import InputSearch from "../ui/InputSearch";
 import Loading from "../ui/Loading";
 import { LiaEdit } from "react-icons/lia";
 import { VscTrash } from "react-icons/vsc";
@@ -10,25 +8,47 @@ import Pagination from "../ui/Pagination";
 import Image from "../ui/Image";
 import ToolTip from "../ui/ToolTip";
 import Button from "../ui/Button";
+import type { GetRolesParams } from "../../apis/roleApi";
+import { useDeleteRole, useGetAllRoles } from "../../hooks/queries/useRoles";
+import Swal from "sweetalert2";
+import InputSearch from "../ui/InputSearch";
 
 function RoleList() {
-  const roles = mockRoles;
-  const isLoading = false;
-  const totalItems = 12;
-  const totalPages = 2;
-  const currentPage = 1;
-  const size = 12;
+  const [searchParams] = useSearchParams();
+
+  // Đọc từ URL
+  const params: GetRolesParams = {
+    page: Number(searchParams.get("page") ?? 0),
+    size: Number(searchParams.get("size") ?? 12),
+    keyword: searchParams.get("keyword") ?? undefined,
+  };
+
+  const { data, isLoading } = useGetAllRoles(params);
+  const totalItems = data?.data.totalElements ?? 0;
+  const totalPages = data?.data.totalPages ?? 0;
+  const roles = data?.data.content ?? [];
+
+  const deleteRole = useDeleteRole();
 
   const handleDelete = async (id: string) => {
-    if (!id) {
-      return;
-    }
+    const result = await Swal.fire({
+      title: `Xác nhận xóa?`,
+      text: `Bạn có chắc muốn xóa chức vụ này không?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Đồng ý",
+      cancelButtonText: "Hủy",
+    });
+
+    if (!result.isConfirmed || !id) return;
+
+    deleteRole.mutate(id);
   };
 
   return (
     <>
       <ListHeader
-        addLink="/role/add-role"
+        addLink="/roles/create"
         title="Chức vụ"
         totalItems={totalItems}
       />
@@ -38,7 +58,7 @@ function RoleList() {
           <InputSearch />
         </div>
 
-        <table className="w-[350%] table-fixed border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
+        <table className="w-[350%] border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
           <thead>
             <tr className="text-left">
               <th className="p-[1rem]">Mã</th>
@@ -59,13 +79,13 @@ function RoleList() {
               roles.map((role) => (
                 <tr key={role.roleId} className="hover:bg-[#f2f3f8]">
                   <td className="p-[1rem] text-[0.9rem]">{role.roleCode}</td>
-                  <td className="p-[1rem]  ">{role.roleName}</td>
+                  <td className="p-[1rem]">{role.roleName}</td>
 
-                  <td className="p-[1rem]  ">{role.description}</td>
+                  <td className="p-[1rem]">{role.description}</td>
 
-                  <td className="p-[1rem]  ">
+                  <td className="p-[1rem]">
                     <div className="flex items-center gap-[15px]">
-                      <Link to={`/role/edit-role/${role.roleId}`}>
+                      <Link to={`/roles/edit/${role.roleId}`}>
                         <div className="relative group">
                           <LiaEdit size={22} className="text-info" />
 
@@ -73,7 +93,13 @@ function RoleList() {
                         </div>
                       </Link>
 
-                      <Button onClick={() => handleDelete(role.roleId || "")}>
+                      <Button
+                        onClick={() => handleDelete(role.roleId)}
+                        disabled={
+                          deleteRole.isPending &&
+                          deleteRole.variables === role.roleId
+                        }
+                      >
                         <div className="relative group">
                           <VscTrash size={22} className="text-danger" />
 
@@ -104,8 +130,8 @@ function RoleList() {
 
       <Pagination
         totalPages={totalPages}
-        currentPage={currentPage}
-        size={size}
+        currentPage={params.page ?? 0}
+        size={params.size ?? 12}
         totalItems={totalItems}
       />
     </>

@@ -1,4 +1,3 @@
-import { mockDevices } from "../../mocks/mockDevices";
 import ListBody from "../ui/list/ListBody";
 import ListHeader from "../ui/list/ListHeader";
 import InputSearch from "../ui/InputSearch";
@@ -7,24 +6,58 @@ import Pagination from "../ui/Pagination";
 import Image from "../ui/Image";
 import FilterDropDownMenu from "../ui/FilterDropDownMenu";
 import { LuPaintbrush } from "react-icons/lu";
-import { TbLock } from "react-icons/tb";
+import { TbLock, TbLockOpen } from "react-icons/tb";
 import ToolTip from "../ui/ToolTip";
 import {
   DEVICE_STATUS_OPTIONS,
   DEVICE_TRUSTED_OPTIONS,
 } from "../../constant/filterOptions";
 import Button from "../ui/Button";
+import { useSearchParams } from "react-router-dom";
+import {
+  useActivateDevice,
+  useGetAllDevices,
+  useRevokeDevice,
+  useWipeDevice,
+} from "../../hooks/queries/useDevices";
+import type { GetDevicesParams } from "../../apis/deviceApi";
 function DeviceList() {
-  const devices = mockDevices;
-  const isLoading = false;
-  const totalItems = 12;
-  const totalPages = 2;
-  const currentPage = 1;
-  const size = 12;
+  const [searchParams] = useSearchParams();
 
-  const handleUpdateStatus = async (id: string, status: string) => {
-    if (!id && !status) {
-      return;
+  // Đọc từ URL
+  const params: GetDevicesParams = {
+    page: Number(searchParams.get("page") ?? 0),
+    size: Number(searchParams.get("size") ?? 12),
+    keyword: searchParams.get("keyword") ?? undefined,
+    status: searchParams.get("status") ?? undefined,
+    isTrusted:
+      searchParams.get("isTrusted") === null
+        ? undefined
+        : searchParams.get("isTrusted") === "true",
+  };
+
+  const { data, isLoading } = useGetAllDevices(params);
+  const totalItems = data?.data.totalElements ?? 0;
+  const totalPages = data?.data.totalPages ?? 0;
+  const devices = data?.data.content ?? [];
+
+  const revokeDevice = useRevokeDevice();
+  const wipeDevice = useWipeDevice();
+  const activateDevice = useActivateDevice();
+
+  const handleUpdateStatus = (id: string, status: string) => {
+    if (!id) return;
+
+    if (status === "REVOKE") {
+      revokeDevice.mutate(id);
+    }
+
+    if (status === "WIPE") {
+      wipeDevice.mutate(id);
+    }
+
+    if (status === "ACTIVE") {
+      activateDevice.mutate(id);
     }
   };
 
@@ -37,7 +70,7 @@ function DeviceList() {
           <InputSearch />
         </div>
 
-        <table className="w-[350%] table-fixed border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
+        <table className="w-[350%] border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
           <thead>
             <tr className="text-left">
               <th className="p-[1rem]">Tài khoản</th>
@@ -119,14 +152,26 @@ function DeviceList() {
                         >
                           <div className="relative group">
                             <TbLock size={22} className="text-neutral" />
-
-                            <ToolTip text="Thu hồi" />
+                            <ToolTip text="Thu hồi thiết bị" />
                           </div>
                         </Button>
                       )}
 
-                      {(device.status === "REVOKED" ||
-                        device.status === "ACTIVE") && (
+                      {device.status === "REVOKED" && (
+                        <Button
+                          onClick={() =>
+                            handleUpdateStatus(device.deviceId, "ACTIVE")
+                          }
+                        >
+                          <div className="relative group">
+                            <TbLockOpen size={22} className="text-neutral" />
+                            <ToolTip text="Kích hoạt lại thiết bị" />
+                          </div>
+                        </Button>
+                      )}
+
+                      {(device.status === "ACTIVE" ||
+                        device.status === "REVOKED") && (
                         <Button
                           onClick={() =>
                             handleUpdateStatus(device.deviceId, "WIPED")
@@ -134,8 +179,7 @@ function DeviceList() {
                         >
                           <div className="relative group">
                             <LuPaintbrush size={22} className="text-danger" />
-
-                            <ToolTip text="Xóa từ xa" />
+                            <ToolTip text="Xóa từ xa thiết bị" />
                           </div>
                         </Button>
                       )}
@@ -163,8 +207,8 @@ function DeviceList() {
 
       <Pagination
         totalPages={totalPages}
-        currentPage={currentPage}
-        size={size}
+        currentPage={params.page ?? 0}
+        size={params.size ?? 12}
         totalItems={totalItems}
       />
     </>

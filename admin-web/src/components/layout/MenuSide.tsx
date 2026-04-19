@@ -50,15 +50,19 @@ const menuData: MenuGroup[] = [
       {
         icon: <FiUsers size={20} />,
         label: "Người dùng",
-        path: "/users",
+        key: "1a",
+        children: [
+          { label: "Danh sách người dùng", path: "/users" },
+          { label: "Thêm người dùng", path: "/users/create" },
+        ],
       },
       {
         icon: <TbCategoryPlus size={20} />,
         label: "Chức vụ",
-        key: "3a",
+        key: "2a",
         children: [
           { label: "Danh sách chức vụ", path: "/roles" },
-          { label: "Thêm chức vụ", path: "/role/add-role" },
+          { label: "Thêm chức vụ", path: "/roles/create" },
         ],
       },
     ],
@@ -69,10 +73,10 @@ const menuData: MenuGroup[] = [
       {
         icon: <HiOutlineOfficeBuilding size={20} />,
         label: "Đơn vị",
-        key: "3b",
+        key: "3a",
         children: [
           { label: "Danh sách đơn vị", path: "/units" },
-          { label: "Thêm đơn vị", path: "/unit/add-unit" },
+          { label: "Thêm đơn vị", path: "/units/create" },
         ],
       },
     ],

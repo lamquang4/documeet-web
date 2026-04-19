@@ -5,19 +5,50 @@ import { SiTicktick } from "react-icons/si";
 import Pagination from "../ui/Pagination";
 import FilterDropDownMenu from "../ui/FilterDropDownMenu";
 import InputSearch from "../ui/InputSearch";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import ListHeader from "../ui/list/ListHeader";
 import ListBody from "../ui/list/ListBody";
-import { mockUsers } from "../../mocks/mockUsers";
 import Loading from "../ui/Loading";
 import Image from "../ui/Image";
 import ToolTip from "../ui/ToolTip";
 import { USER_STATUS_OPTIONS } from "../../constant/filterOptions";
 import Button from "../ui/Button";
-import { mockRoles } from "../../mocks/mockRoles";
+import Swal from "sweetalert2";
+import { useGetAllRoles } from "../../hooks/queries/useRoles";
+import {
+  useActivateUser,
+  useDeleteUser,
+  useGetAllUsers,
+  useLockUser,
+  useUnlockUser,
+} from "../../hooks/queries/useUsers";
+import type { GetUsersParams } from "../../apis/userApi";
 
 function UserList() {
-  const roles = mockRoles;
+  const [searchParams] = useSearchParams();
+
+  // Đọc từ URL
+  const params: GetUsersParams = {
+    page: Number(searchParams.get("page") ?? 0),
+    size: Number(searchParams.get("size") ?? 12),
+    keyword: searchParams.get("keyword") ?? undefined,
+    status: searchParams.get("status") ?? undefined,
+    role: searchParams.get("role") ?? undefined,
+  };
+
+  const { data: rolesRes } = useGetAllRoles({ page: 1, size: 12 });
+  const roles = rolesRes?.data.content ?? [];
+
+  const { data: usersRes, isLoading } = useGetAllUsers(params);
+  const totalItems = usersRes?.data.totalElements ?? 0;
+  const totalPages = usersRes?.data.totalPages ?? 0;
+  const users = usersRes?.data.content ?? [];
+
+  const deleteUser = useDeleteUser();
+
+  const lockUser = useLockUser();
+  const unlockUser = useUnlockUser();
+  const activateUser = useActivateUser();
 
   const arrayRoles = [
     { name: "Tất cả", value: null },
@@ -27,22 +58,44 @@ function UserList() {
     })),
   ];
 
-  const users = mockUsers;
-  const isLoading = false;
-  const totalItems = 12;
-  const totalPages = 2;
-  const currentPage = 1;
-  const size = 12;
-
   const handleDelete = async (id: string) => {
-    if (!id) {
-      return;
-    }
+    const result = await Swal.fire({
+      title: `Xác nhận xóa?`,
+      text: `Bạn có chắc muốn xóa người dùng này không?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Đồng ý",
+      cancelButtonText: "Hủy",
+    });
+
+    if (!result.isConfirmed || !id) return;
+
+    deleteUser.mutate(id);
   };
 
   const handleUpdateStatus = async (id: string, status: string) => {
-    if (!id && !status) {
+    if (!id || !status) return;
+
+    if (status === "LOCKED") {
+      const result = await Swal.fire({
+        title: "Khóa người dùng?",
+        text: "Người dùng sẽ không thể đăng nhập",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Khóa",
+        cancelButtonText: "Hủy",
+      });
+
+      if (!result.isConfirmed) return;
+
+      lockUser.mutate(id);
       return;
+    }
+
+    if (status === "ACTIVE") {
+      unlockUser.mutate(id);
+    } else if (status === "DISABLED") {
+      activateUser.mutate(id);
     }
   };
 
@@ -58,7 +111,7 @@ function UserList() {
       <ListHeader
         title="Người dùng"
         totalItems={totalItems}
-        addLink="/user/add-user"
+        addLink="/users/create"
       />
 
       <ListBody>
@@ -66,11 +119,11 @@ function UserList() {
           <InputSearch />
         </div>
 
-        <table className="w-[350%] table-fixed border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
+        <table className="w-[350%] border-collapse sm:w-[220%] xl:w-full text-[0.9rem]">
           <thead>
             <tr className="text-left">
-              <th className="p-[1rem]">Số định danh cá nhân</th>
-              <th className="p-[1rem]">Số điện thoại</th>
+              <th className="p-[1rem]">Số định danh</th>
+              <th className="p-[1rem]">SĐT</th>
               <th className="p-[1rem]">Họ tên</th>
               <th className="p-[1rem]">Đơn vị</th>
               <th className="p-[1rem]  ">
@@ -115,7 +168,7 @@ function UserList() {
                   <td className="p-[1rem]  ">{user.role?.roleName}</td>
 
                   <td className="p-[1rem] font-semibold">
-                    {user.status === "ACTIVE" && "Bình thường"}
+                    {user.status === "ACTIVE" && "Hoạt động"}
                     {user.status === "LOCKED" && "Bị khóa"}
                     {user.status === "DISABLED" && "Vô hiệu hóa"}
                   </td>
@@ -165,7 +218,7 @@ function UserList() {
                         </div>
                       </Button>
 
-                      <Link to={`/user/edit-user/${user.userId}`}>
+                      <Link to={`/users/edit/${user.userId}`}>
                         <div className="relative group">
                           <LiaEdit size={22} className="text-info" />
 
@@ -203,8 +256,8 @@ function UserList() {
 
       <Pagination
         totalPages={totalPages}
-        currentPage={currentPage}
-        size={size}
+        currentPage={params.page ?? 0}
+        size={params.size ?? 12}
         totalItems={totalItems}
       />
     </>

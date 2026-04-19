@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, memo } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import Input from "./Input";
 
 type Option = {
   value: string;
@@ -13,6 +14,9 @@ type Props = {
   options: Option[];
   setKeyword: (val: string) => void;
   isLoading: boolean;
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
 };
 
 function SearchableSelect({
@@ -22,23 +26,20 @@ function SearchableSelect({
   options,
   setKeyword,
   isLoading,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
 }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
 
   const selectedOption = options.find((opt) => opt.value === value);
-
   const containerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
-  // xử lý setKeyword tìm kiếm gửi backend
   useEffect(() => {
     if (!open) return;
-
-    const debounce = setTimeout(() => {
-      setKeyword(search);
-    }, 300);
-
-    return () => clearTimeout(debounce);
+    setKeyword(search);
   }, [search, open, setKeyword]);
 
   // đóng menu khi bấm ngoài
@@ -51,10 +52,20 @@ function SearchableSelect({
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // kéo xuống cuối
+  const handleScroll = () => {
+    if (!listRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+
+    if (isAtBottom && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage?.();
+    }
+  };
 
   return (
     <div className="relative w-full cursor-pointer" ref={containerRef}>
@@ -72,32 +83,42 @@ function SearchableSelect({
       {open && (
         <div className="absolute z-10 w-full bg-white border border-gray-300 shadow-md max-h-60 overflow-y-auto">
           <div>
-            <input
+            <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="border-b border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none"
               placeholder="Tìm kiếm..."
             />
 
-            {isLoading && <p className="p-[6px_10px]">Đang tìm...</p>}
+            <div
+              ref={listRef}
+              onScroll={handleScroll}
+              className="max-h-60 overflow-y-auto"
+            >
+              {isLoading && <p className="p-[6px_10px]">Đang tải...</p>}
 
-            {!isLoading && options.length === 0 && (
-              <p className="p-[6px_10px]">Không tìm thấy</p>
-            )}
+              {!isLoading && options.length === 0 && (
+                <p className="p-[6px_10px]">Không tìm thấy</p>
+              )}
 
-            {!isLoading &&
-              options.map((opt) => (
-                <div
-                  key={opt.value}
-                  onClick={() => {
-                    onChange(opt.value);
-                    setOpen(false);
-                  }}
-                  className="p-[6px_10px] text-[0.9rem] hover:bg-gray-100 cursor-pointer"
-                >
-                  {opt.label}
-                </div>
-              ))}
+              {!isLoading &&
+                options.map((opt) => (
+                  <div
+                    key={opt.value}
+                    onClick={() => {
+                      onChange(opt.value);
+                      setOpen(false);
+                    }}
+                    className="p-[6px_10px] text-[0.9rem] hover:bg-gray-100 cursor-pointer"
+                  >
+                    {opt.label}
+                  </div>
+                ))}
+
+              {isFetchingNextPage && (
+                <p className="p-[6px_10px]">Đang tải thêm...</p>
+              )}
+            </div>
           </div>
         </div>
       )}

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, memo } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import Input from "./Input";
 
 type Option = {
   value: string;
@@ -13,6 +14,9 @@ type Props = {
   options: Option[];
   setKeyword: (val: string) => void;
   isLoading: boolean;
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
 };
 
 function MultiSearchableSelect({
@@ -22,24 +26,22 @@ function MultiSearchableSelect({
   options,
   setKeyword,
   isLoading,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
-  // Tìm kiếm
   useEffect(() => {
     if (!open) return;
-
-    const debounce = setTimeout(() => {
-      setKeyword(search);
-    }, 300);
-
-    return () => clearTimeout(debounce);
+    setKeyword(search);
   }, [search, open, setKeyword]);
 
-  // click bên ngoài
+  // click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -55,15 +57,24 @@ function MultiSearchableSelect({
   }, []);
 
   const handleSelect = (val: string) => {
-    if (value.includes(val)) {
-      onChange(value.filter((v) => v !== val));
-    } else {
-      onChange([...value, val]);
-    }
+    onChange(
+      value.includes(val) ? value.filter((v) => v !== val) : [...value, val],
+    );
   };
 
   const selectedOptions = options.filter((opt) => value.includes(opt.value));
 
+  const handleScroll = () => {
+    if (!listRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+
+    const isBottom = scrollTop + clientHeight >= scrollHeight - 10;
+
+    if (isBottom && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage?.();
+    }
+  };
   return (
     <div className="cursor-pointer relative w-full" ref={containerRef}>
       <div
@@ -98,34 +109,44 @@ function MultiSearchableSelect({
 
       {open && (
         <div className="absolute z-10 w-full bg-white border border-gray-300 shadow-md rounded max-h-60 overflow-y-auto">
-          <input
+          <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border-b border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none"
             placeholder="Tìm kiếm..."
           />
 
-          {isLoading && <p className="p-[6px_10px]">Đang tìm...</p>}
+          <div
+            ref={listRef}
+            onScroll={handleScroll}
+            className="max-h-60 overflow-y-auto"
+          >
+            {isLoading && <p className="p-2">Đang tải...</p>}
 
-          {!isLoading && options.length === 0 && (
-            <p className="p-[6px_10px]">Không tìm thấy</p>
-          )}
+            {!isLoading && options.length === 0 && (
+              <p className="p-[6px_10px]">Không tìm thấy</p>
+            )}
 
-          {!isLoading &&
-            options.map((opt) => {
-              const isSelected = value.includes(opt.value);
-
-              return (
+            {!isLoading &&
+              options.map((opt) => (
                 <div
                   key={opt.value}
                   onClick={() => handleSelect(opt.value)}
-                  className="flex items-center gap-2 p-[6px_10px] text-[0.9rem] hover:bg-gray-100 cursor-pointer"
+                  className="p-[6px_10px] text-[0.9rem] hover:bg-gray-100 cursor-pointer flex gap-2"
                 >
-                  <input type="checkbox" checked={isSelected} readOnly />
-                  <span>{opt.label}</span>
+                  <Input
+                    type="checkbox"
+                    checked={value.includes(opt.value)}
+                    readOnly
+                  />
+                  {opt.label}
                 </div>
-              );
-            })}
+              ))}
+
+            {isFetchingNextPage && (
+              <p className="p-[6px_10px]">Đang tải thêm...</p>
+            )}
+          </div>
         </div>
       )}
     </div>
