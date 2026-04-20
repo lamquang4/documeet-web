@@ -21,6 +21,7 @@ import {
   useWipeDevice,
 } from "../../hooks/queries/useDevices";
 import type { GetDevicesParams } from "../../apis/deviceApi";
+import Swal from "sweetalert2";
 function DeviceList() {
   const [searchParams] = useSearchParams();
 
@@ -45,20 +46,43 @@ function DeviceList() {
   const wipeDevice = useWipeDevice();
   const activateDevice = useActivateDevice();
 
-  const handleUpdateStatus = (id: string, status: string) => {
-    if (!id) return;
+  const handleUpdateStatus = async (
+    id: string,
+    status: "ACTIVE" | "REVOKED" | "WIPED",
+  ) => {
+    if (!id || !status) return;
 
-    if (status === "REVOKE") {
-      revokeDevice.mutate(id);
-    }
+    const statusConfig: Record<string, { title: string; text: string }> = {
+      REVOKED: {
+        title: "Xác nhận thu hồi thiết bị?",
+        text: "Thiết bị sẽ bị thu hồi và không thể đăng nhập cho đến khi được kích hoạt lại.",
+      },
+      WIPED: {
+        title: "Xác nhận xóa từ xa thiết bị?",
+        text: "Toàn bộ dữ liệu trên thiết bị sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.",
+      },
+      ACTIVE: {
+        title: "Xác nhận kích hoạt lại thiết bị?",
+        text: "Thiết bị sẽ được kích hoạt và có thể đăng nhập trở lại.",
+      },
+    };
 
-    if (status === "WIPE") {
-      wipeDevice.mutate(id);
-    }
+    const config = statusConfig[status];
 
-    if (status === "ACTIVE") {
-      activateDevice.mutate(id);
-    }
+    const result = await Swal.fire({
+      title: config.title,
+      text: config.text,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Đồng ý",
+      cancelButtonText: "Hủy",
+    });
+
+    if (!result.isConfirmed) return;
+
+    if (status === "REVOKED") revokeDevice.mutate(id);
+    if (status === "WIPED") wipeDevice.mutate(id);
+    if (status === "ACTIVE") activateDevice.mutate(id);
   };
 
   return (

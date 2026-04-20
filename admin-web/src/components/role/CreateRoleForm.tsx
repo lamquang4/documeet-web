@@ -4,6 +4,7 @@ import Button from "../ui/Button";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
 import { useCreateRole } from "../../hooks/queries/useRoles";
+import toast from "react-hot-toast";
 
 function CreateRoleForm() {
   const [data, setData] = useState({
@@ -24,22 +25,35 @@ function CreateRoleForm() {
 
     setData({
       ...data,
-      [name]: name === "roleCode" ? value.toUpperCase() : value,
+      [name]: name === "roleCode" ? value.toUpperCase().trim() : value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    createRole.mutate(data, {
-      onSuccess: () => {
-        setData({
-          roleCode: "",
-          roleName: "",
-          description: "",
-        });
+    if (!data.roleCode.trim()) {
+      toast.error("Mã chức vụ không được để trống");
+      return;
+    }
+
+    if (!data.roleName.trim()) {
+      toast.error("Tên chức vụ không được để trống");
+      return;
+    }
+
+    createRole.mutate(
+      {
+        roleCode: data.roleCode.trim(),
+        roleName: data.roleName.trim(),
+        description: data.description.trim(),
       },
-    });
+      {
+        onSuccess: () => {
+          setData({ roleCode: "", roleName: "", description: "" });
+        },
+      },
+    );
   };
 
   return (

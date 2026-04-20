@@ -1,8 +1,8 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { validateEmail } from "../../utils/validateEmail";
-import { validatePhone } from "../../utils/validatePhone";
+import { validateEmail } from "../../utils/validation/validateEmail";
+import { validatePhone } from "../../utils/validation/validatePhone";
 import SearchableSelect from "../ui/SearchableSelect";
 import Button from "../ui/Button";
 import Select from "../ui/Select";
@@ -10,7 +10,7 @@ import Label from "../ui/Label";
 import Input from "../ui/Input";
 import { useGetAllRoles } from "../../hooks/queries/useRoles";
 import { useCreateUser } from "../../hooks/queries/useUsers";
-import { validatePassword } from "../../utils/validatePassword";
+import { validatePassword } from "../../utils/validation/validatePassword";
 import { useGetSelectedUnitForUser } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
 
@@ -60,6 +60,41 @@ function CreateUserForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!data.governmentId.trim()) {
+      toast.error("Số định danh cá nhân không được để trống");
+      return;
+    }
+
+    if (!data.fullName.trim()) {
+      toast.error("Họ tên không được để trống");
+      return;
+    }
+
+    if (!data.email.trim()) {
+      toast.error("Email không được để trống");
+      return;
+    }
+
+    if (!data.phoneNumber.trim()) {
+      toast.error("Số điện thoại không được để trống");
+      return;
+    }
+
+    if (!data.unitId) {
+      toast.error("Vui lòng chọn đơn vị");
+      return;
+    }
+
+    if (!data.roleId) {
+      toast.error("Vui lòng chọn chức vụ");
+      return;
+    }
+
+    if (!data.passwordHash) {
+      toast.error("Mật khẩu không được để trống");
+      return;
+    }
+
     if (!validateEmail(data.email)) {
       toast.error("Email không hợp lệ");
       return;
@@ -82,20 +117,29 @@ function CreateUserForm() {
       return;
     }
 
-    createUser.mutate(data, {
-      onSuccess: () => {
-        setData({
-          fullName: "",
-          governmentId: "",
-          email: "",
-          phoneNumber: "",
-          unitId: "",
-          roleId: "",
-          passwordHash: "",
-          repasswordHash: "",
-        });
+    createUser.mutate(
+      {
+        ...data,
+        fullName: data.fullName.trim(),
+        governmentId: data.governmentId.trim(),
+        email: data.email.trim(),
+        phoneNumber: data.phoneNumber.trim(),
       },
-    });
+      {
+        onSuccess: () => {
+          setData({
+            fullName: "",
+            governmentId: "",
+            email: "",
+            phoneNumber: "",
+            unitId: "",
+            roleId: "",
+            passwordHash: "",
+            repasswordHash: "",
+          });
+        },
+      },
+    );
   };
 
   return (

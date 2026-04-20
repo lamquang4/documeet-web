@@ -73,37 +73,57 @@ function UserList() {
     deleteUser.mutate(id);
   };
 
-  const handleUpdateStatus = async (id: string, status: string) => {
+  const handleUpdateStatus = async (
+    id: string,
+    status: "ACTIVE" | "LOCKED" | "DISABLED",
+  ) => {
     if (!id || !status) return;
 
-    if (status === "LOCKED") {
-      const result = await Swal.fire({
-        title: "Khóa người dùng?",
-        text: "Người dùng sẽ không thể đăng nhập",
-        icon: "warning",
-        showCancelButton: true,
+    const statusConfig: Record<
+      string,
+      { title: string; text: string; confirmButtonText: string }
+    > = {
+      LOCKED: {
+        title: "Xác nhận khóa người dùng?",
+        text: "Người dùng sẽ không thể đăng nhập cho đến khi được mở khóa.",
         confirmButtonText: "Khóa",
-        cancelButtonText: "Hủy",
-      });
+      },
+      ACTIVE: {
+        title: "Xác nhận mở khóa người dùng?",
+        text: "Người dùng sẽ có thể đăng nhập trở lại.",
+        confirmButtonText: "Mở khóa",
+      },
+      DISABLED: {
+        title: "Xác nhận duyệt tài khoản?",
+        text: "Tài khoản sẽ được kích hoạt và người dùng có thể đăng nhập.",
+        confirmButtonText: "Duyệt",
+      },
+    };
 
-      if (!result.isConfirmed) return;
+    const config = statusConfig[status];
+    if (!config) return;
 
-      lockUser.mutate(id);
-      return;
-    }
+    const result = await Swal.fire({
+      title: config.title,
+      text: config.text,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: config.confirmButtonText,
+      cancelButtonText: "Hủy",
+    });
 
-    if (status === "ACTIVE") {
-      unlockUser.mutate(id);
-    } else if (status === "DISABLED") {
-      activateUser.mutate(id);
-    }
+    if (!result.isConfirmed) return;
+
+    if (status === "LOCKED") lockUser.mutate(id);
+    if (status === "ACTIVE") unlockUser.mutate(id);
+    if (status === "DISABLED") activateUser.mutate(id);
   };
 
-  const getNextStatus = (status: string) => {
+  const getNextStatus = (status: string): "ACTIVE" | "LOCKED" | "DISABLED" => {
     if (status === "DISABLED") return "ACTIVE";
     if (status === "ACTIVE") return "LOCKED";
     if (status === "LOCKED") return "ACTIVE";
-    return status;
+    return "ACTIVE";
   };
 
   return (

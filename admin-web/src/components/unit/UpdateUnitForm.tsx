@@ -76,12 +76,22 @@ function UpdateUnitForm() {
     const { name, value } = e.target;
     setData({
       ...data,
-      [name]: value,
+      [name]: name === "unitCode" ? value.toUpperCase().trim() : value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!data.unitCode.trim()) {
+      toast.error("Mã đơn vị không được để trống");
+      return;
+    }
+
+    if (!data.unitName.trim()) {
+      toast.error("Tên đơn vị không được để trống");
+      return;
+    }
 
     const addedUserIds = data.userIds.filter(
       (uid) => !originalUserIds.includes(uid),
@@ -98,12 +108,12 @@ function UpdateUnitForm() {
       );
     }
 
-    // Cập nhật unit — chỉ gửi user mới thêm
+    // Cập nhật unit — với userIds là những user mới thêm vào đơn vị
     updateUnit.mutate({
       id: id ?? "",
       data: {
-        unitCode: data.unitCode,
-        unitName: data.unitName,
+        unitCode: data.unitCode.trim(),
+        unitName: data.unitName.trim(),
         status: data.status as "ACTIVE" | "INACTIVE",
         userIds: addedUserIds,
       },

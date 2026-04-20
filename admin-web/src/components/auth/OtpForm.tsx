@@ -6,6 +6,10 @@ import { useVerifyOtp } from "../../hooks/queries/useOtp";
 import { cookieUtil } from "../../utils/cookieUtil";
 import Input from "../ui/Input";
 import toast from "react-hot-toast";
+import {
+  validateOtp,
+  validateOtpDigit,
+} from "../../utils/validation/validationOtp";
 
 const OTP_LENGTH = 6;
 const OTP_EXPIRE_SECONDS = 5 * 60; // 5 phút
@@ -20,12 +24,22 @@ function OtpForm() {
 
   // Đếm ngược
   useEffect(() => {
-    if (timeLeft <= 0) return;
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
+
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, []);
+
+  useEffect(() => {
+    inputRefs.current[0]?.focus();
+  }, []);
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60)
@@ -36,7 +50,7 @@ function OtpForm() {
   };
 
   const handleChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return; // chỉ nhận số
+    if (!validateOtpDigit(value)) return; // chỉ nhận số
 
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1); // chỉ lấy 1 ký tự
@@ -49,29 +63,40 @@ function OtpForm() {
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    // Backspace → focus ô trước
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+    if (e.key === "Backspace") {
+      if (!otp[index] && index > 0) {
+        const newOtp = [...otp];
+        newOtp[index - 1] = "";
+        setOtp(newOtp);
+        inputRefs.current[index - 1]?.focus();
+      }
     }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").slice(0, OTP_LENGTH);
-    if (!/^\d+$/.test(pasted)) return;
 
-    const newOtp = [...otp];
-    pasted.split("").forEach((char, i) => {
-      newOtp[i] = char;
-    });
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, OTP_LENGTH);
+
+    if (!validateOtp(pasted, OTP_LENGTH)) return;
+
+    const newOtp = pasted.split("");
     setOtp(newOtp);
-    inputRefs.current[Math.min(pasted.length, OTP_LENGTH - 1)]?.focus();
+
+    inputRefs.current[OTP_LENGTH - 1]?.focus();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const otpValue = otp.join("");
-    if (otpValue.length < OTP_LENGTH) return;
+
+    if (!validateOtp(otpValue, OTP_LENGTH)) {
+      toast.error("OTP không hợp lệ");
+      return;
+    }
 
     verifyOtp.mutate({
       mfaToken: cookieUtil.get("mfaToken") ?? "",
@@ -98,6 +123,7 @@ function OtpForm() {
                 }}
                 type="text"
                 inputMode="numeric"
+                pattern="\d*"
                 maxLength={1}
                 value={otp[index]}
                 required
@@ -136,7 +162,9 @@ function OtpForm() {
 
           <Button
             disabled={
-              isLoading || otp.join("").length < OTP_LENGTH || timeLeft <= 0
+              isLoading ||
+              !validateOtp(otp.join(""), OTP_LENGTH) ||
+              timeLeft <= 0
             }
             type="submit"
             className="w-full bg-success text-[0.9rem] text-white focus:outline-none font-semibold rounded-sm px-5 py-2.5 text-center"

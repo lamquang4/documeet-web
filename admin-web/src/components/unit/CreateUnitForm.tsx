@@ -7,6 +7,7 @@ import Input from "../ui/Input";
 import { useCreateUnit } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUserForUnit } from "../../hooks/queries/useUsers";
+import toast from "react-hot-toast";
 
 function CreateUnitForm() {
   const [data, setData] = useState({
@@ -43,23 +44,34 @@ function CreateUnitForm() {
     const { name, value } = e.target;
     setData({
       ...data,
-      [name]: value,
+      [name]: name === "unitCode" ? value.toUpperCase().trim() : value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!data.unitCode.trim()) {
+      toast.error("Mã đơn vị không được để trống");
+      return;
+    }
 
-    createUnit.mutate(data, {
-      onSuccess: () => {
-        setData({
-          unitCode: "",
-          unitName: "",
-          status: "",
-          userIds: [],
-        });
+    if (!data.unitName.trim()) {
+      toast.error("Tên đơn vị không được để trống");
+      return;
+    }
+
+    createUnit.mutate(
+      {
+        unitCode: data.unitCode.trim(),
+        unitName: data.unitName.trim(),
+        userIds: data.userIds,
       },
-    });
+      {
+        onSuccess: () => {
+          setData({ unitCode: "", unitName: "", status: "", userIds: [] });
+        },
+      },
+    );
   };
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-auto">

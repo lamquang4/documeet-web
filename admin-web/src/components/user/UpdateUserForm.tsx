@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { validateEmail } from "../../utils/validateEmail";
-import { validatePhone } from "../../utils/validatePhone";
+import { validateEmail } from "../../utils/validation/validateEmail";
+import { validatePhone } from "../../utils/validation/validatePhone";
 import SearchableSelect from "../ui/SearchableSelect";
 import Button from "../ui/Button";
 import Select from "../ui/Select";
@@ -10,7 +10,7 @@ import Label from "../ui/Label";
 import Input from "../ui/Input";
 import { useGetUserById, useUpdateUser } from "../../hooks/queries/useUsers";
 import { useGetAllRoles } from "../../hooks/queries/useRoles";
-import { validatePassword } from "../../utils/validatePassword";
+import { validatePassword } from "../../utils/validation/validatePassword";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUnitForUser } from "../../hooks/queries/useUnits";
 
@@ -87,6 +87,42 @@ function UpdateUserForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!data.governmentId.trim()) {
+      toast.error("Số định danh cá nhân không được để trống");
+      return;
+    }
+
+    if (!data.fullName.trim()) {
+      toast.error("Họ tên không được để trống");
+      return;
+    }
+
+    if (!data.email.trim()) {
+      toast.error("Email không được để trống");
+      return;
+    }
+
+    if (!data.phoneNumber.trim()) {
+      toast.error("Số điện thoại không hợp lệ");
+      return;
+    }
+
+    if (!data.unitId) {
+      toast.error("Vui lòng chọn đơn vị");
+      return;
+    }
+
+    if (!data.roleId) {
+      toast.error("Vui lòng chọn chức vụ");
+      return;
+    }
+
+    if (!data.status) {
+      toast.error("Vui lòng chọn tình trạng");
+      return;
+    }
+
     if (!validateEmail(data.email)) {
       toast.error("Email không hợp lệ");
       return;
@@ -97,7 +133,7 @@ function UpdateUserForm() {
       return;
     }
 
-    if (!validatePassword(data.passwordHash)) {
+    if (data.passwordHash && !validatePassword(data.passwordHash)) {
       toast.error(
         "Mật khẩu phải chứa ít nhất một chữ cái in hoa, một chữ cái thường, một chữ số và một ký tự đặc biệt",
       );
@@ -107,14 +143,14 @@ function UpdateUserForm() {
     updateUser.mutate({
       id: id ?? "",
       data: {
-        fullName: data.fullName,
-        governmentId: data.governmentId,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
+        fullName: data.fullName.trim(),
+        governmentId: data.governmentId.trim(),
+        email: data.email.trim(),
+        phoneNumber: data.phoneNumber.trim(),
         unitId: data.unitId,
         roleId: data.roleId,
         status: data.status as "ACTIVE" | "LOCKED" | "DISABLED",
-        passwordHash: data.passwordHash || undefined,
+        passwordHash: data.passwordHash,
       },
     });
 

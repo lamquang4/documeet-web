@@ -54,8 +54,35 @@ function UnitList() {
     deleteUnit.mutate(id);
   };
 
-  const handleUpdateStatus = async (id: string, status: string) => {
+  const handleUpdateStatus = async (
+    id: string,
+    status: "ACTIVE" | "INACTIVE",
+  ) => {
     if (!id || !status) return;
+
+    const statusConfig: Record<string, { title: string; text: string }> = {
+      ACTIVE: {
+        title: "Xác nhận kích hoạt đơn vị?",
+        text: "Đơn vị sẽ được kích hoạt và hoạt động trở lại.",
+      },
+      INACTIVE: {
+        title: "Xác nhận vô hiệu hóa đơn vị?",
+        text: "Đơn vị sẽ bị vô hiệu hóa và tạm ngừng hoạt động.",
+      },
+    };
+
+    const config = statusConfig[status];
+
+    const result = await Swal.fire({
+      title: config.title,
+      text: config.text,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Đồng ý",
+      cancelButtonText: "Hủy",
+    });
+
+    if (!result.isConfirmed) return;
 
     updateStatus.mutate({
       unitId: id,
@@ -132,8 +159,8 @@ function UnitList() {
                           <ToolTip
                             text={
                               unit.status === "ACTIVE"
-                                ? "Cập nhật thành không hoạt động"
-                                : "Cập nhật thành hoạt động"
+                                ? "Vô hiệu hóa đơn vị"
+                                : "kích hoạt đơn vị"
                             }
                           />
                         </div>

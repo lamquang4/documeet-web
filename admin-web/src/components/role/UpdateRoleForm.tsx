@@ -47,14 +47,31 @@ function UpdateRoleForm() {
 
     setData({
       ...data,
-      [name]: name === "roleCode" ? value.toUpperCase() : value,
+      [name]: name === "roleCode" ? value.toUpperCase().trim() : value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    updateRole.mutate({ id: id ?? "", data: data });
+    if (!data.roleCode.trim()) {
+      toast.error("Mã chức vụ không được để trống");
+      return;
+    }
+
+    if (!data.roleName.trim()) {
+      toast.error("Tên chức vụ không được để trống");
+      return;
+    }
+
+    updateRole.mutate({
+      id: id ?? "",
+      data: {
+        roleCode: data.roleCode.trim(),
+        roleName: data.roleName.trim(),
+        description: data.description.trim(),
+      },
+    });
   };
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-full">

@@ -7,6 +7,7 @@ import { useLogin } from "../../hooks/queries/useAuth";
 import toast from "react-hot-toast";
 import Overplay from "../ui/Overplay";
 import Loading from "../ui/Loading";
+import { getDeviceId } from "../../utils/deviceUtil";
 type Props = {
   onRequireMfa: () => void;
 };
@@ -32,17 +33,22 @@ function LoginForm({ onRequireMfa }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const deviceIMEI = localStorage.getItem("secure_device_imei") ?? "";
-
-    if (!deviceIMEI) {
-      toast.error("Thiết bị không tìm thấy");
+    if (!data.governmentId.trim()) {
+      toast.error("Số định danh cá nhân không được để trống");
       return;
     }
 
+    if (!data.password.trim()) {
+      toast.error("Mật khẩu không được để trống");
+      return;
+    }
+
+    const deviceIMEI = await getDeviceId();
+
     login.mutate(
       {
-        governmentId: data.governmentId,
-        password: data.password,
+        governmentId: data.governmentId.trim(),
+        password: data.password.trim(),
         deviceId: deviceIMEI,
       },
       {
