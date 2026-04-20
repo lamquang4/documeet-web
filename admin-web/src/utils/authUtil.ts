@@ -1,6 +1,6 @@
 import { cookieUtil } from "./cookieUtil";
 
-export const clearAuth = () => {
+export const clearAuthStorage = () => {
   cookieUtil.remove("accessToken");
   cookieUtil.remove("refreshToken");
   cookieUtil.remove("mfaToken");

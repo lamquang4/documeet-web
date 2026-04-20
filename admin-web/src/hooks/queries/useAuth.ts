@@ -9,7 +9,7 @@ import type {
 } from "../../types/type";
 import { authApi } from "../../apis/authApi";
 import { cookieUtil } from "../../utils/cookieUtil";
-import { clearAuth } from "../../utils/authUtil";
+import { clearAuthStorage } from "../../utils/authUtil";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -91,13 +91,13 @@ export const useLogout = () => {
     },
 
     onSuccess: () => {
-      clearAuth();
+      clearAuthStorage();
       queryClient.clear();
       window.location.href = "/";
     },
 
     onError: () => {
-      clearAuth();
+      clearAuthStorage();
       queryClient.clear();
       window.location.href = "/";
     },

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const DEVICE_IMEI_KEY = "device_imei";
 
-// visitorId từ FingerprintJS dựa trên Canvas fingerprint, WebGL, Timezone, CPU cores...
+// visitorId từ FingerprintJS dựa trên Canvas/WebGL/Fonts, Hardware/Timezone, Số core CPU...
 // uuidv4 random
 // từ 2 cái này tạo ra deviceIMEI cho web
 export const getDeviceIMEI = async (): Promise<string> => {

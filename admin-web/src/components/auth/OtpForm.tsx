@@ -16,7 +16,7 @@ const OTP_EXPIRE_SECONDS = 5 * 60; // 5 phút
 
 function OtpForm() {
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
-  const [timeLeft, setTimeLeft] = useState(OTP_EXPIRE_SECONDS);
+  const [timeLeft, setTimeLeft] = useState<number>(OTP_EXPIRE_SECONDS);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const verifyOtp = useVerifyOtp();
