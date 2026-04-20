@@ -6,7 +6,7 @@ import { clearAuth } from "../utils/authUtil";
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
   timeout: 10000,
-  withCredentials: true,
+  withCredentials: false,
 });
 
 axiosInstance.interceptors.request.use((config) => {
