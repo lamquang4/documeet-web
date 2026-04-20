@@ -7,7 +7,7 @@ import { useLogin } from "../../hooks/queries/useAuth";
 import toast from "react-hot-toast";
 import Overplay from "../ui/Overplay";
 import Loading from "../ui/Loading";
-import { getDeviceId } from "../../utils/deviceUtil";
+import { getDeviceIMEI } from "../../utils/deviceUtil";
 type Props = {
   onRequireMfa: () => void;
 };
@@ -43,13 +43,13 @@ function LoginForm({ onRequireMfa }: Props) {
       return;
     }
 
-    const deviceIMEI = await getDeviceId();
+    const deviceIMEI = await getDeviceIMEI();
 
     login.mutate(
       {
         governmentId: data.governmentId.trim(),
         password: data.password.trim(),
-        deviceId: deviceIMEI,
+        deviceIMEI: deviceIMEI,
       },
       {
         onSuccess: () => {

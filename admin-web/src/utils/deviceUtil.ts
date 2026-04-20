@@ -1,12 +1,12 @@
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { v4 as uuidv4 } from "uuid";
 
-const DEVICE_IMEI_KEY = "secure_device_imei";
+const DEVICE_IMEI_KEY = "device_imei";
 
 // visitorId từ FingerprintJS dựa trên Canvas fingerprint, WebGL, Timezone, CPU cores...
 // uuidv4 random
-// từ 2 cái này tạo ra deviceId
-export const getDeviceId = async (): Promise<string> => {
+// từ 2 cái này tạo ra deviceIMEI cho web
+export const getDeviceIMEI = async (): Promise<string> => {
   const existing = localStorage.getItem(DEVICE_IMEI_KEY);
   if (existing) return existing;
 

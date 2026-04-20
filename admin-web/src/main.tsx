@@ -2,9 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import { getDeviceId } from "./utils/deviceUtil.ts";
+import { getDeviceIMEI } from "./utils/deviceUtil.ts";
 
-getDeviceId().then(() => {
+getDeviceIMEI().then(() => {
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <App />

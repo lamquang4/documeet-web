@@ -2,7 +2,7 @@
 export interface LoginRequest {
   governmentId: string; // cccd
   password: string;
-  deviceId: string;
+  deviceIMEI: string;
 }
 
 export interface LogoutRequest {
