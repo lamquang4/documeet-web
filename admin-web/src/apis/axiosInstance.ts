@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
         if (newToken) {
           cookieUtil.set("accessToken", newToken, {
             secure: true,
-            sameSite: "Strict",
+            sameSite: "None",
           });
         }
 

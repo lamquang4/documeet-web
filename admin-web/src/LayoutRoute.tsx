@@ -69,7 +69,7 @@ function LayoutRoute() {
         }
       />
       <Route
-        path="/roles/add"
+        path="/roles/create"
         element={
           <PrivateRoute>
             <CreateRolePage />
