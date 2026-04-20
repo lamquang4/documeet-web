@@ -102,7 +102,7 @@ function LoginForm({ onRequireMfa }: Props) {
 
               <Button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral"
                 onClick={toggleShowPassword}
               >
                 {!showPassword ? (
