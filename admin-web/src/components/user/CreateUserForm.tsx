@@ -308,6 +308,3 @@ function CreateUserForm() {
 }
 
 export default CreateUserForm;
-function validateFullName(fullName: string) {
-  throw new Error("Function not implemented.");
-}
