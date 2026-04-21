@@ -44,7 +44,7 @@ function LayoutRoute() {
         }
       />
       <Route
-        path="/users/add"
+        path="/users/create"
         element={
           <PrivateRoute>
             <CreateUserPage />
