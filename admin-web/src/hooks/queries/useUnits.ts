@@ -22,25 +22,20 @@ import type { AxiosError } from "axios";
 export const unitKeys = {
   all: ["units"] as const,
 
-  lists: (params?: GetUnitsParams) =>
+  lists: () => [...unitKeys.all, "list"] as const,
+  listParams: (params?: GetUnitsParams) =>
     [
-      ...unitKeys.all,
-      "list",
-      params?.page,
-      params?.size,
-      params?.keyword,
+      ...unitKeys.lists(),
+      params?.page ?? 0,
+      params?.size ?? 10,
+      params?.keyword ?? "",
     ] as const,
 
   detail: (id: string) => [...unitKeys.all, "detail", id] as const,
 
-  selectedForUser: (params?: GetUnitsParams) =>
-    [
-      ...unitKeys.all,
-      "selected-for-user",
-      params?.page,
-      params?.size,
-      params?.keyword,
-    ] as const,
+  selectedForUsers: () => [...unitKeys.all, "selected-for-user"] as const,
+  selectedForUserParams: (keyword: string) =>
+    [...unitKeys.selectedForUsers(), keyword] as const,
 };
 
 export const useGetAllUnits = (params?: GetUnitsParams) => {
@@ -48,7 +43,7 @@ export const useGetAllUnits = (params?: GetUnitsParams) => {
     ApiResponse<PageResponse<UnitResponse>>,
     AxiosError<ErrorResponse>
   >({
-    queryKey: unitKeys.lists(params),
+    queryKey: unitKeys.listParams(params),
     queryFn: () => unitApi.getAll(params),
     placeholderData: (prev) => prev,
   });
@@ -62,19 +57,19 @@ export const useGetUnitById = (id: string) => {
   });
 };
 
-export const useGetSelectedUnitForUser = (keyword: string) => {
+export const useGetSelectedUnitForUser = (keyword: string = "") => {
   return useInfiniteQuery<
     ApiResponse<PageResponse<SelectedUnitForUserResponse>>,
     Error,
     SelectedUnitForUserResponse[],
-    string[],
+    ReturnType<typeof unitKeys.selectedForUserParams>,
     number
   >({
-    queryKey: ["units-select", keyword],
+    queryKey: unitKeys.selectedForUserParams(keyword),
 
     queryFn: ({ pageParam = 0 }) =>
       unitApi.getSelectedUnitForUser({
-        page: pageParam,
+        page: pageParam as number,
         size: 10,
         keyword,
       }),
@@ -82,8 +77,8 @@ export const useGetSelectedUnitForUser = (keyword: string) => {
     initialPageParam: 0,
 
     getNextPageParam: (lastPage) => {
-      const { page, totalPages } = lastPage.data;
-
+      const page = lastPage?.data?.page ?? 0;
+      const totalPages = lastPage?.data?.totalPages ?? 0;
       return page < totalPages - 1 ? page + 1 : undefined;
     },
 
@@ -102,7 +97,8 @@ export const useCreateUnit = () => {
     mutationFn: (data) => unitApi.create(data),
 
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: unitKeys.all });
+      queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: unitKeys.selectedForUsers() });
       toast.success(res.message);
     },
 
@@ -123,10 +119,16 @@ export const useUpdateUnit = () => {
     mutationFn: ({ id, data }) => unitApi.update(id, data),
 
     onSuccess: (res, variables) => {
-      queryClient.setQueryData(unitKeys.detail(variables.id), res);
+      queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: unitKeys.selectedForUsers() });
 
-      queryClient.invalidateQueries({ queryKey: unitKeys.all });
-
+      if (res.data) {
+        queryClient.setQueryData(unitKeys.detail(variables.id), res);
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: unitKeys.detail(variables.id),
+        });
+      }
       toast.success(res.message);
     },
 
@@ -146,14 +148,23 @@ export const useUpdateUnitStatus = () => {
   >({
     mutationFn: ({ unitId, data }) => unitApi.updateStatus(unitId, data),
 
-    onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: unitKeys.all });
-      toast.success(res.message);
+    onSuccess: (res, variables) => {
+      queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
+
+      if (res.data) {
+        queryClient.setQueryData(unitKeys.detail(variables.unitId), res);
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: unitKeys.detail(variables.unitId),
+        });
+      }
+
+      toast.success(res.message || "Cập nhật trạng thái thành công");
     },
 
     onError: (error) => {
       toast.error(
-        error.response?.data?.message ?? "Cập nhật trạng thái thất bại",
+        error.response?.data?.message || "Cập nhật trạng thái thất bại",
       );
     },
   });
@@ -170,7 +181,7 @@ export const useRemoveUserFromUnit = () => {
     mutationFn: ({ userId }) => unitApi.removeUserFromUnit(userId),
 
     onSuccess: (res, variables) => {
-      queryClient.invalidateQueries({ queryKey: unitKeys.all });
+      queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
 
       queryClient.invalidateQueries({
         queryKey: unitKeys.detail(variables.unitId),
@@ -194,7 +205,8 @@ export const useDeleteUnit = () => {
     mutationFn: (id) => unitApi.remove(id),
 
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: unitKeys.all });
+      queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: unitKeys.selectedForUsers() });
       toast.success(res.message);
     },
 

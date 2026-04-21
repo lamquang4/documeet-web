@@ -34,6 +34,11 @@ export const useVerifyOtp = () => {
         expires: COOKIE_EXPIRES.session,
       });
 
+      cookieUtil.set("refreshToken", res.data.refreshToken, {
+        ...COOKIE_OPTIONS,
+        expires: COOKIE_EXPIRES.refresh,
+      });
+
       if (res.data?.user) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }

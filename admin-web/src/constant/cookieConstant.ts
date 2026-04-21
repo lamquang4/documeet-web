@@ -5,5 +5,6 @@ export const COOKIE_OPTIONS = {
 
 export const COOKIE_EXPIRES = {
   session: 7, // 7 ngày
-  mfa: 5 / (24 * 60), // 5 phút
+  refresh: 7, // 7 ngày
+  mfa: 5 / 1440, // 5 phút
 } as const;

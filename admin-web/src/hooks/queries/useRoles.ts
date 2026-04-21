@@ -14,8 +14,17 @@ import type { AxiosError } from "axios";
 // query key
 export const roleKeys = {
   all: ["roles"] as const,
-  lists: (params?: GetRolesParams) =>
-    [...roleKeys.all, "list", params] as const,
+
+  lists: () => [...roleKeys.all, "list"] as const,
+
+  listParams: (params?: GetRolesParams) =>
+    [
+      ...roleKeys.lists(),
+      params?.page ?? 0,
+      params?.size ?? 10,
+      params?.keyword ?? "",
+    ] as const,
+
   detail: (id: string) => [...roleKeys.all, "detail", id] as const,
 };
 
@@ -24,9 +33,9 @@ export const useGetAllRoles = (params?: GetRolesParams) => {
     ApiResponse<PageResponse<RoleResponse>>,
     AxiosError<ErrorResponse>
   >({
-    queryKey: roleKeys.lists(params),
+    queryKey: roleKeys.listParams(params),
     queryFn: () => roleApi.getAll(params),
-    placeholderData: (previousData) => previousData,
+    placeholderData: (prev) => prev,
   });
 };
 
@@ -46,11 +55,16 @@ export const useCreateRole = () => {
     AxiosError<ErrorResponse>,
     CreateRoleRequest
   >({
-    mutationFn: (data) => roleApi.create(data),
+    mutationFn: roleApi.create,
+
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: roleKeys.all });
+      queryClient.invalidateQueries({
+        queryKey: roleKeys.lists(),
+      });
+
       toast.success(res.message);
     },
+
     onError: (error) => {
       toast.error(error.response?.data?.message ?? "Tạo chức vụ thất bại");
     },
@@ -66,13 +80,23 @@ export const useUpdateRole = () => {
     { id: string; data: UpdateRoleRequest }
   >({
     mutationFn: ({ id, data }) => roleApi.update(id, data),
+
     onSuccess: (res, variables) => {
-      queryClient.invalidateQueries({ queryKey: roleKeys.all });
       queryClient.invalidateQueries({
-        queryKey: roleKeys.detail(variables.id),
+        queryKey: roleKeys.lists(),
       });
+
+      if (res.data) {
+        queryClient.setQueryData(roleKeys.detail(variables.id), res);
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: roleKeys.detail(variables.id),
+        });
+      }
+
       toast.success(res.message);
     },
+
     onError: (error) => {
       toast.error(error.response?.data?.message ?? "Cập nhật chức vụ thất bại");
     },
@@ -83,11 +107,16 @@ export const useDeleteRole = () => {
   const queryClient = useQueryClient();
 
   return useMutation<ApiResponse<null>, AxiosError<ErrorResponse>, string>({
-    mutationFn: (id) => roleApi.remove(id),
+    mutationFn: roleApi.remove,
+
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: roleKeys.all });
+      queryClient.invalidateQueries({
+        queryKey: roleKeys.lists(),
+      });
+      
       toast.success(res.message);
     },
+
     onError: (error) => {
       toast.error(error.response?.data?.message ?? "Xóa chức vụ thất bại");
     },

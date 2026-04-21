@@ -15,6 +15,10 @@ export interface VerifyOtpRequest {
   otp: string;
 }
 
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
 export interface CreateUserRequest {
   unitId: string;
   roleId: string;
@@ -186,7 +190,7 @@ export interface DeviceResponse {
   deviceName: string;
   platform: string;
   osVersion: string;
-  isTrusted: boolean;
+  trusted: boolean;
   status: "ACTIVE" | "REVOKED" | "WIPED";
   lastUsedDate: string;
   registeredDate: string;

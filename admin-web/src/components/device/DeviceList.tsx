@@ -21,6 +21,7 @@ import {
 import type { GetDevicesParams } from "../../apis/deviceApi";
 import Swal from "sweetalert2";
 import { BrushCleaning, LockKeyhole, LockKeyholeOpen } from "lucide-react";
+import { parseSafeDate } from "../../utils/dateUtil";
 function DeviceList() {
   const [searchParams] = useSearchParams();
 
@@ -46,10 +47,10 @@ function DeviceList() {
   const activateDevice = useActivateDevice();
 
   const handleUpdateStatus = async (
-    id: string,
+    deviceId: string,
     status: "ACTIVE" | "REVOKED" | "WIPED",
   ) => {
-    if (!id || !status) return;
+    if (!deviceId || !status) return;
 
     const statusConfig: Record<string, { title: string; text: string }> = {
       REVOKED: {
@@ -79,9 +80,9 @@ function DeviceList() {
 
     if (!result.isConfirmed) return;
 
-    if (status === "REVOKED") revokeDevice.mutate(id);
-    if (status === "WIPED") wipeDevice.mutate(id);
-    if (status === "ACTIVE") activateDevice.mutate(id);
+    if (status === "REVOKED") revokeDevice.mutate(deviceId);
+    if (status === "WIPED") wipeDevice.mutate(deviceId);
+    if (status === "ACTIVE") activateDevice.mutate(deviceId);
   };
 
   return (
@@ -142,15 +143,20 @@ function DeviceList() {
                   </td>
 
                   <td className="p-[1rem] font-semibold">
-                    {device.isTrusted ? (
-                      <span className="px-2 py-1">Tin cậy</span>
+                    {device.trusted ? (
+                      <span className="px-2 py-1 text-success">Tin cậy</span>
                     ) : (
-                      <span className="px-2 py-1"> Chưa xác thực</span>
+                      <span className="px-2 py-1 text-danger">
+                        Chưa xác thực
+                      </span>
                     )}
                   </td>
 
                   <td className="p-[1rem]">
-                    {new Date(device.lastUsedDate).toLocaleString("vi-VN")}
+                    {device.lastUsedDate &&
+                      parseSafeDate(device.lastUsedDate)?.toLocaleString(
+                        "vi-VN",
+                      )}
                   </td>
 
                   <td className="p-[1rem] font-semibold">
@@ -174,7 +180,11 @@ function DeviceList() {
                           }
                         >
                           <div className="relative group">
-                            <LockKeyhole size={22} className="text-neutral" />
+                            <LockKeyhole
+                              size={22}
+                              className="text-neutral"
+                              strokeWidth={1.5}
+                            />
                             <ToolTip text="Thu hồi thiết bị" />
                           </div>
                         </Button>
@@ -189,6 +199,7 @@ function DeviceList() {
                           <div className="relative group">
                             <LockKeyholeOpen
                               size={22}
+                              strokeWidth={1.5}
                               className="text-neutral"
                             />
                             <ToolTip text="Kích hoạt lại thiết bị" />
@@ -204,7 +215,11 @@ function DeviceList() {
                           }
                         >
                           <div className="relative group">
-                            <BrushCleaning size={22} className="text-danger" />
+                            <BrushCleaning
+                              size={22}
+                              className="text-danger"
+                              strokeWidth={1.5}
+                            />
                             <ToolTip text="Xóa từ xa thiết bị" />
                           </div>
                         </Button>

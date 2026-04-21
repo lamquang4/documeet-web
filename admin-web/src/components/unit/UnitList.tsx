@@ -36,7 +36,7 @@ function UnitList() {
 
   const updateStatus = useUpdateUnitStatus();
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (unitId: string) => {
     const result = await Swal.fire({
       title: `Xác nhận xóa?`,
       text: `Bạn có chắc muốn xóa đơn vị này không?`,
@@ -46,16 +46,16 @@ function UnitList() {
       cancelButtonText: "Hủy",
     });
 
-    if (!result.isConfirmed || !id) return;
+    if (!result.isConfirmed || !unitId) return;
 
-    deleteUnit.mutate(id);
+    deleteUnit.mutate(unitId);
   };
 
   const handleUpdateStatus = async (
-    id: string,
+    unitId: string,
     status: "ACTIVE" | "INACTIVE",
   ) => {
-    if (!id || !status) return;
+    if (!unitId || !status) return;
 
     const statusConfig: Record<string, { title: string; text: string }> = {
       ACTIVE: {
@@ -82,7 +82,7 @@ function UnitList() {
     if (!result.isConfirmed) return;
 
     updateStatus.mutate({
-      unitId: id,
+      unitId: unitId,
       data: { status },
     });
   };
@@ -144,10 +144,15 @@ function UnitList() {
                       >
                         <div className="relative group">
                           {unit.status === "ACTIVE" && (
-                            <LockKeyhole size={22} className="text-neutral" />
+                            <LockKeyhole
+                              strokeWidth={1.5}
+                              size={22}
+                              className="text-neutral"
+                            />
                           )}
                           {unit.status === "INACTIVE" && (
                             <LockKeyholeOpen
+                              strokeWidth={1.5}
                               size={22}
                               className="text-neutral"
                             />
@@ -165,7 +170,11 @@ function UnitList() {
 
                       <Link to={`/units/edit/${unit.unitId}`}>
                         <div className="relative group">
-                          <SquarePen size={22} className="text-info" />
+                          <SquarePen
+                            size={22}
+                            strokeWidth={1.5}
+                            className="text-info"
+                          />
 
                           <ToolTip text="Chỉnh sửa đơn vị" />
                         </div>
@@ -173,7 +182,11 @@ function UnitList() {
 
                       <Button onClick={() => handleDelete(unit.unitId || "")}>
                         <div className="relative group">
-                          <Trash2 size={22} className="text-danger" />
+                          <Trash2
+                            size={22}
+                            strokeWidth={1.5}
+                            className="text-danger"
+                          />
 
                           <ToolTip text="Xóa đơn vị" />
                         </div>

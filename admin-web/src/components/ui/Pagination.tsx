@@ -3,44 +3,52 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "./Button";
 import Select from "./Select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 interface Props {
   totalPages: number;
-  currentPage: number;
+  currentPage: number; // backend (0-based)
   size: number;
   totalItems: number;
 }
+
 function Pagination({ totalPages, currentPage, size, totalItems }: Props) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const start = (currentPage - 1) * size + 1;
-  const end = Math.min(start + size - 1, totalItems);
+  // UI page (1-based)
+  const displayPage = currentPage + 1;
 
-  const goToPage = (page: number) => {
+  const start = totalItems === 0 ? 0 : currentPage * size + 1;
+  const end = Math.min((currentPage + 1) * size, totalItems);
+
+  const goToPage = (uiPage: number) => {
+    const safeUiPage = Math.max(1, Math.min(uiPage, totalPages));
+    const apiPage = safeUiPage - 1;
+
     const params = new URLSearchParams(searchParams.toString());
-    params.set("page", page.toString());
+    params.set("page", apiPage.toString());
     params.set("size", size.toString());
 
     navigate(`?${params.toString()}`);
   };
 
   const getPageNumbers = () => {
-    const pages = [];
+    const pages: (number | string)[] = [];
 
     if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
-      if (currentPage <= 3) {
+      if (displayPage <= 3) {
         pages.push(1, 2, 3, "...", totalPages);
-      } else if (currentPage >= totalPages - 2) {
+      } else if (displayPage >= totalPages - 2) {
         pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
       } else {
         pages.push(
           1,
           "...",
-          currentPage - 1,
-          currentPage,
-          currentPage + 1,
+          displayPage - 1,
+          displayPage,
+          displayPage + 1,
           "...",
           totalPages,
         );
@@ -50,96 +58,90 @@ function Pagination({ totalPages, currentPage, size, totalItems }: Props) {
     return pages;
   };
 
-  const handlesizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newsize = parseInt(e.target.value, 10);
+  const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newSize = Number(e.target.value);
+
     const params = new URLSearchParams(searchParams.toString());
-    params.set("size", newsize.toString());
-    params.set("page", "1");
+    params.set("size", newSize.toString());
+    params.set("page", "0");
+
     navigate(`?${params.toString()}`);
   };
 
+  if (totalItems === 0) return null;
+
   return (
-    <>
-      {totalItems > 0 && (
-        <div className="flex items-center justify-center bg-white px-[15px] py-3 w-full flex-wrap gap-5 sm:gap-3 text-[0.9rem] font-medium">
-          <div className="flex gap-2 items-center">
-            Số dòng mỗi trang
-            <Select
-              value={size}
-              onChange={handlesizeChange}
-              className="p-1 border border-gray-300 focus:border-black text-[0.9rem]"
-            >
-              <option value="12">12</option>
-              <option value="24">24</option>
-              <option value="36">36</option>
-              <option value="48">48</option>
-            </Select>
-          </div>
+    <div className="flex items-center justify-center bg-white px-[15px] py-3 w-full flex-wrap gap-5 sm:gap-3 text-[0.9rem] font-medium">
+      <div className="flex gap-2 items-center">
+        Số dòng mỗi trang
+        <Select
+          value={size}
+          onChange={handleSizeChange}
+          className="p-1 border border-gray-300 focus:border-black text-[0.9rem]"
+        >
+          <option value="12">12</option>
+          <option value="24">24</option>
+          <option value="36">36</option>
+          <option value="48">48</option>
+        </Select>
+      </div>
 
-          <div>
-            <p>
-              {start}-{end} của {totalItems}
-            </p>
-          </div>
+      <div>
+        <p>
+          {start}-{end} của {totalItems}
+        </p>
+      </div>
 
-          <div>
-            <nav
-              className="isolate inline-flex gap-0.5"
-              aria-label="Pagination"
-            >
+      <nav className="isolate inline-flex gap-0.5" aria-label="Pagination">
+        <Button
+          className="h-8.5 w-8.5 flex justify-center items-center border border-gray-300 hover:bg-gray-100"
+          disabled={displayPage <= 1}
+          onClick={() => goToPage(displayPage - 1)}
+        >
+          <ChevronLeft size={18} strokeWidth={1.5} />
+        </Button>
+
+        {/* Pages */}
+        {getPageNumbers().map((page, index) => {
+          if (page === "...") {
+            return (
               <Button
-                type="button"
-                className="h-8.5 w-8.5 inline-flex justify-center items-center gap-x-2 text-[0.9rem] border border-gray-300 hover:bg-gray-100"
-                aria-label="Previous"
-                disabled={currentPage <= 1}
-                onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
+                key={`ellipsis-${index}`}
+                disabled
+                className="h-8.5 w-8.5 flex justify-center items-center border border-gray-300"
               >
-                <ChevronLeft />
+                ...
               </Button>
+            );
+          }
 
-              {getPageNumbers().map((page, index) => {
-                if (page === "...") {
-                  return (
-                    <Button
-                      type="button"
-                      disabled
-                      key={`ellipsis-${index}`}
-                      className="group h-8.5 w-8.5 flex justify-center items-center   text-[0.9rem] border border-gray-300"
-                    >
-                      ...
-                    </Button>
-                  );
-                }
+          const uiPage = page as number;
 
-                return (
-                  <Button
-                    key={page}
-                    onClick={() => goToPage(page as number)}
-                    className={`h-8.5 w-8.5 flex justify-center items-center font-medium text-[0.9rem] border border-gray-300 ${
-                      currentPage === page
-                        ? "bg-primary text-white"
-                        : "hover:bg-gray-100"
-                    }`}
-                  >
-                    {page}
-                  </Button>
-                );
-              })}
+          return (
+            <Button
+              key={uiPage}
+              onClick={() => goToPage(uiPage)}
+              className={`h-8.5 w-8.5 flex justify-center items-center border border-gray-300 font-medium ${
+                displayPage === uiPage
+                  ? "bg-primary text-white"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              {uiPage}
+            </Button>
+          );
+        })}
 
-              <Button
-                disabled={currentPage >= totalPages}
-                onClick={() =>
-                  currentPage < totalPages && goToPage(currentPage + 1)
-                }
-                className="h-8.5 w-8.5 inline-flex justify-center items-center gap-x-2 text-[0.9rem] border border-gray-300 hover:bg-gray-100"
-              >
-                <ChevronRight />
-              </Button>
-            </nav>
-          </div>
-        </div>
-      )}
-    </>
+        {/* Next */}
+        <Button
+          className="h-8.5 w-8.5 flex justify-center items-center border border-gray-300 hover:bg-gray-100"
+          disabled={displayPage >= totalPages}
+          onClick={() => goToPage(displayPage + 1)}
+        >
+          <ChevronRight size={18} strokeWidth={1.5} />
+        </Button>
+      </nav>
+    </div>
   );
 }
 

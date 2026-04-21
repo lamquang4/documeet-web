@@ -12,8 +12,19 @@ import type { AxiosError } from "axios";
 export const deviceKeys = {
   all: ["devices"] as const,
 
-  lists: (params?: GetDevicesParams) =>
-    [...deviceKeys.all, "list", params?.page, params?.size] as const,
+  lists: () => [...deviceKeys.all, "list"] as const,
+
+  listParams: (params?: GetDevicesParams) =>
+    [
+      ...deviceKeys.lists(),
+      params?.page ?? 0,
+      params?.size ?? 10,
+      params?.keyword ?? "",
+      params?.status ?? "",
+      params?.isTrusted ?? "",
+    ] as const,
+
+  detail: (id: string) => [...deviceKeys.all, "detail", id] as const,
 };
 
 export const useGetAllDevices = (params?: GetDevicesParams) => {
@@ -21,7 +32,7 @@ export const useGetAllDevices = (params?: GetDevicesParams) => {
     ApiResponse<PageResponse<DeviceResponse>>,
     AxiosError<ErrorResponse>
   >({
-    queryKey: deviceKeys.lists(params),
+    queryKey: deviceKeys.listParams(params),
     queryFn: () => deviceApi.getAll(params),
     placeholderData: (prev) => prev,
   });
@@ -41,7 +52,7 @@ export const useRevokeDevice = () => {
     mutationFn: (id) => deviceApi.revoke(id),
 
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: deviceKeys.all });
+      queryClient.invalidateQueries({ queryKey: deviceKeys.lists() });
       toast.success(res.message);
     },
 
@@ -63,7 +74,7 @@ export const useWipeDevice = () => {
     mutationFn: (id) => deviceApi.wipe(id),
 
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: deviceKeys.all });
+      queryClient.invalidateQueries({ queryKey: deviceKeys.lists() });
       toast.success(res.message);
     },
 
@@ -87,7 +98,7 @@ export const useActivateDevice = () => {
     mutationFn: (id) => deviceApi.activate(id),
 
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: deviceKeys.all });
+      queryClient.invalidateQueries({ queryKey: deviceKeys.lists() });
       toast.success(res.message);
     },
 

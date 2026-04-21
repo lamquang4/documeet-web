@@ -68,6 +68,11 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
         expires: COOKIE_EXPIRES.session,
       });
 
+      cookieUtil.set("refreshToken", res.data.refreshToken, {
+        ...COOKIE_OPTIONS,
+        expires: COOKIE_EXPIRES.refresh,
+      });
+
       if (res.data?.user) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }
@@ -103,6 +108,37 @@ export const useLogout = () => {
       clearAuthStorage();
       queryClient.clear();
       window.location.href = "/";
+    },
+  });
+};
+
+export const useRefresh = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ApiResponse<LoginResponse>,
+    AxiosError<ErrorResponse>,
+    void
+  >({
+    mutationFn: () => {
+      const refreshToken = cookieUtil.get("refreshToken") ?? "";
+      return authApi.refresh({ refreshToken });
+    },
+
+    onSuccess: (res) => {
+      cookieUtil.set("accessToken", res.data.accessToken, {
+        ...COOKIE_OPTIONS,
+        expires: res.data.expiresIn / 86400,
+      });
+
+      if (res.data?.refreshToken) {
+        cookieUtil.set("refreshToken", res.data.refreshToken, {
+          ...COOKIE_OPTIONS,
+          expires: COOKIE_EXPIRES.refresh,
+        });
+      }
+
+      queryClient.invalidateQueries();
     },
   });
 };

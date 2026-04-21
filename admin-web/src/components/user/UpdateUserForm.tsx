@@ -13,6 +13,8 @@ import { useGetAllRoles } from "../../hooks/queries/useRoles";
 import { validatePassword } from "../../utils/validation/validatePassword";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUnitForUser } from "../../hooks/queries/useUnits";
+import { validateGovernmentId } from "../../utils/validation/validateGovermentId";
+import { validateSize } from "../../utils/validation/validateSize";
 
 function UpdateUserForm() {
   const navigate = useNavigate();
@@ -30,12 +32,15 @@ function UpdateUserForm() {
   const [keyword, setKeyword] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
 
+  const account = JSON.parse(localStorage.getItem("user") || "null");
+
   const { data: userRes, isLoading } = useGetUserById(id as string);
+  const user = userRes?.data;
 
   const updateUser = useUpdateUser();
   const isLoadingUpdate = updateUser.isPending;
 
-  const { data: rolesRes } = useGetAllRoles({ page: 1, size: 12 });
+  const { data: rolesRes } = useGetAllRoles({ page: 0, size: 12 });
   const roles = rolesRes?.data.content ?? [];
 
   const {
@@ -54,8 +59,6 @@ function UpdateUserForm() {
 
   useEffect(() => {
     if (isLoading) return;
-
-    const user = userRes?.data;
 
     if (!user) {
       toast.error("Người dùng không tìm thấy");
@@ -88,8 +91,18 @@ function UpdateUserForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (data.status === "LOCKED" && user?.userId === account.userId) {
+      toast.error("Bạn không thể khóa chính tài khoản của mình");
+      return;
+    }
+
     if (!data.governmentId.trim()) {
       toast.error("Số định danh cá nhân không được để trống");
+      return;
+    }
+
+    if (!validateGovernmentId(data.governmentId)) {
+      toast.error("Số định danh cá nhân phải gồm đúng 12 chữ số");
       return;
     }
 
@@ -98,8 +111,8 @@ function UpdateUserForm() {
       return;
     }
 
-    if (!data.email.trim()) {
-      toast.error("Email không được để trống");
+    if (!validateSize(data.fullName.trim(), 2, 100)) {
+      toast.error("Họ tên phải từ 2 đến 100 ký tự");
       return;
     }
 

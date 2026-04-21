@@ -16,14 +16,13 @@ function UpdateRoleForm() {
   });
 
   const { data: roleRes, isLoading } = useGetRoleById(id as string);
+  const role = roleRes?.data;
 
   const updateRole = useUpdateRole();
   const isLoadingUpdate = updateRole.isPending;
 
   useEffect(() => {
     if (isLoading) return;
-
-    const role = roleRes?.data;
 
     if (!role) {
       toast.error("Chức vụ không tìm thấy");

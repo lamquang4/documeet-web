@@ -3,6 +3,7 @@ import type {
   LoginRequest,
   LoginResponse,
   LogoutRequest,
+  RefreshTokenRequest,
 } from "../types/type";
 import axiosInstance from "./axiosInstance";
 
@@ -19,5 +20,11 @@ export const authApi = {
   logout: (data: LogoutRequest) =>
     axiosInstance
       .post<ApiResponse<null>>(`${BASE}/logout`, data)
+      .then((r) => r.data),
+
+  // POST /auth/refresh
+  refresh: (data: RefreshTokenRequest) =>
+    axiosInstance
+      .post<ApiResponse<LoginResponse>>(`${BASE}/refresh`, data)
       .then((r) => r.data),
 };

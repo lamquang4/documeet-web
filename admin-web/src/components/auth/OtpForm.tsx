@@ -10,9 +10,7 @@ import {
   validateOtp,
   validateOtpDigit,
 } from "../../utils/validation/validationOtp";
-
-const OTP_LENGTH = 6;
-const OTP_EXPIRE_SECONDS = 5 * 60; // 5 phút
+import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constant/otpConstant";
 
 function OtpForm() {
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));

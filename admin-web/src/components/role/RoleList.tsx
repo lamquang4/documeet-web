@@ -29,7 +29,7 @@ function RoleList() {
 
   const deleteRole = useDeleteRole();
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (roleId: string) => {
     const result = await Swal.fire({
       title: `Xác nhận xóa?`,
       text: `Bạn có chắc muốn xóa chức vụ này không?`,
@@ -39,9 +39,9 @@ function RoleList() {
       cancelButtonText: "Hủy",
     });
 
-    if (!result.isConfirmed || !id) return;
+    if (!result.isConfirmed || !roleId) return;
 
-    deleteRole.mutate(id);
+    deleteRole.mutate(roleId);
   };
 
   return (
@@ -86,7 +86,11 @@ function RoleList() {
                     <div className="flex items-center gap-[15px]">
                       <Link to={`/roles/edit/${role.roleId}`}>
                         <div className="relative group">
-                          <SquarePen size={22} className="text-info" />
+                          <SquarePen
+                            size={22}
+                            strokeWidth={1.5}
+                            className="text-info"
+                          />
 
                           <ToolTip text="Chỉnh sửa chức vụ" />
                         </div>
@@ -100,7 +104,11 @@ function RoleList() {
                         }
                       >
                         <div className="relative group">
-                          <Trash2 size={22} className="text-danger" />
+                          <Trash2
+                            size={22}
+                            className="text-danger"
+                            strokeWidth={1.5}
+                          />
 
                           <ToolTip text="Xóa chức vụ" />
                         </div>

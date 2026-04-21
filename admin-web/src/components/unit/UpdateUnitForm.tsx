@@ -28,6 +28,7 @@ function UpdateUnitForm() {
   const debouncedKeyword = useDebounce(keyword, 400);
 
   const { data: unitRes, isLoading } = useGetUnitById(id as string);
+  const unit = unitRes?.data;
 
   const updateUnit = useUpdateUnit();
 
@@ -49,8 +50,6 @@ function UpdateUnitForm() {
 
   useEffect(() => {
     if (isLoading) return;
-
-    const unit = unitRes?.data;
 
     if (!unit) {
       toast.error("Đơn vị không tìm thấy");

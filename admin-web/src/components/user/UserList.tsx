@@ -20,12 +20,14 @@ import {
 } from "../../hooks/queries/useUsers";
 import type { GetUsersParams } from "../../apis/userApi";
 import {
-  Check,
+  CircleCheckBig,
   LockKeyhole,
   LockKeyholeOpen,
   SquarePen,
   Trash2,
 } from "lucide-react";
+import { parseSafeDate } from "../../utils/dateUtil";
+import toast from "react-hot-toast";
 
 function UserList() {
   const [searchParams] = useSearchParams();
@@ -39,7 +41,9 @@ function UserList() {
     role: searchParams.get("role") ?? undefined,
   };
 
-  const { data: rolesRes } = useGetAllRoles({ page: 1, size: 12 });
+  const account = JSON.parse(localStorage.getItem("user") || "null");
+
+  const { data: rolesRes } = useGetAllRoles({ page: 0, size: 12 });
   const roles = rolesRes?.data.content ?? [];
 
   const { data: usersRes, isLoading } = useGetAllUsers(params);
@@ -61,7 +65,7 @@ function UserList() {
     })),
   ];
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (userId: string) => {
     const result = await Swal.fire({
       title: `Xác nhận xóa?`,
       text: `Bạn có chắc muốn xóa người dùng này không?`,
@@ -71,16 +75,21 @@ function UserList() {
       cancelButtonText: "Hủy",
     });
 
-    if (!result.isConfirmed || !id) return;
+    if (!result.isConfirmed || !userId) return;
 
-    deleteUser.mutate(id);
+    deleteUser.mutate(userId);
   };
 
   const handleUpdateStatus = async (
-    id: string,
+    userId: string,
     status: "ACTIVE" | "LOCKED" | "DISABLED",
   ) => {
-    if (!id || !status) return;
+    if (!userId || !status) return;
+
+    if (status === "LOCKED" && userId === account.userId) {
+      toast.error("Bạn không thể khóa chính tài khoản của mình");
+      return;
+    }
 
     const statusConfig: Record<
       string,
@@ -117,9 +126,9 @@ function UserList() {
 
     if (!result.isConfirmed) return;
 
-    if (status === "LOCKED") lockUser.mutate(id);
-    if (status === "ACTIVE") unlockUser.mutate(id);
-    if (status === "DISABLED") activateUser.mutate(id);
+    if (status === "LOCKED") lockUser.mutate(userId);
+    if (status === "ACTIVE") unlockUser.mutate(userId);
+    if (status === "DISABLED") activateUser.mutate(userId);
   };
 
   const getNextStatus = (status: string): "ACTIVE" | "LOCKED" | "DISABLED" => {
@@ -198,12 +207,16 @@ function UserList() {
 
                   <td className="p-[1rem]">
                     {user?.lastLoginDate &&
-                      new Date(user.lastLoginDate).toLocaleString("vi-VN")}
+                      parseSafeDate(user?.lastLoginDate)?.toLocaleString(
+                        "vi-VN",
+                      )}
                   </td>
 
                   <td className="p-[1rem]">
                     {user?.lockoutEndTime &&
-                      new Date(user?.lockoutEndTime).toLocaleString("vi-VN")}
+                      parseSafeDate(user?.lockoutEndTime)?.toLocaleString(
+                        "vi-VN",
+                      )}
                   </td>
 
                   <td className="p-[1rem]  ">
@@ -218,15 +231,24 @@ function UserList() {
                       >
                         <div className="relative group">
                           {user.status === "DISABLED" && (
-                            <Check size={18} className="text-success" />
+                            <CircleCheckBig
+                              size={22}
+                              strokeWidth={1.5}
+                              className="text-success"
+                            />
                           )}
 
                           {user.status === "ACTIVE" && (
-                            <LockKeyhole size={22} className="text-neutral" />
+                            <LockKeyhole
+                              strokeWidth={1.5}
+                              size={22}
+                              className="text-neutral"
+                            />
                           )}
 
                           {user.status === "LOCKED" && (
                             <LockKeyholeOpen
+                              strokeWidth={1.5}
                               size={22}
                               className="text-neutral"
                             />
@@ -246,7 +268,11 @@ function UserList() {
 
                       <Link to={`/users/edit/${user.userId}`}>
                         <div className="relative group">
-                          <SquarePen size={22} className="text-info" />
+                          <SquarePen
+                            size={22}
+                            strokeWidth={1.5}
+                            className="text-info"
+                          />
 
                           <ToolTip text={"Chỉnh sửa người dùng"} />
                         </div>
@@ -254,7 +280,11 @@ function UserList() {
 
                       <Button onClick={() => handleDelete(user.userId || "")}>
                         <div className="relative group">
-                          <Trash2 size={22} className="text-danger" />
+                          <Trash2
+                            size={22}
+                            strokeWidth={1.5}
+                            className="text-danger"
+                          />
                           <ToolTip text={"Xóa người dùng"} />
                         </div>
                       </Button>

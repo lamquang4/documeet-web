@@ -13,6 +13,8 @@ import { useCreateUser } from "../../hooks/queries/useUsers";
 import { validatePassword } from "../../utils/validation/validatePassword";
 import { useGetSelectedUnitForUser } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
+import { validateGovernmentId } from "../../utils/validation/validateGovermentId";
+import { validateSize } from "../../utils/validation/validateSize";
 
 function CreateUserForm() {
   const [data, setData] = useState({
@@ -31,7 +33,7 @@ function CreateUserForm() {
   const createUser = useCreateUser();
   const isLoading = createUser.isPending;
 
-  const { data: rolesRes } = useGetAllRoles({ page: 1, size: 12 });
+  const { data: rolesRes } = useGetAllRoles({ page: 0, size: 12 });
   const roles = rolesRes?.data.content ?? [];
 
   const {
@@ -60,8 +62,14 @@ function CreateUserForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!data.governmentId.trim()) {
       toast.error("Số định danh cá nhân không được để trống");
+      return;
+    }
+
+    if (!validateGovernmentId(data.governmentId)) {
+      toast.error("Số định danh cá nhân phải gồm đúng 12 chữ số");
       return;
     }
 
@@ -70,13 +78,8 @@ function CreateUserForm() {
       return;
     }
 
-    if (!data.email.trim()) {
-      toast.error("Email không được để trống");
-      return;
-    }
-
-    if (!data.phoneNumber.trim()) {
-      toast.error("Số điện thoại không được để trống");
+    if (!validateSize(data.fullName.trim(), 2, 100)) {
+      toast.error("Họ tên phải từ 2 đến 100 ký tự");
       return;
     }
 
@@ -305,3 +308,6 @@ function CreateUserForm() {
 }
 
 export default CreateUserForm;
+function validateFullName(fullName: string) {
+  throw new Error("Function not implemented.");
+}
