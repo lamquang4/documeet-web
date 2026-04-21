@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { cookieUtil } from "../utils/cookieUtil";
-import { clearAuth } from "../utils/authUtil";
+import { clearAuthStorage } from "../utils/authUtil";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -47,7 +47,7 @@ axiosInstance.interceptors.response.use(
 
         return axiosInstance(originalRequest);
       } catch {
-        clearAuth();
+        clearAuthStorage();
         window.location.href = "/";
         return Promise.reject(error);
       }
