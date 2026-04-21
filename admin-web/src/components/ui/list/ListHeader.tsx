@@ -1,5 +1,5 @@
+import { CirclePlus } from "lucide-react";
 import { memo } from "react";
-import { IoMdAddCircle } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 interface Props {
@@ -21,7 +21,7 @@ function ListHeader({ title, totalItems, addLink }: Props) {
             to={addLink}
             className="bg-primary text-white border-0 cursor-pointer text-[0.9rem] font-medium w-[90px] !flex p-[10px_12px] items-center justify-center gap-[5px]"
           >
-            <IoMdAddCircle size={22} /> Thêm
+            <CirclePlus size={22} /> Thêm
           </Link>
         )}
       </div>

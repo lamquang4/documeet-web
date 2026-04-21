@@ -1,7 +1,3 @@
-import { VscTrash } from "react-icons/vsc";
-import { LiaEdit } from "react-icons/lia";
-import { TbLock, TbLockOpen } from "react-icons/tb";
-import { SiTicktick } from "react-icons/si";
 import Pagination from "../ui/Pagination";
 import FilterDropDownMenu from "../ui/FilterDropDownMenu";
 import InputSearch from "../ui/InputSearch";
@@ -23,6 +19,13 @@ import {
   useUnlockUser,
 } from "../../hooks/queries/useUsers";
 import type { GetUsersParams } from "../../apis/userApi";
+import {
+  Check,
+  LockKeyhole,
+  LockKeyholeOpen,
+  SquarePen,
+  Trash2,
+} from "lucide-react";
 
 function UserList() {
   const [searchParams] = useSearchParams();
@@ -215,15 +218,18 @@ function UserList() {
                       >
                         <div className="relative group">
                           {user.status === "DISABLED" && (
-                            <SiTicktick size={18} className="text-success" />
+                            <Check size={18} className="text-success" />
                           )}
 
                           {user.status === "ACTIVE" && (
-                            <TbLock size={22} className="text-neutral" />
+                            <LockKeyhole size={22} className="text-neutral" />
                           )}
 
                           {user.status === "LOCKED" && (
-                            <TbLockOpen size={22} className="text-neutral" />
+                            <LockKeyholeOpen
+                              size={22}
+                              className="text-neutral"
+                            />
                           )}
 
                           <ToolTip
@@ -240,7 +246,7 @@ function UserList() {
 
                       <Link to={`/users/edit/${user.userId}`}>
                         <div className="relative group">
-                          <LiaEdit size={22} className="text-info" />
+                          <SquarePen size={22} className="text-info" />
 
                           <ToolTip text={"Chỉnh sửa người dùng"} />
                         </div>
@@ -248,7 +254,7 @@ function UserList() {
 
                       <Button onClick={() => handleDelete(user.userId || "")}>
                         <div className="relative group">
-                          <VscTrash size={22} className="text-danger" />
+                          <Trash2 size={22} className="text-danger" />
                           <ToolTip text={"Xóa người dùng"} />
                         </div>
                       </Button>

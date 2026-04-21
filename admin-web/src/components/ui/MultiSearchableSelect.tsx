@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, memo } from "react";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import Input from "./Input";
+import { ChevronDown } from "lucide-react";
 
 type Option = {
   value: string;
@@ -102,7 +102,7 @@ function MultiSearchableSelect({
         ) : (
           <div className="flex items-center justify-between w-full">
             <span className="text-gray-400">{placeholder}</span>
-            <MdKeyboardArrowDown size={18} />
+            <ChevronDown size={18} />
           </div>
         )}
       </div>

@@ -5,8 +5,6 @@ import Loading from "../ui/Loading";
 import Pagination from "../ui/Pagination";
 import Image from "../ui/Image";
 import FilterDropDownMenu from "../ui/FilterDropDownMenu";
-import { LuPaintbrush } from "react-icons/lu";
-import { TbLock, TbLockOpen } from "react-icons/tb";
 import ToolTip from "../ui/ToolTip";
 import {
   DEVICE_STATUS_OPTIONS,
@@ -22,6 +20,7 @@ import {
 } from "../../hooks/queries/useDevices";
 import type { GetDevicesParams } from "../../apis/deviceApi";
 import Swal from "sweetalert2";
+import { BrushCleaning, LockKeyhole, LockKeyholeOpen } from "lucide-react";
 function DeviceList() {
   const [searchParams] = useSearchParams();
 
@@ -175,7 +174,7 @@ function DeviceList() {
                           }
                         >
                           <div className="relative group">
-                            <TbLock size={22} className="text-neutral" />
+                            <LockKeyhole size={22} className="text-neutral" />
                             <ToolTip text="Thu hồi thiết bị" />
                           </div>
                         </Button>
@@ -188,7 +187,10 @@ function DeviceList() {
                           }
                         >
                           <div className="relative group">
-                            <TbLockOpen size={22} className="text-neutral" />
+                            <LockKeyholeOpen
+                              size={22}
+                              className="text-neutral"
+                            />
                             <ToolTip text="Kích hoạt lại thiết bị" />
                           </div>
                         </Button>
@@ -202,7 +204,7 @@ function DeviceList() {
                           }
                         >
                           <div className="relative group">
-                            <LuPaintbrush size={22} className="text-danger" />
+                            <BrushCleaning size={22} className="text-danger" />
                             <ToolTip text="Xóa từ xa thiết bị" />
                           </div>
                         </Button>

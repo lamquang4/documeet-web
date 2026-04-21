@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, memo } from "react";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import Input from "./Input";
+import { ChevronDown } from "lucide-react";
 
 type Option = {
   value: string;
@@ -77,7 +77,7 @@ function SearchableSelect({
         className={`border p-[6px_10px] flex items-center justify-between w-full ${open ? "border-gray-400" : "border-gray-300"}`}
       >
         <p>{selectedOption ? selectedOption.label : placeholder}</p>
-        <MdKeyboardArrowDown size={18} />
+        <ChevronDown size={18} />
       </div>
 
       {open && (

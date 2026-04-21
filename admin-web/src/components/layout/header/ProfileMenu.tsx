@@ -1,10 +1,9 @@
 import { memo } from "react";
 import Image from "../../ui/Image";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { RiLogoutBoxLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import Button from "../../ui/Button";
 import { useLogout } from "../../../hooks/queries/useAuth";
+import { CircleUserRound, DoorOpen } from "lucide-react";
 
 type Props = {
   menuOpen: boolean;
@@ -49,7 +48,7 @@ function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
                 className="block hover:bg-gray-100 px-3 py-3.5"
               >
                 <div className="flex items-center gap-[8px]">
-                  <FaRegCircleUser size={18} />
+                  <CircleUserRound size={18} />
                   <p>Tài khoản</p>
                 </div>
               </Link>
@@ -60,7 +59,7 @@ function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
                 className="w-full block hover:bg-gray-100 px-3 py-3.5 text-danger"
               >
                 <div className="flex items-center gap-[8px] font-normal">
-                  <RiLogoutBoxLine size={18} />
+                  <DoorOpen size={18} />
                   <p>Đăng xuất</p>
                 </div>
               </Button>

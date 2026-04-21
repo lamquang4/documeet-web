@@ -1,7 +1,7 @@
 import { memo, useState } from "react";
-import { FaSortDown } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "./Button";
+import { ChevronDown } from "lucide-react";
 
 type Props = {
   title: string;
@@ -42,7 +42,7 @@ function FilterDropDownMenu({ title, array, paramName }: Props) {
       className="relative w-full"
     >
       <div className=" cursor-pointer flex items-center gap-[2px] ">
-        {title} <FaSortDown size={14} />
+        {title} <ChevronDown size={15} />
       </div>
 
       {isOpen && (

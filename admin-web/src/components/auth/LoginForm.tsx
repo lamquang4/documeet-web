@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HiOutlineEyeOff, HiOutlineEye } from "react-icons/hi";
+import { Eye, EyeOff } from "lucide-react"; 
 import Label from "../ui/Label";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
@@ -105,11 +105,7 @@ function LoginForm({ onRequireMfa }: Props) {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral"
                 onClick={toggleShowPassword}
               >
-                {!showPassword ? (
-                  <HiOutlineEye size={22} />
-                ) : (
-                  <HiOutlineEyeOff size={22} />
-                )}
+                {!showPassword ? <Eye size={22} /> : <EyeOff size={22} />}
               </Button>
             </div>
           </div>

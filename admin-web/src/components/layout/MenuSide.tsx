@@ -1,14 +1,16 @@
 import { memo, useState, type ReactNode } from "react";
 import Overplay from "../ui/Overplay";
 import Image from "../ui/Image";
-import { IoIosArrowDown } from "react-icons/io";
-import { IoIosArrowUp } from "react-icons/io";
-import { TbCategoryPlus } from "react-icons/tb";
-import { FiUsers } from "react-icons/fi";
 import { Link, useLocation } from "react-router-dom";
-import { HiOutlineOfficeBuilding } from "react-icons/hi";
-import { HiOutlineDevicePhoneMobile } from "react-icons/hi2";
 import Button from "../ui/Button";
+import {
+  Building,
+  ChevronDown,
+  ChevronUp,
+  TabletSmartphone,
+  UserRoundKey,
+  Users,
+} from "lucide-react";
 type Props = {
   menuOpen: boolean;
   onToggleMenu: () => void;
@@ -48,7 +50,7 @@ const menuData: MenuGroup[] = [
     title: "Người dùng",
     items: [
       {
-        icon: <FiUsers size={20} />,
+        icon: <Users size={20} />,
         label: "Người dùng",
         key: "1a",
         children: [
@@ -57,7 +59,7 @@ const menuData: MenuGroup[] = [
         ],
       },
       {
-        icon: <TbCategoryPlus size={20} />,
+        icon: <UserRoundKey size={20} />,
         label: "Chức vụ",
         key: "2a",
         children: [
@@ -71,7 +73,7 @@ const menuData: MenuGroup[] = [
     title: "Đơn vị",
     items: [
       {
-        icon: <HiOutlineOfficeBuilding size={20} />,
+        icon: <Building size={20} />,
         label: "Đơn vị",
         key: "3a",
         children: [
@@ -85,7 +87,7 @@ const menuData: MenuGroup[] = [
     title: "Thiết bị",
     items: [
       {
-        icon: <HiOutlineDevicePhoneMobile size={20} />,
+        icon: <TabletSmartphone size={20} />,
         label: "Thiết bị đăng ký",
         path: "/devices",
       },
@@ -147,9 +149,9 @@ function MenuSide({ menuOpen, onToggleMenu }: Props) {
                           item.children.some(
                             (child) => pathname === child.path,
                           ) ? (
-                            <IoIosArrowDown size={18} />
+                            <ChevronDown size={18} />
                           ) : (
-                            <IoIosArrowUp size={18} />
+                            <ChevronUp size={18} />
                           )}
                         </Button>
                       </div>

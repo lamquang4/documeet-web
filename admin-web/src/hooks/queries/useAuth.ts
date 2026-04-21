@@ -10,6 +10,7 @@ import type {
 import { authApi } from "../../apis/authApi";
 import { cookieUtil } from "../../utils/cookieUtil";
 import { clearAuthStorage } from "../../utils/authUtil";
+import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../../constant/cookieConstant";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -25,51 +26,53 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
   >({
     mutationFn: (data) => authApi.login(data),
 
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
+      // Yêu cầu MFA → lưu mfaToken rồi chuyển sang bước OTP
       if (res.data?.requireMfa) {
         if (res.data?.mfaToken) {
           cookieUtil.set("mfaToken", res.data.mfaToken, {
-            expires: 5 / (24 * 60),
-            secure: true,
-            sameSite: "Strict",
+            ...COOKIE_OPTIONS,
+            expires: COOKIE_EXPIRES.mfa,
           });
         }
         onRequireMfa();
         return;
-      } else {
-        toast.success(res.message);
       }
 
-      if (res.data?.accessToken) {
-        cookieUtil.set("accessToken", res.data.accessToken, {
-          expires: res.data.expiresIn / 86400,
-          secure: true,
-          sameSite: "Strict",
-        });
+      // Không phải ADMIN → revoke token ngay, không lưu gì
+      if (res.data?.user?.role !== "ADMIN") {
+        toast.error("Bạn không có quyền truy cập hệ thống này");
+
+        if (res.data?.refreshToken && res.data?.sessionId) {
+          await authApi
+            .logout({
+              refreshToken: res.data.refreshToken,
+              sessionId: res.data.sessionId,
+            })
+            .catch(() => {});
+        }
+
+        return;
       }
 
-      if (res.data?.refreshToken) {
-        cookieUtil.set("refreshToken", res.data.refreshToken, {
-          expires: 7,
-          secure: true,
-          sameSite: "Strict",
-        });
-      }
+      toast.success(res.message);
 
-      if (res.data?.sessionId) {
-        cookieUtil.set("sessionId", res.data.sessionId, {
-          expires: 7,
-          secure: true,
-          sameSite: "Strict",
-        });
-      }
+      // set token vào cookie
+      cookieUtil.set("accessToken", res.data.accessToken, {
+        ...COOKIE_OPTIONS,
+        expires: res.data.expiresIn / 86400,
+      });
+
+      cookieUtil.set("sessionId", res.data.sessionId, {
+        ...COOKIE_OPTIONS,
+        expires: COOKIE_EXPIRES.session,
+      });
 
       if (res.data?.user) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }
 
       queryClient.clear();
-
       window.location.href = "/account/profile";
     },
 

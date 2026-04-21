@@ -1,8 +1,7 @@
-import { AiOutlineMenu } from "react-icons/ai";
-import { TbMaximize } from "react-icons/tb";
 import ProfileMenu from "./ProfileMenu";
 import { useCallback, useState } from "react";
 import Button from "../../ui/Button";
+import { Maximize, Menu } from "lucide-react";
 
 type Props = {
   onToggleMenu: () => void;
@@ -32,7 +31,7 @@ function Header({ onToggleMenu }: Props) {
             onClick={onToggleMenu}
             className="w-8.5 h-8.5 rounded-lg border border-gray-200 justify-center items-center flex"
           >
-            <AiOutlineMenu size={18} />
+            <Menu size={18} />
           </Button>
 
           <div className="flex gap-[15px] sm:gap-[20px] items-center">
@@ -40,7 +39,7 @@ function Header({ onToggleMenu }: Props) {
               onClick={handleFullscreen}
               className="w-8.5 h-8.5 rounded-lg border border-gray-200 justify-center items-center flex relative"
             >
-              <TbMaximize size={18} />
+              <Maximize size={18} />
             </Button>
 
             <ProfileMenu

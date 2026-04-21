@@ -3,13 +3,9 @@ import ListBody from "../ui/list/ListBody";
 import ListHeader from "../ui/list/ListHeader";
 import FilterDropDownMenu from "../ui/FilterDropDownMenu";
 import InputSearch from "../ui/InputSearch";
-import { VscTrash } from "react-icons/vsc";
-import { LiaEdit } from "react-icons/lia";
 import Pagination from "../ui/Pagination";
 import Loading from "../ui/Loading";
 import Image from "../ui/Image";
-import { FaRegEyeSlash } from "react-icons/fa";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
 import ToolTip from "../ui/ToolTip";
 import { UNIT_STATUS_OPTIONS } from "../../constant/filterOptions";
 import Button from "../ui/Button";
@@ -20,6 +16,7 @@ import {
   useUpdateUnitStatus,
 } from "../../hooks/queries/useUnits";
 import Swal from "sweetalert2";
+import { LockKeyhole, LockKeyholeOpen, SquarePen, Trash2 } from "lucide-react";
 function UnitList() {
   const [searchParams] = useSearchParams();
 
@@ -147,10 +144,10 @@ function UnitList() {
                       >
                         <div className="relative group">
                           {unit.status === "ACTIVE" && (
-                            <FaRegEyeSlash size={22} className="text-neutral" />
+                            <LockKeyhole size={22} className="text-neutral" />
                           )}
                           {unit.status === "INACTIVE" && (
-                            <MdOutlineRemoveRedEye
+                            <LockKeyholeOpen
                               size={22}
                               className="text-neutral"
                             />
@@ -168,7 +165,7 @@ function UnitList() {
 
                       <Link to={`/units/edit/${unit.unitId}`}>
                         <div className="relative group">
-                          <LiaEdit size={22} className="text-info" />
+                          <SquarePen size={22} className="text-info" />
 
                           <ToolTip text="Chỉnh sửa đơn vị" />
                         </div>
@@ -176,7 +173,7 @@ function UnitList() {
 
                       <Button onClick={() => handleDelete(unit.unitId || "")}>
                         <div className="relative group">
-                          <VscTrash size={22} className="text-danger" />
+                          <Trash2 size={22} className="text-danger" />
 
                           <ToolTip text="Xóa đơn vị" />
                         </div>

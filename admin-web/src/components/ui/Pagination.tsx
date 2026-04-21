@@ -1,8 +1,8 @@
 import { memo } from "react";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "./Button";
 import Select from "./Select";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 interface Props {
   totalPages: number;
   currentPage: number;
@@ -94,7 +94,7 @@ function Pagination({ totalPages, currentPage, size, totalItems }: Props) {
                 disabled={currentPage <= 1}
                 onClick={() => currentPage > 1 && goToPage(currentPage - 1)}
               >
-                <GrFormPrevious />
+                <ChevronLeft />
               </Button>
 
               {getPageNumbers().map((page, index) => {
@@ -133,7 +133,7 @@ function Pagination({ totalPages, currentPage, size, totalItems }: Props) {
                 }
                 className="h-8.5 w-8.5 inline-flex justify-center items-center gap-x-2 text-[0.9rem] border border-gray-300 hover:bg-gray-100"
               >
-                <GrFormNext />
+                <ChevronRight />
               </Button>
             </nav>
           </div>

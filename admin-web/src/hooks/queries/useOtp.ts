@@ -9,6 +9,7 @@ import type {
 } from "../../types/type";
 import { cookieUtil } from "../../utils/cookieUtil";
 import { otpApi } from "../../apis/otpApi";
+import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../../constant/cookieConstant";
 
 export const useVerifyOtp = () => {
   const queryClient = useQueryClient();
@@ -23,29 +24,15 @@ export const useVerifyOtp = () => {
     onSuccess: (res) => {
       toast.success(res.message);
 
-      if (res.data?.accessToken) {
-        cookieUtil.set("accessToken", res.data.accessToken, {
-          expires: res.data.expiresIn / 86400,
-          secure: true,
-          sameSite: "Strict",
-        });
-      }
+      cookieUtil.set("accessToken", res.data.accessToken, {
+        ...COOKIE_OPTIONS,
+        expires: res.data.expiresIn / 86400,
+      });
 
-      if (res.data?.refreshToken) {
-        cookieUtil.set("refreshToken", res.data.refreshToken, {
-          expires: 7,
-          secure: true,
-          sameSite: "Strict",
-        });
-      }
-
-      if (res.data?.sessionId) {
-        cookieUtil.set("sessionId", res.data.sessionId, {
-          expires: 7,
-          secure: true,
-          sameSite: "Strict",
-        });
-      }
+      cookieUtil.set("sessionId", res.data.sessionId, {
+        ...COOKIE_OPTIONS,
+        expires: COOKIE_EXPIRES.session,
+      });
 
       if (res.data?.user) {
         localStorage.setItem("user", JSON.stringify(res.data.user));

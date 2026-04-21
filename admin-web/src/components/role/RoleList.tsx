@@ -2,8 +2,6 @@ import { Link, useSearchParams } from "react-router-dom";
 import ListBody from "../ui/list/ListBody";
 import ListHeader from "../ui/list/ListHeader";
 import Loading from "../ui/Loading";
-import { LiaEdit } from "react-icons/lia";
-import { VscTrash } from "react-icons/vsc";
 import Pagination from "../ui/Pagination";
 import Image from "../ui/Image";
 import ToolTip from "../ui/ToolTip";
@@ -12,6 +10,7 @@ import type { GetRolesParams } from "../../apis/roleApi";
 import { useDeleteRole, useGetAllRoles } from "../../hooks/queries/useRoles";
 import Swal from "sweetalert2";
 import InputSearch from "../ui/InputSearch";
+import { SquarePen, Trash2 } from "lucide-react";
 
 function RoleList() {
   const [searchParams] = useSearchParams();
@@ -87,7 +86,7 @@ function RoleList() {
                     <div className="flex items-center gap-[15px]">
                       <Link to={`/roles/edit/${role.roleId}`}>
                         <div className="relative group">
-                          <LiaEdit size={22} className="text-info" />
+                          <SquarePen size={22} className="text-info" />
 
                           <ToolTip text="Chỉnh sửa chức vụ" />
                         </div>
@@ -101,7 +100,7 @@ function RoleList() {
                         }
                       >
                         <div className="relative group">
-                          <VscTrash size={22} className="text-danger" />
+                          <Trash2 size={22} className="text-danger" />
 
                           <ToolTip text="Xóa chức vụ" />
                         </div>
