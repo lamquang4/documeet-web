@@ -79,7 +79,7 @@ function LoginForm({ onRequireMfa }: Props) {
               name="governmentId"
               value={data.governmentId}
               onChange={handleChange}
-              className="text-[0.9rem] block w-full px-3 py-2 outline-none border border-gray-300"
+              className="block w-full px-3 py-2 border border-gray-300"
               placeholder="Nhập số định danh cá nhân"
             />
           </div>
@@ -97,7 +97,7 @@ function LoginForm({ onRequireMfa }: Props) {
                 value={data.password}
                 onChange={handleChange}
                 placeholder="Nhập mật khẩu"
-                className="text-[0.9rem] block w-full px-3 pr-12 py-2 outline-none border border-gray-300"
+                className="block w-full px-3 pr-12 py-2 border border-gray-300"
               />
 
               <Button
@@ -113,7 +113,7 @@ function LoginForm({ onRequireMfa }: Props) {
           <Button
             disabled={isLoading}
             type="submit"
-            className="w-full hover-scale bg-primary text-[0.9rem] text-white focus:outline-none font-semibold rounded-sm px-5 py-2.5 text-center mt-6"
+            className="w-full hover-scale bg-primary text-white font-semibold rounded-sm px-5 py-2.5 text-center mt-6"
           >
             Đăng nhập
           </Button>

@@ -128,7 +128,7 @@ function MultiSearchableSelect({
             autoFocus
             value={search}
             onChange={handleSearchChange}
-            className="border-b border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none"
+            className="border-b border-gray-300 p-[6px_10px] w-full"
             placeholder="Tìm kiếm..."
           />
 

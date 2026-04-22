@@ -193,9 +193,7 @@ function UserList() {
             ) : users.length > 0 ? (
               users.map((user) => (
                 <tr key={user.userId} className="hover:bg-[#f2f3f8]">
-                  <td className="p-[1rem] text-[0.9rem]">
-                    {user.governmentId}
-                  </td>
+                  <td className="p-[1rem]">{user.governmentId}</td>
                   <td className="p-[1rem]  ">{user.phoneNumber}</td>
 
                   <td className="p-[1rem]  ">{user.fullName}</td>

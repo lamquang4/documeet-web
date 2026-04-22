@@ -25,7 +25,7 @@ function Account() {
                   name="governmentId"
                   value={account?.governmentId}
                   readOnly
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />
               </div>
 
@@ -38,7 +38,7 @@ function Account() {
                   name="phoneNumber"
                   value={account?.phoneNumber}
                   readOnly
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />
               </div>
             </div>
@@ -53,7 +53,7 @@ function Account() {
                   name="fullName"
                   value={account?.fullName}
                   readOnly
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />
               </div>
 
@@ -66,7 +66,7 @@ function Account() {
                   name="email"
                   value={account?.email}
                   readOnly
-                  className="lowercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="lowercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />
               </div>
             </div>
@@ -82,7 +82,7 @@ function Account() {
                   name="unitName"
                   value={account?.unit?.unitName}
                   readOnly
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />
               </div>
             </div>

@@ -77,7 +77,7 @@ function Pagination({ totalPages, currentPage, size, totalItems }: Props) {
         <Select
           value={size}
           onChange={handleSizeChange}
-          className="p-1 border border-gray-300 focus:border-black text-[0.9rem]"
+          className="p-1 border border-gray-300 focus:border-black"
         >
           <option value="12">12</option>
           <option value="24">24</option>

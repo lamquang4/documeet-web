@@ -97,7 +97,7 @@ function UpdateRoleForm() {
                 name="roleCode"
                 value={data.roleCode}
                 onChange={handleChange}
-                className="uppercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
               />
             </div>
 
@@ -112,7 +112,7 @@ function UpdateRoleForm() {
                 name="roleName"
                 value={data.roleName}
                 onChange={handleChange}
-                className="  border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
               />
             </div>
 
@@ -127,7 +127,7 @@ function UpdateRoleForm() {
                 name="description"
                 value={data.description}
                 onChange={handleChange}
-                className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
               />
             </div>
           </div>
@@ -137,14 +137,14 @@ function UpdateRoleForm() {
           <Button
             disabled={isLoadingUpdate}
             type="submit"
-            className="p-[6px_10px] hover-scale bg-success text-white text-[0.9rem] font-medium text-center rounded-sm"
+            className="p-[6px_10px] hover-scale bg-success text-white font-medium text-center rounded-sm"
           >
             {isLoadingUpdate ? "Đang cập nhật..." : "Cập nhật"}
           </Button>
 
           <Link
             to="/roles"
-            className="p-[6px_10px] hover-scale bg-danger text-white text-[0.9rem] text-center   rounded-sm"
+            className="p-[6px_10px] hover-scale bg-danger text-white text-[0.9rem] text-center rounded-sm"
           >
             Trờ về
           </Link>

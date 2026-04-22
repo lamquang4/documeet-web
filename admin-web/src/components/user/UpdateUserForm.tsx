@@ -199,7 +199,7 @@ function UpdateUserForm() {
                   name="governmentId"
                   value={data.governmentId}
                   onChange={handleChange}
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />
               </div>
 
@@ -214,7 +214,7 @@ function UpdateUserForm() {
                   name="phoneNumber"
                   value={data.phoneNumber}
                   onChange={handleChange}
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />
               </div>
             </div>
@@ -232,7 +232,7 @@ function UpdateUserForm() {
                   value={data.fullName}
                   onChange={handleChange}
                   required
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />
               </div>
 
@@ -247,7 +247,7 @@ function UpdateUserForm() {
                   name="email"
                   value={data.email}
                   onChange={handleChange}
-                  className="lowercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="lowercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />
               </div>
             </div>
@@ -282,7 +282,7 @@ function UpdateUserForm() {
                   name="roleId"
                   value={data.roleId}
                   onChange={handleChange}
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 >
                   <option value="">Chọn chức vụ</option>
                   {roles.map((role) => (
@@ -305,7 +305,7 @@ function UpdateUserForm() {
                   name="status"
                   value={data.status}
                   onChange={handleChange}
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400"
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 >
                   <option value="">Chọn tình trạng</option>
                   <option value="ACTIVE">Hoạt động</option>
@@ -322,7 +322,7 @@ function UpdateUserForm() {
                   name="passwordHash"
                   value={data.passwordHash}
                   onChange={handleChange}
-                  className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
                 />
               </div>
             </div>
@@ -333,13 +333,13 @@ function UpdateUserForm() {
           <Button
             disabled={isLoadingUpdate}
             type="submit"
-            className="p-[6px_10px] hover-scale bg-success text-white text-[0.9rem] font-medium text-center rounded-sm"
+            className="p-[6px_10px] hover-scale bg-success text-white font-medium text-center rounded-sm"
           >
             {isLoadingUpdate ? "Đang cập nhật..." : "Cập nhật"}
           </Button>
           <Link
             to="/users"
-            className="p-[6px_10px] hover-scale bg-danger text-white text-[0.9rem] text-center   rounded-sm"
+            className="p-[6px_10px] hover-scale bg-danger text-white text-[0.9rem] text-center rounded-sm"
           >
             Trờ về
           </Link>

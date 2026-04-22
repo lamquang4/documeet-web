@@ -81,7 +81,7 @@ function CreateRoleForm() {
                 name="roleCode"
                 value={data.roleCode}
                 onChange={handleChange}
-                className="uppercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
               />
             </div>
 
@@ -96,7 +96,7 @@ function CreateRoleForm() {
                 name="roleName"
                 value={data.roleName}
                 onChange={handleChange}
-                className="  border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
               />
             </div>
 
@@ -111,7 +111,7 @@ function CreateRoleForm() {
                 name="description"
                 value={data.description}
                 onChange={handleChange}
-                className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
+                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
               />
             </div>
           </div>
@@ -121,14 +121,14 @@ function CreateRoleForm() {
           <Button
             disabled={isLoading}
             type="submit"
-            className="hover-scale p-[6px_10px] bg-success text-white text-[0.9rem] font-medium text-center rounded-sm"
+            className="hover-scale p-[6px_10px] bg-success text-white font-medium text-center rounded-sm"
           >
             {isLoading ? "Đang thêm..." : "Thêm"}
           </Button>
 
           <Link
             to="/roles"
-            className="hover-scale p-[6px_10px] bg-danger text-white text-[0.9rem] text-center   rounded-sm"
+            className="hover-scale p-[6px_10px] bg-danger text-white text-[0.9rem] text-center rounded-sm"
           >
             Trờ về
           </Link>
