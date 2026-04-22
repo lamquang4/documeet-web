@@ -36,18 +36,6 @@ function MultiSearchableSelect({
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    setKeyword(search);
-  }, [search]);
-
-  useEffect(() => {
-    if (!open) {
-      setSearch("");
-      setKeyword("");
-    }
-  }, [open]);
-
   // Click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -55,13 +43,38 @@ function MultiSearchableSelect({
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        setOpen(false);
+        handleClose();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleOpen = () => {
+    setOpen(true);
+    setSearch("");
+    setKeyword("");
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSearch("");
+    setKeyword("");
+  };
+
+  const handleToggle = () => {
+    if (open) {
+      handleClose();
+    } else {
+      handleOpen();
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSearch(val);
+    setKeyword(val);
+  };
 
   const handleSelect = (val: string) => {
     onChange(
@@ -73,10 +86,8 @@ function MultiSearchableSelect({
 
   const handleScroll = () => {
     if (!listRef.current) return;
-
     const { scrollTop, scrollHeight, clientHeight } = listRef.current;
     const isBottom = scrollTop + clientHeight >= scrollHeight - 10;
-
     if (isBottom && hasNextPage && !isFetchingNextPage) {
       fetchNextPage?.();
     }
@@ -85,7 +96,7 @@ function MultiSearchableSelect({
   return (
     <div className="cursor-pointer relative w-full" ref={containerRef}>
       <div
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={handleToggle}
         className={`border p-[6px_10px] w-full ${open ? "border-gray-400" : "border-gray-300"}`}
       >
         {selectedOptions.length > 0 ? (
@@ -112,11 +123,11 @@ function MultiSearchableSelect({
       </div>
 
       {open && (
-        <div className="absolute z-10 w-full bg-white border border-gray-300 shadow-md rounded max-h-60 overflow-y-auto">
+        <div className="absolute z-10 w-full bg-white border border-gray-300 shadow-md rounded">
           <Input
             autoFocus
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={handleSearchChange}
             className="border-b border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none"
             placeholder="Tìm kiếm..."
           />

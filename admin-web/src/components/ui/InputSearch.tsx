@@ -11,7 +11,7 @@ function InputSearch() {
     e.preventDefault();
     const params = new URLSearchParams(searchParams.toString());
 
-    if (search.trim()) {
+    if (!search.trim()) {
       return;
     }
 
