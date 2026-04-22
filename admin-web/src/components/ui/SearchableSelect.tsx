@@ -87,7 +87,7 @@ function SearchableSelect({
         className={twMerge(
           "border p-[6px_10px] flex items-center justify-between w-full cursor-pointer transition-colors",
           open ? "border-gray-400" : "border-gray-300",
-          error && "border-red-500",
+          error && "border-danger",
         )}
       >
         <p>{selectedOption ? selectedOption.label : placeholder}</p>
