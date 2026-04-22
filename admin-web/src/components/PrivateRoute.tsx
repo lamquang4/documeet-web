@@ -2,12 +2,11 @@ import { jwtDecode } from "jwt-decode";
 import { cookieUtil } from "../utils/cookieUtil";
 import { logoutAndRedirect } from "../utils/authUtil";
 import type { AccessTokenPayload } from "../types/type";
-import { Navigate } from "react-router-dom"; // Dùng Navigate thay vì return null
+import { Navigate } from "react-router-dom";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
 }
-
 function PrivateRoute({ children }: PrivateRouteProps) {
   const accessToken = cookieUtil.get("accessToken");
   const refreshToken = cookieUtil.get("refreshToken");
@@ -18,7 +17,13 @@ function PrivateRoute({ children }: PrivateRouteProps) {
 
   if (accessToken) {
     try {
-      jwtDecode<AccessTokenPayload>(accessToken);
+      const decoded = jwtDecode<AccessTokenPayload>(accessToken);
+      const isExpired = decoded.exp * 1000 < Date.now();
+
+      if (isExpired && !refreshToken) {
+        logoutAndRedirect();
+        return <Navigate to="/" replace />;
+      }
     } catch {
       logoutAndRedirect();
       return <Navigate to="/" replace />;

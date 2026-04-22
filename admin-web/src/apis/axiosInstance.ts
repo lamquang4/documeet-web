@@ -10,7 +10,6 @@ const axiosInstance = axios.create({
   timeout: 10000,
   withCredentials: false,
 });
-
 axiosInstance.interceptors.request.use((config) => {
   const accessToken = cookieUtil.get("accessToken");
   if (accessToken) {
@@ -20,18 +19,19 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 let isRefreshing = false;
-let failedQueue: any[] = [];
+let failedQueue: {
+  resolve: (token: string) => void;
+  reject: (err: unknown) => void;
+}[] = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
     } else {
-      prom.resolve(token);
+      prom.resolve(token!);
     }
   });
-
-  isRefreshing = false;
   failedQueue = [];
 };
 
@@ -44,7 +44,7 @@ axiosInstance.interceptors.response.use(
 
     if (status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-        return new Promise((resolve, reject) => {
+        return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then((token) => {
           originalRequest.headers.Authorization = `Bearer ${token}`;
@@ -62,13 +62,11 @@ axiosInstance.interceptors.response.use(
         const res = await authApi.refresh({ refreshToken });
         const newAccessToken = res.data.accessToken;
 
-        // accessToken mới
         cookieUtil.set("accessToken", newAccessToken, {
           ...COOKIE_OPTIONS,
           expires: res.data.expiresIn / 86400,
         });
 
-        // refreshToken mới
         if (res.data?.refreshToken) {
           cookieUtil.set("refreshToken", res.data.refreshToken, {
             ...COOKIE_OPTIONS,
@@ -82,7 +80,8 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (err) {
         processQueue(err, null);
-        await logoutAndRedirect();
+        logoutAndRedirect();
+        return Promise.reject(err);
       } finally {
         isRefreshing = false;
       }
