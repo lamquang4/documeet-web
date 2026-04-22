@@ -80,7 +80,11 @@ function RoleList() {
                   <td className="p-[1rem] text-[0.9rem]">{role.roleCode}</td>
                   <td className="p-[1rem]">{role.roleName}</td>
 
-                  <td className="p-[1rem]">{role.description}</td>
+                  <td className="p-[1rem] max-w-[250px]">
+                    <p className="line-clamp-2 break-words">
+                      {role.description}
+                    </p>
+                  </td>
 
                   <td className="p-[1rem]">
                     <div className="flex items-center gap-[15px]">

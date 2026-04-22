@@ -126,13 +126,13 @@ function UnitList() {
               units.map((unit) => (
                 <tr key={unit.unitId} className="hover:bg-[#f2f3f8]">
                   <td className="p-[1rem] text-[0.9rem]">{unit.unitCode}</td>
-                  <td className="p-[1rem]  ">{unit.unitName}</td>
+                  <td className="p-[1rem]">{unit.unitName}</td>
 
                   <td className="p-[1rem] font-semibold">
                     {unit.status === "ACTIVE" && "Hoạt động"}
                     {unit.status === "INACTIVE" && "Không hoạt động"}
                   </td>
-                  <td className="p-[1rem]  ">
+                  <td className="p-[1rem]">
                     <div className="flex items-center gap-[15px]">
                       <Button
                         onClick={() =>

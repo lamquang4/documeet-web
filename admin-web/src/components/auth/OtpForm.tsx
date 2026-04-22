@@ -124,11 +124,10 @@ function OtpForm() {
                 pattern="\d*"
                 maxLength={1}
                 value={otp[index]}
-                required
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={handlePaste}
-                className={`w-[50px] h-[50px] text-center text-[0.95rem] font-semibold border rounded-md outline-none transition-colors
+                className={`w-[50px] h-[50px] text-center text-[1rem] font-semibold border rounded-md outline-none transition-colors
                           ${digit ? "border-success text-success" : "border-gray-300"}
                           focus:border-success`}
               />

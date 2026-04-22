@@ -35,7 +35,7 @@ function UpdateRoleForm() {
       roleName: role.roleName,
       description: role.description ?? "",
     });
-  }, [isLoading, roleRes, navigate]);
+  }, [isLoading, role, navigate]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -80,49 +80,52 @@ function UpdateRoleForm() {
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-full">
       <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>
-        <h2 className="text-[#74767d]">Chỉnh sửa chức vụ</h2>
+        <h2 className="text-neutral">Chỉnh sửa chức vụ</h2>
 
         <div className="flex gap-[25px] w-full flex-col">
           <div className="md:p-[25px] p-[15px] bg-white rounded-md flex flex-col gap-[20px] w-full">
-            <h5 className="font-bold text-[#74767d]">Thông tin chức vụ</h5>
+            <h5 className="font-bold text-neutral">Thông tin chức vụ</h5>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="roleCode" required>
                 Mã chức vụ
               </Label>
+
               <Input
                 type="text"
+                id="roleCode"
                 name="roleCode"
                 value={data.roleCode}
                 onChange={handleChange}
-                required
                 className="uppercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="roleName" required>
                 Tên chức vụ
               </Label>
+
               <Input
                 type="text"
+                id="roleName"
                 name="roleName"
                 value={data.roleName}
                 onChange={handleChange}
-                required
                 className="  border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               />
             </div>
 
             <div className="flex flex-col gap-1 w-full">
-              <Label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="description" required>
                 Mô tả
               </Label>
+
               <Input
                 type="text"
+                id="description"
                 name="description"
                 value={data.description}
-                required
                 onChange={handleChange}
                 className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               />
@@ -138,6 +141,7 @@ function UpdateRoleForm() {
           >
             {isLoadingUpdate ? "Đang cập nhật..." : "Cập nhật"}
           </Button>
+
           <Link
             to="/roles"
             className="p-[6px_10px] bg-danger text-white text-[0.9rem] text-center   rounded-sm"

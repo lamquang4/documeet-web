@@ -76,7 +76,7 @@ function UpdateUserForm() {
       status: user.status?.toString() || "",
       passwordHash: "",
     });
-  }, [isLoading, userRes, navigate]);
+  }, [isLoading, user, navigate]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -181,37 +181,39 @@ function UpdateUserForm() {
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-auto">
       <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>
-        <h2 className="text-[#74767d]">Chỉnh sửa người dùng</h2>
+        <h2 className="text-neutral">Chỉnh sửa người dùng</h2>
 
         <div className="flex gap-[25px] w-full flex-col">
           <div className="md:p-[25px] p-[15px] bg-white rounded-md flex flex-col gap-[20px] w-full">
-            <h5 className="font-bold text-[#74767d]">Thông tin người dùng</h5>
+            <h5 className="font-bold text-neutral">Thông tin người dùng</h5>
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <Label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="governmentId" required>
                   Số định danh cá nhân
                 </Label>
+
                 <Input
                   type="text"
+                  id="governmentId"
                   name="governmentId"
                   value={data.governmentId}
                   onChange={handleChange}
-                  required
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
-                <Label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="phoneNumber" required>
                   Số điện thoại
                 </Label>
+
                 <Input
                   type="text"
+                  id="phoneNumber"
                   name="phoneNumber"
                   value={data.phoneNumber}
                   onChange={handleChange}
-                  required
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -219,11 +221,13 @@ function UpdateUserForm() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <Label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="fullName" required>
                   Họ tên
                 </Label>
+
                 <Input
                   type="text"
+                  id="fullName"
                   name="fullName"
                   value={data.fullName}
                   onChange={handleChange}
@@ -233,15 +237,16 @@ function UpdateUserForm() {
               </div>
 
               <div className="flex flex-col gap-1 w-full">
-                <Label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="email" required>
                   Email
                 </Label>
+
                 <Input
-                  type="email"
+                  type="text"
+                  id="email"
                   name="email"
                   value={data.email}
                   onChange={handleChange}
-                  required
                   className="lowercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 />
               </div>
@@ -249,9 +254,10 @@ function UpdateUserForm() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <Label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="" required>
                   Đơn vị
                 </Label>
+
                 <SearchableSelect
                   value={data.unitId}
                   onChange={(val) =>
@@ -268,14 +274,14 @@ function UpdateUserForm() {
               </div>
 
               <div className="flex flex-col gap-1 w-full">
-                <Label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="roleId" required>
                   Chức vụ
                 </Label>
+
                 <Select
                   name="roleId"
                   value={data.roleId}
                   onChange={handleChange}
-                  required
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
                 >
                   <option value="">Chọn chức vụ</option>
@@ -290,14 +296,15 @@ function UpdateUserForm() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
-                <Label htmlFor="" className="text-[0.9rem] font-medium">
+                <Label htmlFor="status" required>
                   Tình trạng
                 </Label>
+
                 <Select
+                  id="status"
                   name="status"
                   value={data.status}
                   onChange={handleChange}
-                  required
                   className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400"
                 >
                   <option value="">Chọn tình trạng</option>
@@ -308,9 +315,8 @@ function UpdateUserForm() {
               </div>
 
               <div className="flex flex-col gap-1 w-full">
-                <Label htmlFor="" className="text-[0.9rem] font-medium">
-                  Mật khẩu mới
-                </Label>
+                <Label htmlFor="passwordHash">Mật khẩu mới</Label>
+
                 <Input
                   type="password"
                   name="passwordHash"

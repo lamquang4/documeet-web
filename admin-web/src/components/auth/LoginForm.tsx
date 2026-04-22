@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react"; 
+import { Eye, EyeOff } from "lucide-react";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
@@ -69,35 +69,35 @@ function LoginForm({ onRequireMfa }: Props) {
 
         <form className="space-y-[15px]" onSubmit={handleSubmit}>
           <div className="space-y-[5px]">
-            <Label htmlFor="" className="block text-[0.9rem] font-medium">
+            <Label htmlFor="governmentId" required>
               Số định danh cá nhân
-              <span className="text-red-500">*</span>
             </Label>
+
             <Input
               type="text"
+              id="governmentId"
               name="governmentId"
               value={data.governmentId}
               onChange={handleChange}
               className="text-[0.9rem] block w-full px-3 py-2 outline-none border border-gray-300"
               placeholder="Nhập số định danh cá nhân"
-              required
             />
           </div>
 
           <div className="space-y-[5px]">
-            <Label htmlFor="" className="block text-[0.9rem] font-medium">
-              Mật khẩu <span className="text-red-500">*</span>
+            <Label htmlFor="password" required>
+              Mật khẩu
             </Label>
 
             <div className="relative">
               <Input
                 type={!showPassword ? "password" : "text"}
+                id="password"
                 name="password"
                 value={data.password}
                 onChange={handleChange}
                 placeholder="Nhập mật khẩu"
                 className="text-[0.9rem] block w-full px-3 pr-12 py-2 outline-none border border-gray-300"
-                required
               />
 
               <Button

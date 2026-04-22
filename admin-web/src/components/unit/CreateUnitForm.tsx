@@ -76,48 +76,50 @@ function CreateUnitForm() {
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-auto">
       <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>
-        <h2 className="text-[#74767d]">Thêm đơn vị</h2>
+        <h2 className="text-neutral">Thêm đơn vị</h2>
 
         <div className="flex gap-[25px] w-full flex-col">
           <div className="md:p-[25px] p-[15px] bg-white rounded-md flex flex-col gap-[20px] w-full">
-            <h5 className="font-bold text-[#74767d]">Thông tin đơn vị</h5>
+            <h5 className="font-bold text-neutral">Thông tin đơn vị</h5>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="unitCode" required>
                 Mã đơn vị
               </Label>
+
               <Input
                 type="text"
+                id="unitCode"
                 name="unitCode"
                 value={data.unitCode}
                 onChange={handleChange}
-                required
                 className="uppercase border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="" className="text-[0.9rem] font-medium">
+              <Label htmlFor="unitName" required>
                 Tên đơn vị
               </Label>
+
               <Input
                 type="text"
+                id="unitName"
                 name="unitName"
                 value={data.unitName}
                 onChange={handleChange}
-                required
                 className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "
               />
             </div>
           </div>
 
           <div className="md:p-[25px] p-[15px] bg-white rounded-md flex flex-col gap-[20px] w-full">
-            <h5 className="font-bold text-[#74767d]">Người trong đơn vị</h5>
+            <h5 className="font-bold text-neutral">
+              Quản lý thành viên trong đơn vị
+            </h5>
 
             <div className="flex flex-col gap-1 w-full">
-              <Label htmlFor="" className="text-[0.9rem] font-medium">
-                Người dùng
-              </Label>
+              <Label htmlFor="">Người dùng trong đơn vị</Label>
 
               <MultiSearchableSelect
                 value={data.userIds}

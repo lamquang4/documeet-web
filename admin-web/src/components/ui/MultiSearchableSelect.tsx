@@ -39,9 +39,16 @@ function MultiSearchableSelect({
   useEffect(() => {
     if (!open) return;
     setKeyword(search);
-  }, [search, open, setKeyword]);
+  }, [search]);
 
-  // click outside
+  useEffect(() => {
+    if (!open) {
+      setSearch("");
+      setKeyword("");
+    }
+  }, [open]);
+
+  // Click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -68,20 +75,17 @@ function MultiSearchableSelect({
     if (!listRef.current) return;
 
     const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-
     const isBottom = scrollTop + clientHeight >= scrollHeight - 10;
 
     if (isBottom && hasNextPage && !isFetchingNextPage) {
       fetchNextPage?.();
     }
   };
+
   return (
     <div className="cursor-pointer relative w-full" ref={containerRef}>
       <div
-        onClick={() => {
-          setOpen((prev) => !prev);
-          setSearch("");
-        }}
+        onClick={() => setOpen((prev) => !prev)}
         className={`border p-[6px_10px] w-full ${open ? "border-gray-400" : "border-gray-300"}`}
       >
         {selectedOptions.length > 0 ? (
@@ -93,7 +97,7 @@ function MultiSearchableSelect({
                   e.stopPropagation();
                   handleSelect(opt.value);
                 }}
-                className="flex items-center gap-1 bg-gray-200 px-2 py-[2px] text-[0.8rem] rounded hover:bg-gray-300 transition"
+                className="flex items-center gap-1 bg-gray-200 px-2 py-[2px] rounded hover:bg-gray-300 transition"
               >
                 {opt.label}
               </span>
@@ -110,6 +114,7 @@ function MultiSearchableSelect({
       {open && (
         <div className="absolute z-10 w-full bg-white border border-gray-300 shadow-md rounded max-h-60 overflow-y-auto">
           <Input
+            autoFocus
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border-b border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none"
@@ -121,7 +126,7 @@ function MultiSearchableSelect({
             onScroll={handleScroll}
             className="max-h-60 overflow-y-auto"
           >
-            {isLoading && <p className="p-2">Đang tải...</p>}
+            {isLoading && <p className="p-[6px_10px]">Đang tải...</p>}
 
             {!isLoading && options.length === 0 && (
               <p className="p-[6px_10px]">Không tìm thấy</p>

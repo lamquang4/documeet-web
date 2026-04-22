@@ -1,4 +1,3 @@
-
 import { memo, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Input from "./Input";
@@ -13,18 +12,22 @@ function InputSearch() {
     const params = new URLSearchParams(searchParams.toString());
 
     if (search.trim()) {
-      params.set("q", search.trim());
-    } else {
-      params.delete("q");
+      return;
     }
-    params.set("page", "1");
+
+    if (search.trim()) {
+      params.set("keyword", search.trim());
+    } else {
+      params.delete("keyword");
+    }
+    params.set("page", "0");
 
     navigate(`?${params.toString()}`);
   };
 
   useEffect(() => {
-    const q = searchParams.get("q") || "";
-    setSearch(q);
+    const keyword = searchParams.get("keyword") || "";
+    setSearch(keyword);
   }, [searchParams]);
   return (
     <form onSubmit={handleSearch}>

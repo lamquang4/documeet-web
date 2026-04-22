@@ -9,11 +9,11 @@ function Account() {
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-full">
       <form className="flex flex-col gap-7 w-full">
-        <h2 className="text-[#74767d]">Tài khoản</h2>
+        <h2 className="text-neutral">Tài khoản</h2>
 
         <div className="gap-[25px] w-full flex flex-wrap lg:flex-nowrap">
           <div className="sm:p-[25px] p-[15px] bg-white rounded-md flex flex-col gap-[20px] w-full">
-            <h5 className="font-bold text-[#74767d]">Thông tin tài khoản</h5>
+            <h5 className="font-bold text-neutral">Thông tin tài khoản</h5>
 
             <div className="flex flex-wrap md:flex-nowrap gap-[15px]">
               <div className="flex flex-col gap-1 w-full">
