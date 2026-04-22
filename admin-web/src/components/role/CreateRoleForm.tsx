@@ -4,7 +4,9 @@ import Button from "../ui/Button";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
 import { useCreateRole } from "../../hooks/queries/useRoles";
-import toast from "react-hot-toast";
+import { useFormValidation } from "../../hooks/useFromValidation";
+import { roleRules } from "../../utils/validation/rules/roleRules";
+import FieldError from "../ui/FieldError";
 
 function CreateRoleForm() {
   const [data, setData] = useState({
@@ -12,6 +14,9 @@ function CreateRoleForm() {
     roleName: "",
     description: "",
   });
+
+  const { errors, handleBlur, clearError, validateAll, resetErrors } =
+    useFormValidation(data, roleRules);
 
   const createRole = useCreateRole();
   const isLoading = createRole.isPending;
@@ -27,25 +32,14 @@ function CreateRoleForm() {
       ...data,
       [name]: name === "roleCode" ? value.toUpperCase().trim() : value,
     });
+
+    clearError(name as keyof typeof data);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!data.roleCode.trim()) {
-      toast.error("Mã chức vụ không được để trống");
-      return;
-    }
-
-    if (!data.roleName.trim()) {
-      toast.error("Tên chức vụ không được để trống");
-      return;
-    }
-
-    if (!data.description.trim()) {
-      toast.error("Mô tả không được để trống");
-      return;
-    }
+    if (!validateAll()) return;
 
     createRole.mutate(
       {
@@ -56,6 +50,7 @@ function CreateRoleForm() {
       {
         onSuccess: () => {
           setData({ roleCode: "", roleName: "", description: "" });
+          resetErrors();
         },
       },
     );
@@ -81,8 +76,11 @@ function CreateRoleForm() {
                 name="roleCode"
                 value={data.roleCode}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("roleCode", e.target.value)}
                 className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                error={errors.roleCode}
               />
+              <FieldError message={errors.roleCode} />
             </div>
 
             <div className="flex flex-col gap-1">
@@ -96,8 +94,11 @@ function CreateRoleForm() {
                 name="roleName"
                 value={data.roleName}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("roleName", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                error={errors.roleName}
               />
+              <FieldError message={errors.roleName} />
             </div>
 
             <div className="flex flex-col gap-1 w-full">
@@ -111,8 +112,11 @@ function CreateRoleForm() {
                 name="description"
                 value={data.description}
                 onChange={handleChange}
-                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                onBlur={(e) => handleBlur("description", e.target.value)}
+                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                error={errors.description}
               />
+              <FieldError message={errors.description} />
             </div>
           </div>
         </div>

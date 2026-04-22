@@ -5,6 +5,9 @@ import Input from "../ui/Input";
 import Label from "../ui/Label";
 import Button from "../ui/Button";
 import { useGetRoleById, useUpdateRole } from "../../hooks/queries/useRoles";
+import { useFormValidation } from "../../hooks/useFromValidation";
+import { roleRules } from "../../utils/validation/rules/roleRules";
+import FieldError from "../ui/FieldError";
 
 function UpdateRoleForm() {
   const navigate = useNavigate();
@@ -14,6 +17,9 @@ function UpdateRoleForm() {
     roleName: "",
     description: "",
   });
+
+  const { errors, handleBlur, clearError, validateAll, resetErrors } =
+    useFormValidation(data, roleRules);
 
   const { data: roleRes, isLoading } = useGetRoleById(id as string);
   const role = roleRes?.data;
@@ -48,34 +54,30 @@ function UpdateRoleForm() {
       ...data,
       [name]: name === "roleCode" ? value.toUpperCase().trim() : value,
     });
+
+    clearError(name as keyof typeof data);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!data.roleCode.trim()) {
-      toast.error("Mã chức vụ không được để trống");
-      return;
-    }
+    if (!validateAll()) return;
 
-    if (!data.roleName.trim()) {
-      toast.error("Tên chức vụ không được để trống");
-      return;
-    }
-
-    if (!data.description.trim()) {
-      toast.error("Mô tả không được để trống");
-      return;
-    }
-
-    updateRole.mutate({
-      id: id ?? "",
-      data: {
-        roleCode: data.roleCode.trim(),
-        roleName: data.roleName.trim(),
-        description: data.description.trim(),
+    updateRole.mutate(
+      {
+        id: id ?? "",
+        data: {
+          roleCode: data.roleCode.trim(),
+          roleName: data.roleName.trim(),
+          description: data.description.trim(),
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          resetErrors();
+        },
+      },
+    );
   };
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-full">
@@ -97,8 +99,11 @@ function UpdateRoleForm() {
                 name="roleCode"
                 value={data.roleCode}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("roleCode", e.target.value)}
                 className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                error={errors.roleCode}
               />
+              <FieldError message={errors.roleCode} />
             </div>
 
             <div className="flex flex-col gap-1">
@@ -112,8 +117,11 @@ function UpdateRoleForm() {
                 name="roleName"
                 value={data.roleName}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("roleName", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                error={errors.roleName}
               />
+              <FieldError message={errors.roleName} />
             </div>
 
             <div className="flex flex-col gap-1 w-full">
@@ -127,8 +135,11 @@ function UpdateRoleForm() {
                 name="description"
                 value={data.description}
                 onChange={handleChange}
-                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                onBlur={(e) => handleBlur("description", e.target.value)}
+                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                error={errors.description}
               />
+              <FieldError message={errors.description} />
             </div>
           </div>
         </div>
