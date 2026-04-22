@@ -44,13 +44,13 @@ export interface UpdateUserRequest {
 export interface CreateRoleRequest {
   roleCode: string;
   roleName: string;
-  description?: string;
+  description: string;
 }
 
 export interface UpdateRoleRequest {
   roleCode: string;
   roleName: string;
-  description?: string;
+  description: string;
 }
 
 export interface CreateUnitRequest {

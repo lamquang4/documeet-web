@@ -15,17 +15,11 @@ function PrivateRoute({ children }: PrivateRouteProps) {
     return null;
   }
 
-  // Token không decode được
-  let decoded: AccessTokenPayload;
+  // Token không đúng format JWT → có thể bị corrupt hoặc giả mạo
+  // Việc verify signature do backend đảm nhiệm
   try {
-    decoded = jwtDecode<AccessTokenPayload>(accessToken);
+    jwtDecode<AccessTokenPayload>(accessToken);
   } catch {
-    logoutAndRedirect();
-    return null;
-  }
-
-  // Token hết hạn
-  if (decoded.exp * 1000 < Date.now()) {
     logoutAndRedirect();
     return null;
   }

@@ -11,12 +11,9 @@ import type {
 } from "../../types/type";
 import type { AxiosError } from "axios";
 
-// query key
 export const roleKeys = {
   all: ["roles"] as const,
-
   lists: () => [...roleKeys.all, "list"] as const,
-
   listParams: (params?: GetRolesParams) =>
     [
       ...roleKeys.lists(),
@@ -24,7 +21,6 @@ export const roleKeys = {
       params?.size ?? 10,
       params?.keyword ?? "",
     ] as const,
-
   detail: (id: string) => [...roleKeys.all, "detail", id] as const,
 };
 
@@ -58,10 +54,7 @@ export const useCreateRole = () => {
     mutationFn: roleApi.create,
 
     onSuccess: (res) => {
-      queryClient.invalidateQueries({
-        queryKey: roleKeys.lists(),
-      });
-
+      queryClient.invalidateQueries({ queryKey: roleKeys.lists() });
       toast.success(res.message);
     },
 
@@ -82,17 +75,10 @@ export const useUpdateRole = () => {
     mutationFn: ({ id, data }) => roleApi.update(id, data),
 
     onSuccess: (res, variables) => {
+      queryClient.invalidateQueries({ queryKey: roleKeys.lists() });
       queryClient.invalidateQueries({
-        queryKey: roleKeys.lists(),
+        queryKey: roleKeys.detail(variables.id),
       });
-
-      if (res.data) {
-        queryClient.setQueryData(roleKeys.detail(variables.id), res);
-      } else {
-        queryClient.invalidateQueries({
-          queryKey: roleKeys.detail(variables.id),
-        });
-      }
 
       toast.success(res.message);
     },
@@ -110,10 +96,7 @@ export const useDeleteRole = () => {
     mutationFn: roleApi.remove,
 
     onSuccess: (res) => {
-      queryClient.invalidateQueries({
-        queryKey: roleKeys.lists(),
-      });
-      
+      queryClient.invalidateQueries({ queryKey: roleKeys.lists() });
       toast.success(res.message);
     },
 

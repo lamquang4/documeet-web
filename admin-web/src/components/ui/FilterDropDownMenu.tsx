@@ -31,7 +31,7 @@ function FilterDropDownMenu({ title, array, paramName }: Props) {
     } else {
       params.delete(paramName);
     }
-    params.set("page", "1");
+    params.set("page", "0");
     navigate({ search: params.toString() });
   };
 

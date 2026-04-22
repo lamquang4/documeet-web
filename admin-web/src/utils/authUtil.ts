@@ -15,6 +15,8 @@ export const logoutAndRedirect = async () => {
   const sessionId = cookieUtil.get("sessionId");
 
   if (refreshToken && sessionId) {
-    await authApi.logout({ refreshToken, sessionId });
+    try {
+      await authApi.logout({ refreshToken, sessionId });
+    } catch {}
   }
 };

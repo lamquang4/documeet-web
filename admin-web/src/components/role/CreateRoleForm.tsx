@@ -42,6 +42,11 @@ function CreateRoleForm() {
       return;
     }
 
+    if (!data.description.trim()) {
+      toast.error("Mô tả không được để trống");
+      return;
+    }
+
     createRole.mutate(
       {
         roleCode: data.roleCode.trim(),
@@ -101,6 +106,7 @@ function CreateRoleForm() {
               <Input
                 type="text"
                 name="description"
+                required
                 value={data.description}
                 onChange={handleChange}
                 className="border border-gray-300 p-[6px_10px] text-[0.9rem] w-full outline-none focus:border-gray-400  "

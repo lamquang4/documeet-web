@@ -77,6 +77,11 @@ function UserList() {
 
     if (!result.isConfirmed || !userId) return;
 
+    if (userId === account.userId) {
+      toast.error("Bạn không thể xóa chính tài khoản của mình");
+      return;
+    }
+
     deleteUser.mutate(userId);
   };
 

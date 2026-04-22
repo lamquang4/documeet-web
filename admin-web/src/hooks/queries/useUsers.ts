@@ -95,11 +95,12 @@ export const useCreateUser = () => {
     AxiosError<ErrorResponse>,
     CreateUserRequest
   >({
-    mutationFn: (data) => userApi.create(data),
+    mutationFn: userApi.create,
 
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: userKeys.lists() });
       queryClient.invalidateQueries({ queryKey: userKeys.selectedForUnits() });
+
       toast.success(res.message);
     },
 
@@ -122,14 +123,9 @@ export const useUpdateUser = () => {
     onSuccess: (res, variables) => {
       queryClient.invalidateQueries({ queryKey: userKeys.lists() });
       queryClient.invalidateQueries({ queryKey: userKeys.selectedForUnits() });
-
-      if (res.data) {
-        queryClient.setQueryData(userKeys.detail(variables.id), res);
-      } else {
-        queryClient.invalidateQueries({
-          queryKey: userKeys.detail(variables.id),
-        });
-      }
+      queryClient.invalidateQueries({
+        queryKey: userKeys.detail(variables.id),
+      });
 
       toast.success(res.message);
     },
@@ -146,11 +142,12 @@ export const useDeleteUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation<ApiResponse<null>, AxiosError<ErrorResponse>, string>({
-    mutationFn: (id) => userApi.remove(id),
+    mutationFn: userApi.remove,
 
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: userKeys.lists() });
       queryClient.invalidateQueries({ queryKey: userKeys.selectedForUnits() });
+
       toast.success(res.message);
     },
 
@@ -160,16 +157,14 @@ export const useDeleteUser = () => {
   });
 };
 
-// Status của user
 export const useLockUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation<ApiResponse<null>, AxiosError<ErrorResponse>, string>({
-    mutationFn: (id) => userApi.lock(id),
+    mutationFn: userApi.lock,
 
     onSuccess: (res, id) => {
       queryClient.invalidateQueries({ queryKey: userKeys.lists() });
-
       queryClient.invalidateQueries({ queryKey: userKeys.detail(id) });
 
       toast.success(res.message);
@@ -185,7 +180,7 @@ export const useUnlockUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation<ApiResponse<null>, AxiosError<ErrorResponse>, string>({
-    mutationFn: (id) => userApi.unlock(id),
+    mutationFn: userApi.unlock,
 
     onSuccess: (res, id) => {
       queryClient.invalidateQueries({ queryKey: userKeys.lists() });
@@ -206,7 +201,7 @@ export const useActivateUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation<ApiResponse<null>, AxiosError<ErrorResponse>, string>({
-    mutationFn: (id) => userApi.activate(id),
+    mutationFn: userApi.activate,
 
     onSuccess: (res, id) => {
       queryClient.invalidateQueries({ queryKey: userKeys.lists() });

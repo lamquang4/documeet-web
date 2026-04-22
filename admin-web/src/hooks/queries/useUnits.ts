@@ -94,11 +94,12 @@ export const useCreateUnit = () => {
     AxiosError<ErrorResponse>,
     CreateUnitRequest
   >({
-    mutationFn: (data) => unitApi.create(data),
+    mutationFn: unitApi.create,
 
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
       queryClient.invalidateQueries({ queryKey: unitKeys.selectedForUsers() });
+
       toast.success(res.message);
     },
 
@@ -121,14 +122,10 @@ export const useUpdateUnit = () => {
     onSuccess: (res, variables) => {
       queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
       queryClient.invalidateQueries({ queryKey: unitKeys.selectedForUsers() });
+      queryClient.invalidateQueries({
+        queryKey: unitKeys.detail(variables.id),
+      });
 
-      if (res.data) {
-        queryClient.setQueryData(unitKeys.detail(variables.id), res);
-      } else {
-        queryClient.invalidateQueries({
-          queryKey: unitKeys.detail(variables.id),
-        });
-      }
       toast.success(res.message);
     },
 
@@ -150,14 +147,9 @@ export const useUpdateUnitStatus = () => {
 
     onSuccess: (res, variables) => {
       queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
-
-      if (res.data) {
-        queryClient.setQueryData(unitKeys.detail(variables.unitId), res);
-      } else {
-        queryClient.invalidateQueries({
-          queryKey: unitKeys.detail(variables.unitId),
-        });
-      }
+      queryClient.invalidateQueries({
+        queryKey: unitKeys.detail(variables.unitId),
+      });
 
       toast.success(res.message || "Cập nhật trạng thái thành công");
     },
@@ -182,7 +174,6 @@ export const useRemoveUserFromUnit = () => {
 
     onSuccess: (res, variables) => {
       queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
-
       queryClient.invalidateQueries({
         queryKey: unitKeys.detail(variables.unitId),
       });
@@ -202,11 +193,12 @@ export const useDeleteUnit = () => {
   const queryClient = useQueryClient();
 
   return useMutation<ApiResponse<null>, AxiosError<ErrorResponse>, string>({
-    mutationFn: (id) => unitApi.remove(id),
+    mutationFn: unitApi.remove,
 
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
       queryClient.invalidateQueries({ queryKey: unitKeys.selectedForUsers() });
+
       toast.success(res.message);
     },
 
