@@ -1,3 +1,4 @@
+import { authApi } from "../apis/authApi";
 import { cookieUtil } from "./cookieUtil";
 
 export const clearAuthStorage = () => {
@@ -6,4 +7,14 @@ export const clearAuthStorage = () => {
   cookieUtil.remove("mfaToken");
   cookieUtil.remove("sessionId");
   localStorage.removeItem("user");
+  window.location.href = "/";
+};
+
+export const logoutAndRedirect = async () => {
+  const refreshToken = cookieUtil.get("refreshToken");
+  const sessionId = cookieUtil.get("sessionId");
+
+  if (refreshToken && sessionId) {
+    await authApi.logout({ refreshToken, sessionId });
+  }
 };

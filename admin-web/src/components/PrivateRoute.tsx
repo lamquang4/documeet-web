@@ -1,10 +1,7 @@
-import { useRef } from "react";
-import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { cookieUtil } from "../utils/cookieUtil";
-import { clearAuthStorage } from "../utils/authUtil";
+import { logoutAndRedirect } from "../utils/authUtil";
 import type { AccessTokenPayload } from "../types/type";
-import { useLogout } from "../hooks/queries/useAuth";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -12,12 +9,10 @@ interface PrivateRouteProps {
 
 function PrivateRoute({ children }: PrivateRouteProps) {
   const accessToken = cookieUtil.get("accessToken");
-  const { mutate: logout } = useLogout();
-  const hasLoggedOut = useRef(false);
 
   // Không có token
   if (!accessToken) {
-    return <Navigate to="/" replace />;
+    return null;
   }
 
   // Token không decode được
@@ -25,14 +20,14 @@ function PrivateRoute({ children }: PrivateRouteProps) {
   try {
     decoded = jwtDecode<AccessTokenPayload>(accessToken);
   } catch {
-    clearAuthStorage();
-    return <Navigate to="/" replace />;
+    logoutAndRedirect();
+    return null;
   }
 
   // Token hết hạn
   if (decoded.exp * 1000 < Date.now()) {
-    clearAuthStorage();
-    return <Navigate to="/" replace />;
+    logoutAndRedirect();
+    return null;
   }
 
   // Không có user hoặc không phải ADMIN
@@ -44,14 +39,8 @@ function PrivateRoute({ children }: PrivateRouteProps) {
   }
 
   if (!user || user.role !== "ADMIN") {
-    clearAuthStorage();
-
-    if (!hasLoggedOut.current) {
-      hasLoggedOut.current = true;
-      logout();
-    }
-
-    return <Navigate to="/" replace />;
+    logoutAndRedirect();
+    return null;
   }
 
   return <>{children}</>;

@@ -1,8 +1,8 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { cookieUtil } from "../utils/cookieUtil";
-import { clearAuthStorage } from "../utils/authUtil";
-import { authApi } from "../apis/authApi"; // Bắt buộc import API để gọi trực tiếp
+import { logoutAndRedirect } from "../utils/authUtil";
+import { authApi } from "../apis/authApi";
 import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../constant/cookieConstant";
 
 const axiosInstance = axios.create({
@@ -19,6 +19,22 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  isRefreshing = false;
+  failedQueue = [];
+};
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -27,7 +43,17 @@ axiosInstance.interceptors.response.use(
     const message = error.response?.data?.message;
 
     if (status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return axiosInstance(originalRequest);
+        });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
         const refreshToken = cookieUtil.get("refreshToken");
@@ -50,13 +76,15 @@ axiosInstance.interceptors.response.use(
           });
         }
 
+        processQueue(null, newAccessToken);
+
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        // Nếu refresh cũng lỗi (hết hạn hoặc sai)
-        clearAuthStorage();
-        window.location.href = "/";
-        return Promise.reject(refreshError);
+      } catch (err) {
+        processQueue(err, null);
+        await logoutAndRedirect();
+      } finally {
+        isRefreshing = false;
       }
     }
 

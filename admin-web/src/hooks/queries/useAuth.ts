@@ -99,15 +99,13 @@ export const useLogout = () => {
     },
 
     onSuccess: () => {
+      queryClient.invalidateQueries();
       clearAuthStorage();
-      queryClient.clear();
-      window.location.href = "/";
     },
 
     onError: () => {
+      queryClient.invalidateQueries();
       clearAuthStorage();
-      queryClient.clear();
-      window.location.href = "/";
     },
   });
 };
