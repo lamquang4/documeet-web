@@ -234,3 +234,11 @@ export interface MfaTokenPayload {
   iat: number;
   exp: number;
 }
+
+export interface CookieOptions {
+  expires?: number; // ngày
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  sameSite?: "Strict" | "Lax" | "None";
+}

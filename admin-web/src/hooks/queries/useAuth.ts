@@ -9,7 +9,13 @@ import type {
 } from "../../types/type";
 import { authApi } from "../../apis/authApi";
 import { cookieUtil } from "../../utils/cookieUtil";
-import { clearAuthStorage } from "../../utils/authUtil";
+import {
+  clearAuthStorage,
+  initVisibilityRefresh,
+  saveTokens,
+  scheduleRefresh,
+  stopRefreshScheduler,
+} from "../../utils/authService";
 import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../../constant/cookieConstant";
 
 export const authKeys = {
@@ -51,31 +57,21 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
             })
             .catch(() => {});
         }
-
         return;
       }
 
       toast.success(res.message);
 
-      // set token vào cookie
-      cookieUtil.set("accessToken", res.data.accessToken, {
-        ...COOKIE_OPTIONS,
-        expires: res.data.expiresIn / 86400,
-      });
-
+      // Lưu token + user
+      saveTokens(res.data);
       cookieUtil.set("sessionId", res.data.sessionId, {
         ...COOKIE_OPTIONS,
         expires: COOKIE_EXPIRES.session,
       });
 
-      cookieUtil.set("refreshToken", res.data.refreshToken, {
-        ...COOKIE_OPTIONS,
-        expires: COOKIE_EXPIRES.refresh,
-      });
-
-      if (res.data?.user) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-      }
+      // Khởi động silent refresh timer ngay sau login
+      scheduleRefresh(res.data.expiresIn);
+      initVisibilityRefresh();
 
       queryClient.clear();
       window.location.href = "/account/profile";
@@ -104,12 +100,15 @@ export const useLogout = () => {
     },
 
     onSettled: () => {
+      // Dừng timer khi logout
+      stopRefreshScheduler();
       queryClient.clear();
       clearAuthStorage();
     },
   });
 };
 
+// useRefresh vẫn giữ để dùng thủ công nếu cần
 export const useRefresh = () => {
   const queryClient = useQueryClient();
 
@@ -124,18 +123,9 @@ export const useRefresh = () => {
     },
 
     onSuccess: (res) => {
-      cookieUtil.set("accessToken", res.data.accessToken, {
-        ...COOKIE_OPTIONS,
-        expires: res.data.expiresIn / 86400,
-      });
-
-      if (res.data?.refreshToken) {
-        cookieUtil.set("refreshToken", res.data.refreshToken, {
-          ...COOKIE_OPTIONS,
-          expires: COOKIE_EXPIRES.refresh,
-        });
-      }
-
+      saveTokens(res.data);
+      // Reset timer sau khi refresh thủ công
+      scheduleRefresh(res.data.expiresIn);
       queryClient.invalidateQueries();
     },
   });

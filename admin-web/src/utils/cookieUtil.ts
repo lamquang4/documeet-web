@@ -1,10 +1,4 @@
-type CookieOptions = {
-  expires?: number; // ngày
-  path?: string;
-  domain?: string;
-  secure?: boolean;
-  sameSite?: "Strict" | "Lax" | "None";
-};
+import type { CookieOptions } from "../types/type";
 
 export const cookieUtil = {
   // set cookie
