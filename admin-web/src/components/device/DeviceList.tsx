@@ -175,6 +175,7 @@ function DeviceList() {
                     <div className="flex items-center gap-[15px]">
                       {device.status === "ACTIVE" && (
                         <Button
+                          className="hover-scale"
                           onClick={() =>
                             handleUpdateStatus(device.deviceId, "REVOKED")
                           }
@@ -192,6 +193,7 @@ function DeviceList() {
 
                       {device.status === "REVOKED" && (
                         <Button
+                          className="hover-scale"
                           onClick={() =>
                             handleUpdateStatus(device.deviceId, "ACTIVE")
                           }
@@ -210,6 +212,7 @@ function DeviceList() {
                       {(device.status === "ACTIVE" ||
                         device.status === "REVOKED") && (
                         <Button
+                          className="hover-scale"
                           onClick={() =>
                             handleUpdateStatus(device.deviceId, "WIPED")
                           }

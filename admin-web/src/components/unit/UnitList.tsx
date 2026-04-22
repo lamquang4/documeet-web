@@ -135,6 +135,7 @@ function UnitList() {
                   <td className="p-[1rem]">
                     <div className="flex items-center gap-[15px]">
                       <Button
+                        className="hover-scale"
                         onClick={() =>
                           handleUpdateStatus(
                             unit.unitId,
@@ -168,7 +169,10 @@ function UnitList() {
                         </div>
                       </Button>
 
-                      <Link to={`/units/edit/${unit.unitId}`}>
+                      <Link
+                        className="hover-scale"
+                        to={`/units/edit/${unit.unitId}`}
+                      >
                         <div className="relative group">
                           <SquarePen
                             size={22}
@@ -180,7 +184,10 @@ function UnitList() {
                         </div>
                       </Link>
 
-                      <Button onClick={() => handleDelete(unit.unitId || "")}>
+                      <Button
+                        className="hover-scale"
+                        onClick={() => handleDelete(unit.unitId || "")}
+                      >
                         <div className="relative group">
                           <Trash2
                             size={22}

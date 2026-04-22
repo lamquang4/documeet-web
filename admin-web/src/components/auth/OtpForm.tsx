@@ -140,7 +140,7 @@ function OtpForm() {
                 toast("OTP đã gửi");
               }}
               disabled={timeLeft > 0}
-              className={` text-[0.9rem] font-medium ${timeLeft <= 0 ? "text-success" : "text-neutral"}`}
+              className={`text-[0.9rem] font-medium ${timeLeft <= 0 ? "text-success" : "text-neutral"}`}
             >
               Gửi lại mã
             </Button>
@@ -164,7 +164,7 @@ function OtpForm() {
               timeLeft <= 0
             }
             type="submit"
-            className="w-full bg-success text-[0.9rem] text-white focus:outline-none font-semibold rounded-sm px-5 py-2.5 text-center"
+            className="w-full hover-scale bg-success text-[0.9rem] text-white focus:outline-none font-semibold rounded-sm px-5 py-2.5 text-center"
           >
             Xác nhận
           </Button>

@@ -102,7 +102,7 @@ function LoginForm({ onRequireMfa }: Props) {
 
               <Button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral"
+                className="absolute hover-scale right-3 top-1/2 -translate-y-1/2 text-neutral"
                 onClick={toggleShowPassword}
               >
                 {!showPassword ? <Eye size={22} /> : <EyeOff size={22} />}
@@ -113,7 +113,7 @@ function LoginForm({ onRequireMfa }: Props) {
           <Button
             disabled={isLoading}
             type="submit"
-            className="w-full bg-primary text-[0.9rem] text-white focus:outline-none font-semibold rounded-sm px-5 py-2.5 text-center mt-6"
+            className="w-full hover-scale bg-primary text-[0.9rem] text-white focus:outline-none font-semibold rounded-sm px-5 py-2.5 text-center mt-6"
           >
             Đăng nhập
           </Button>

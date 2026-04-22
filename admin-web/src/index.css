@@ -13,7 +13,7 @@
   --color-bg-primary: #f1f4f9;
 }
 
-.btn-hover-scale {
+.hover-scale {
   @apply transition-all duration-200 ease-out hover:scale-105 active:scale-95;
 }
 

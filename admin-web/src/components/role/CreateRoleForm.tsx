@@ -121,14 +121,14 @@ function CreateRoleForm() {
           <Button
             disabled={isLoading}
             type="submit"
-            className="p-[6px_10px] bg-success text-white text-[0.9rem] font-medium text-center rounded-sm"
+            className="hover-scale p-[6px_10px] bg-success text-white text-[0.9rem] font-medium text-center rounded-sm"
           >
             {isLoading ? "Đang thêm..." : "Thêm"}
           </Button>
 
           <Link
             to="/roles"
-            className="p-[6px_10px] bg-danger text-white text-[0.9rem] text-center   rounded-sm"
+            className="hover-scale p-[6px_10px] bg-danger text-white text-[0.9rem] text-center   rounded-sm"
           >
             Trờ về
           </Link>

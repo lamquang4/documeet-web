@@ -88,7 +88,10 @@ function RoleList() {
 
                   <td className="p-[1rem]">
                     <div className="flex items-center gap-[15px]">
-                      <Link to={`/roles/edit/${role.roleId}`}>
+                      <Link
+                        to={`/roles/edit/${role.roleId}`}
+                        className="hover-scale"
+                      >
                         <div className="relative group">
                           <SquarePen
                             size={22}
@@ -106,6 +109,7 @@ function RoleList() {
                           deleteRole.isPending &&
                           deleteRole.variables === role.roleId
                         }
+                        className="hover-scale"
                       >
                         <div className="relative group">
                           <Trash2

@@ -226,9 +226,10 @@ function UserList() {
                       )}
                   </td>
 
-                  <td className="p-[1rem]  ">
+                  <td className="p-[1rem]">
                     <div className="flex items-center gap-[15px]">
                       <Button
+                        className="hover-scale"
                         onClick={() =>
                           handleUpdateStatus(
                             user.userId,
@@ -273,7 +274,10 @@ function UserList() {
                         </div>
                       </Button>
 
-                      <Link to={`/users/edit/${user.userId}`}>
+                      <Link
+                        className="hover-scale"
+                        to={`/users/edit/${user.userId}`}
+                      >
                         <div className="relative group">
                           <SquarePen
                             size={22}
@@ -285,7 +289,10 @@ function UserList() {
                         </div>
                       </Link>
 
-                      <Button onClick={() => handleDelete(user.userId || "")}>
+                      <Button
+                        className="hover-scale"
+                        onClick={() => handleDelete(user.userId || "")}
+                      >
                         <div className="relative group">
                           <Trash2
                             size={22}

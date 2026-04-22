@@ -137,14 +137,14 @@ function UpdateRoleForm() {
           <Button
             disabled={isLoadingUpdate}
             type="submit"
-            className="p-[6px_10px] bg-success text-white text-[0.9rem] font-medium text-center rounded-sm"
+            className="p-[6px_10px] hover-scale bg-success text-white text-[0.9rem] font-medium text-center rounded-sm"
           >
             {isLoadingUpdate ? "Đang cập nhật..." : "Cập nhật"}
           </Button>
 
           <Link
             to="/roles"
-            className="p-[6px_10px] bg-danger text-white text-[0.9rem] text-center   rounded-sm"
+            className="p-[6px_10px] hover-scale bg-danger text-white text-[0.9rem] text-center   rounded-sm"
           >
             Trờ về
           </Link>

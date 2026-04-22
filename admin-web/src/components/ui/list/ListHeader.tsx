@@ -19,7 +19,7 @@ function ListHeader({ title, totalItems, addLink }: Props) {
         {addLink && (
           <Link
             to={addLink}
-            className="bg-primary text-white border-0 cursor-pointer text-[0.9rem] font-medium w-[90px] !flex p-[10px_12px] items-center justify-center gap-[5px]"
+            className="bg-primary hover-scale text-white border-0 cursor-pointer text-[0.9rem] font-medium w-[90px] !flex p-[10px_12px] items-center justify-center gap-[5px]"
           >
             <CirclePlus size={22} /> Thêm
           </Link>
