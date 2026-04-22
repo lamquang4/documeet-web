@@ -11,10 +11,6 @@ function InputSearch() {
     e.preventDefault();
     const params = new URLSearchParams(searchParams.toString());
 
-    if (!search.trim()) {
-      return;
-    }
-
     if (search.trim()) {
       params.set("keyword", search.trim());
     } else {
