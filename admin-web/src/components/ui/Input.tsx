@@ -13,7 +13,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
         className={twMerge(
           "text-[0.9rem] outline-none transition-colors",
           className,
-          error && "border-red-500 focus:border-red-500",
+          error && "border-danger focus:border-danger",
         )}
         {...props}
       />

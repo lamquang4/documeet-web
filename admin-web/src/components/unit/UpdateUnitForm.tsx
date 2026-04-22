@@ -9,6 +9,9 @@ import Input from "../ui/Input";
 import { useGetUnitById, useUpdateUnit } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUserForUnit } from "../../hooks/queries/useUsers";
+import { useFormValidation } from "../../hooks/useFromValidation";
+import { unitRules } from "../../utils/validation/rules/unitRules";
+import FieldError from "../ui/FieldError";
 
 function UpdateUnitForm() {
   const navigate = useNavigate();
@@ -21,6 +24,15 @@ function UpdateUnitForm() {
   });
   const [keyword, setKeyword] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
+
+  const validateData = {
+    unitCode: data.unitCode,
+    unitName: data.unitName,
+    status: data.status,
+  };
+
+  const { errors, handleBlur, clearError, validateAll, resetErrors } =
+    useFormValidation(validateData, unitRules);
 
   const { data: unitRes, isLoading } = useGetUnitById(id as string);
   const unit = unitRes?.data;
@@ -71,30 +83,31 @@ function UpdateUnitForm() {
       ...data,
       [name]: name === "unitCode" ? value.toUpperCase().trim() : value,
     });
+
+    clearError(name as keyof typeof validateData);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!data.unitCode.trim()) {
-      toast.error("Mã đơn vị không được để trống");
-      return;
-    }
+    if (!validateAll()) return;
 
-    if (!data.unitName.trim()) {
-      toast.error("Tên đơn vị không được để trống");
-      return;
-    }
-
-    await updateUnit.mutateAsync({
-      id: id ?? "",
-      data: {
-        unitCode: data.unitCode.trim(),
-        unitName: data.unitName.trim(),
-        status: data.status as "ACTIVE" | "INACTIVE",
-        userIds: data.userIds,
+    await updateUnit.mutateAsync(
+      {
+        id: id ?? "",
+        data: {
+          unitCode: data.unitCode.trim(),
+          unitName: data.unitName.trim(),
+          status: data.status as "ACTIVE" | "INACTIVE",
+          userIds: data.userIds,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          resetErrors();
+        },
+      },
+    );
   };
 
   return (
@@ -117,8 +130,11 @@ function UpdateUnitForm() {
                 name="unitCode"
                 value={data.unitCode}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("unitCode", e.target.value)}
                 className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                error={errors.unitCode}
               />
+              <FieldError message={errors.unitCode} />
             </div>
 
             <div className="flex flex-col gap-1">
@@ -132,8 +148,11 @@ function UpdateUnitForm() {
                 name="unitName"
                 value={data.unitName}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("unitName", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                error={errors.unitName}
               />
+              <FieldError message={errors.unitName} />
             </div>
 
             <div className="flex flex-col gap-1 w-full">
@@ -146,12 +165,15 @@ function UpdateUnitForm() {
                 id="status"
                 value={data.status}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("status", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                error={errors.status}
               >
                 <option value="">Chọn tình trạng</option>
                 <option value="ACTIVE">Hoạt động</option>
                 <option value="INACTIVE">Không hoạt động</option>
               </Select>
+              <FieldError message={errors.status} />
             </div>
           </div>
 

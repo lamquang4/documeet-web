@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, memo } from "react";
 import Input from "./Input";
 import { ChevronDown } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 type Option = {
   value: string;
@@ -10,6 +11,7 @@ type Option = {
 type Props = {
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   placeholder?: string;
   options: Option[];
   setKeyword: (val: string) => void;
@@ -17,11 +19,13 @@ type Props = {
   fetchNextPage?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
+  error?: string;
 };
 
 function SearchableSelect({
   value,
   onChange,
+  onBlur,
   placeholder = "Chọn...",
   options,
   setKeyword,
@@ -29,6 +33,7 @@ function SearchableSelect({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  error,
 }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -38,9 +43,10 @@ function SearchableSelect({
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!open) return;
-    setKeyword(search);
-  }, [search, open, setKeyword]);
+    if (open) {
+      setKeyword(search);
+    }
+  }, [search]);
 
   // đóng menu khi bấm ngoài
   useEffect(() => {
@@ -50,16 +56,20 @@ function SearchableSelect({
         !containerRef.current.contains(e.target as Node)
       ) {
         setOpen(false);
+        onBlur?.();
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [onBlur]);
 
   // kéo xuống cuối
   const handleScroll = () => {
     if (!listRef.current) return;
+
     const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+
     const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
 
     if (isAtBottom && hasNextPage && !isFetchingNextPage) {
@@ -74,7 +84,11 @@ function SearchableSelect({
           setOpen((prev) => !prev);
           setSearch("");
         }}
-        className={`border p-[6px_10px] flex items-center justify-between w-full ${open ? "border-gray-400" : "border-gray-300"}`}
+        className={twMerge(
+          "border p-[6px_10px] flex items-center justify-between w-full cursor-pointer transition-colors",
+          open ? "border-gray-400" : "border-gray-300",
+          error && "border-red-500",
+        )}
       >
         <p>{selectedOption ? selectedOption.label : placeholder}</p>
         <ChevronDown size={18} />
@@ -108,6 +122,7 @@ function SearchableSelect({
                     onClick={() => {
                       onChange(opt.value);
                       setOpen(false);
+                      onBlur?.();
                     }}
                     className="p-[6px_10px] text-[0.9rem] hover:bg-gray-100 cursor-pointer"
                   >

@@ -7,17 +7,26 @@ import Input from "../ui/Input";
 import { useCreateUnit } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUserForUnit } from "../../hooks/queries/useUsers";
-import toast from "react-hot-toast";
+import { unitRules } from "../../utils/validation/rules/unitRules";
+import { useFormValidation } from "../../hooks/useFromValidation";
+import FieldError from "../ui/FieldError";
 
 function CreateUnitForm() {
   const [data, setData] = useState({
     unitCode: "",
     unitName: "",
-    status: "",
     userIds: [] as string[],
   });
   const [keyword, setKeyword] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
+
+  const validateData = {
+    unitCode: data.unitCode,
+    unitName: data.unitName,
+  };
+
+  const { errors, handleBlur, clearError, validateAll, resetErrors } =
+    useFormValidation(validateData, unitRules);
 
   const createUnit = useCreateUnit();
   const isLoading = createUnit.isPending;
@@ -46,19 +55,14 @@ function CreateUnitForm() {
       ...data,
       [name]: name === "unitCode" ? value.toUpperCase().trim() : value,
     });
+
+    clearError(name as keyof typeof validateData);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!data.unitCode.trim()) {
-      toast.error("Mã đơn vị không được để trống");
-      return;
-    }
 
-    if (!data.unitName.trim()) {
-      toast.error("Tên đơn vị không được để trống");
-      return;
-    }
+    if (!validateAll()) return;
 
     createUnit.mutate(
       {
@@ -68,7 +72,8 @@ function CreateUnitForm() {
       },
       {
         onSuccess: () => {
-          setData({ unitCode: "", unitName: "", status: "", userIds: [] });
+          setData({ unitCode: "", unitName: "", userIds: [] });
+          resetErrors();
         },
       },
     );
@@ -93,8 +98,11 @@ function CreateUnitForm() {
                 name="unitCode"
                 value={data.unitCode}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("unitCode", e.target.value)}
                 className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                error={errors.unitCode}
               />
+              <FieldError message={errors.unitCode} />
             </div>
 
             <div className="flex flex-col gap-1">
@@ -108,8 +116,11 @@ function CreateUnitForm() {
                 name="unitName"
                 value={data.unitName}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("unitName", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                error={errors.unitName}
               />
+              <FieldError message={errors.unitName} />
             </div>
           </div>
 

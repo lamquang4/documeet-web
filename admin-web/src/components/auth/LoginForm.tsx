@@ -4,10 +4,12 @@ import Label from "../ui/Label";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { useLogin } from "../../hooks/queries/useAuth";
-import toast from "react-hot-toast";
 import Overplay from "../ui/Overplay";
 import Loading from "../ui/Loading";
 import { getDeviceIMEI } from "../../utils/deviceUtil";
+import { loginRules } from "../../utils/validation/rules/loginRules";
+import { useFormValidation } from "../../hooks/useFromValidation";
+import FieldError from "../ui/FieldError";
 type Props = {
   onRequireMfa: () => void;
 };
@@ -15,6 +17,11 @@ type Props = {
 function LoginForm({ onRequireMfa }: Props) {
   const [data, setData] = useState({ governmentId: "", password: "" });
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const { errors, handleBlur, clearError, validateAll } = useFormValidation(
+    data,
+    loginRules,
+  );
 
   const login = useLogin({ onRequireMfa });
   const isLoading = login.isPending;
@@ -28,20 +35,13 @@ function LoginForm({ onRequireMfa }: Props) {
   ) => {
     const { name, value } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
+    clearError(name as keyof typeof data);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!data.governmentId.trim()) {
-      toast.error("Số định danh cá nhân không được để trống");
-      return;
-    }
-
-    if (!data.password.trim()) {
-      toast.error("Mật khẩu không được để trống");
-      return;
-    }
+    if (!validateAll()) return;
 
     const deviceIMEI = await getDeviceIMEI();
 
@@ -79,9 +79,12 @@ function LoginForm({ onRequireMfa }: Props) {
               name="governmentId"
               value={data.governmentId}
               onChange={handleChange}
+              onBlur={(e) => handleBlur("governmentId", e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300"
               placeholder="Nhập số định danh cá nhân"
+              error={errors.governmentId}
             />
+            <FieldError message={errors.governmentId} />
           </div>
 
           <div className="space-y-[5px]">
@@ -96,8 +99,10 @@ function LoginForm({ onRequireMfa }: Props) {
                 name="password"
                 value={data.password}
                 onChange={handleChange}
+                onBlur={(e) => handleBlur("password", e.target.value)}
                 placeholder="Nhập mật khẩu"
                 className="block w-full px-3 pr-12 py-2 border border-gray-300"
+                error={errors.password}
               />
 
               <Button
@@ -108,6 +113,8 @@ function LoginForm({ onRequireMfa }: Props) {
                 {!showPassword ? <Eye size={22} /> : <EyeOff size={22} />}
               </Button>
             </div>
+
+            <FieldError message={errors.password} />
           </div>
 
           <Button

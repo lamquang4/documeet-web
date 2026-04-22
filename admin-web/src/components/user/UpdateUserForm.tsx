@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { validateEmail } from "../../utils/validation/validateEmail";
-import { validatePhone } from "../../utils/validation/validatePhone";
 import SearchableSelect from "../ui/SearchableSelect";
 import Button from "../ui/Button";
 import Select from "../ui/Select";
@@ -10,11 +8,11 @@ import Label from "../ui/Label";
 import Input from "../ui/Input";
 import { useGetUserById, useUpdateUser } from "../../hooks/queries/useUsers";
 import { useGetAllRoles } from "../../hooks/queries/useRoles";
-import { validatePassword } from "../../utils/validation/validatePassword";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUnitForUser } from "../../hooks/queries/useUnits";
-import { validateGovernmentId } from "../../utils/validation/validateGovermentId";
-import { validateSize } from "../../utils/validation/validateSize";
+import { useFormValidation } from "../../hooks/useFromValidation";
+import { updateUserRules } from "../../utils/validation/rules/updateUserRules";
+import FieldError from "../ui/FieldError";
 
 function UpdateUserForm() {
   const navigate = useNavigate();
@@ -31,6 +29,9 @@ function UpdateUserForm() {
   });
   const [keyword, setKeyword] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
+
+  const { errors, handleBlur, clearError, validateAll, resetErrors } =
+    useFormValidation(data, updateUserRules);
 
   const account = JSON.parse(localStorage.getItem("user") || "null");
 
@@ -86,70 +87,17 @@ function UpdateUserForm() {
       ...prev,
       [name]: name === "email" ? value.toLowerCase() : value,
     }));
+
+    clearError(name as keyof typeof data);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!validateAll()) return;
+
     if (data.status === "LOCKED" && user?.userId === account.userId) {
       toast.error("Bạn không thể khóa chính tài khoản của mình");
-      return;
-    }
-
-    if (!data.governmentId.trim()) {
-      toast.error("Số định danh cá nhân không được để trống");
-      return;
-    }
-
-    if (!validateGovernmentId(data.governmentId)) {
-      toast.error("Số định danh cá nhân phải gồm đúng 12 chữ số");
-      return;
-    }
-
-    if (!data.fullName.trim()) {
-      toast.error("Họ tên không được để trống");
-      return;
-    }
-
-    if (!validateSize(data.fullName.trim(), 2, 100)) {
-      toast.error("Họ tên phải từ 2 đến 100 ký tự");
-      return;
-    }
-
-    if (!data.phoneNumber.trim()) {
-      toast.error("Số điện thoại không hợp lệ");
-      return;
-    }
-
-    if (!data.unitId) {
-      toast.error("Vui lòng chọn đơn vị");
-      return;
-    }
-
-    if (!data.roleId) {
-      toast.error("Vui lòng chọn chức vụ");
-      return;
-    }
-
-    if (!data.status) {
-      toast.error("Vui lòng chọn tình trạng");
-      return;
-    }
-
-    if (!validateEmail(data.email)) {
-      toast.error("Email không hợp lệ");
-      return;
-    }
-
-    if (!validatePhone(data.phoneNumber)) {
-      toast.error("Số điện thoại không hợp lệ");
-      return;
-    }
-
-    if (data.passwordHash && !validatePassword(data.passwordHash)) {
-      toast.error(
-        "Mật khẩu phải chứa ít nhất một chữ cái in hoa, một chữ cái thường, một chữ số và một ký tự đặc biệt",
-      );
       return;
     }
 
@@ -173,6 +121,7 @@ function UpdateUserForm() {
             ...prev,
             passwordHash: "",
           }));
+          resetErrors();
         },
       },
     );
@@ -199,8 +148,11 @@ function UpdateUserForm() {
                   name="governmentId"
                   value={data.governmentId}
                   onChange={handleChange}
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                  onBlur={(e) => handleBlur("governmentId", e.target.value)}
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.governmentId}
                 />
+                <FieldError message={errors.governmentId} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -214,8 +166,11 @@ function UpdateUserForm() {
                   name="phoneNumber"
                   value={data.phoneNumber}
                   onChange={handleChange}
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                  onBlur={(e) => handleBlur("phoneNumber", e.target.value)}
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.phoneNumber}
                 />
+                <FieldError message={errors.phoneNumber} />
               </div>
             </div>
 
@@ -231,9 +186,11 @@ function UpdateUserForm() {
                   name="fullName"
                   value={data.fullName}
                   onChange={handleChange}
-                  required
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                  onBlur={(e) => handleBlur("fullName", e.target.value)}
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.fullName}
                 />
+                <FieldError message={errors.fullName} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -247,8 +204,11 @@ function UpdateUserForm() {
                   name="email"
                   value={data.email}
                   onChange={handleChange}
-                  className="lowercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                  onBlur={(e) => handleBlur("email", e.target.value)}
+                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.email}
                 />
+                <FieldError message={errors.email} />
               </div>
             </div>
 
@@ -270,7 +230,10 @@ function UpdateUserForm() {
                   fetchNextPage={fetchNextPage}
                   hasNextPage={hasNextPage}
                   isFetchingNextPage={isFetchingNextPage}
+                  onBlur={() => handleBlur("unitId", data.unitId)}
+                  error={errors.unitId}
                 />
+                <FieldError message={errors.unitId} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -279,10 +242,13 @@ function UpdateUserForm() {
                 </Label>
 
                 <Select
+                  id="roleId"
                   name="roleId"
                   value={data.roleId}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("roleId", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                  error={errors.roleId}
                 >
                   <option value="">Chọn chức vụ</option>
                   {roles.map((role) => (
@@ -291,6 +257,7 @@ function UpdateUserForm() {
                     </option>
                   ))}
                 </Select>
+                <FieldError message={errors.roleId} />
               </div>
             </div>
 
@@ -305,13 +272,16 @@ function UpdateUserForm() {
                   name="status"
                   value={data.status}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("status", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                  error={errors.status}
                 >
                   <option value="">Chọn tình trạng</option>
                   <option value="ACTIVE">Hoạt động</option>
                   <option value="LOCKED">Bị khóa</option>
                   <option value="DISABLED">Vô hiệu hóa</option>
                 </Select>
+                <FieldError message={errors.status} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -322,8 +292,11 @@ function UpdateUserForm() {
                   name="passwordHash"
                   value={data.passwordHash}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("passwordHash", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.passwordHash}
                 />
+                <FieldError message={errors.passwordHash} />
               </div>
             </div>
           </div>

@@ -1,8 +1,5 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { validateEmail } from "../../utils/validation/validateEmail";
-import { validatePhone } from "../../utils/validation/validatePhone";
 import SearchableSelect from "../ui/SearchableSelect";
 import Button from "../ui/Button";
 import Select from "../ui/Select";
@@ -10,11 +7,11 @@ import Label from "../ui/Label";
 import Input from "../ui/Input";
 import { useGetAllRoles } from "../../hooks/queries/useRoles";
 import { useCreateUser } from "../../hooks/queries/useUsers";
-import { validatePassword } from "../../utils/validation/validatePassword";
 import { useGetSelectedUnitForUser } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
-import { validateGovernmentId } from "../../utils/validation/validateGovermentId";
-import { validateSize } from "../../utils/validation/validateSize";
+import { createUserRules } from "../../utils/validation/rules/createUserRules";
+import { useFormValidation } from "../../hooks/useFromValidation";
+import FieldError from "../ui/FieldError";
 
 function CreateUserForm() {
   const [data, setData] = useState({
@@ -29,6 +26,9 @@ function CreateUserForm() {
   });
   const [keyword, setKeyword] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
+
+  const { errors, handleBlur, clearError, validateAll, resetErrors } =
+    useFormValidation(data, createUserRules);
 
   const createUser = useCreateUser();
   const isLoading = createUser.isPending;
@@ -58,67 +58,14 @@ function CreateUserForm() {
       ...prev,
       [name]: name === "email" ? value.toLowerCase() : value,
     }));
+
+    clearError(name as keyof typeof data);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!data.governmentId.trim()) {
-      toast.error("Số định danh cá nhân không được để trống");
-      return;
-    }
-
-    if (!validateGovernmentId(data.governmentId)) {
-      toast.error("Số định danh cá nhân phải gồm đúng 12 chữ số");
-      return;
-    }
-
-    if (!data.fullName.trim()) {
-      toast.error("Họ tên không được để trống");
-      return;
-    }
-
-    if (!validateSize(data.fullName.trim(), 2, 100)) {
-      toast.error("Họ tên phải từ 2 đến 100 ký tự");
-      return;
-    }
-
-    if (!data.unitId) {
-      toast.error("Vui lòng chọn đơn vị");
-      return;
-    }
-
-    if (!data.roleId) {
-      toast.error("Vui lòng chọn chức vụ");
-      return;
-    }
-
-    if (!data.passwordHash) {
-      toast.error("Mật khẩu không được để trống");
-      return;
-    }
-
-    if (!validateEmail(data.email)) {
-      toast.error("Email không hợp lệ");
-      return;
-    }
-
-    if (!validatePhone(data.phoneNumber)) {
-      toast.error("Số điện thoại không hợp lệ");
-      return;
-    }
-
-    if (!validatePassword(data.passwordHash)) {
-      toast.error(
-        "Mật khẩu phải chứa ít nhất một chữ cái in hoa, một chữ cái thường, một chữ số và một ký tự đặc biệt",
-      );
-      return;
-    }
-
-    if (data.passwordHash !== data.repasswordHash) {
-      toast.error("Mật khẩu nhập lại không khớp");
-      return;
-    }
+    if (!validateAll()) return;
 
     createUser.mutate(
       {
@@ -140,6 +87,7 @@ function CreateUserForm() {
             passwordHash: "",
             repasswordHash: "",
           });
+          resetErrors();
         },
       },
     );
@@ -166,8 +114,11 @@ function CreateUserForm() {
                   name="governmentId"
                   value={data.governmentId}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("governmentId", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.governmentId}
                 />
+                <FieldError message={errors.governmentId} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -181,8 +132,11 @@ function CreateUserForm() {
                   name="phoneNumber"
                   value={data.phoneNumber}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("phoneNumber", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.phoneNumber}
                 />
+                <FieldError message={errors.phoneNumber} />
               </div>
             </div>
 
@@ -198,8 +152,11 @@ function CreateUserForm() {
                   name="fullName"
                   value={data.fullName}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("fullName", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.fullName}
                 />
+                <FieldError message={errors.fullName} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -213,8 +170,11 @@ function CreateUserForm() {
                   name="email"
                   value={data.email}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("email", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.email}
                 />
+                <FieldError message={errors.email} />
               </div>
             </div>
 
@@ -236,7 +196,10 @@ function CreateUserForm() {
                   fetchNextPage={fetchNextPage}
                   hasNextPage={hasNextPage}
                   isFetchingNextPage={isFetchingNextPage}
+                  onBlur={() => handleBlur("unitId", data.unitId)}
+                  error={errors.unitId}
                 />
+                <FieldError message={errors.unitId} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -249,7 +212,9 @@ function CreateUserForm() {
                   name="roleId"
                   value={data.roleId}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("roleId", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                  error={errors.roleId}
                 >
                   <option value="">Chọn chức vụ</option>
                   {roles.map((role) => (
@@ -258,6 +223,7 @@ function CreateUserForm() {
                     </option>
                   ))}
                 </Select>
+                <FieldError message={errors.roleId} />
               </div>
             </div>
 
@@ -273,8 +239,11 @@ function CreateUserForm() {
                   name="passwordHash"
                   value={data.passwordHash}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("passwordHash", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.passwordHash}
                 />
+                <FieldError message={errors.passwordHash} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -288,8 +257,10 @@ function CreateUserForm() {
                   name="repasswordHash"
                   value={data.repasswordHash}
                   onChange={handleChange}
+                  onBlur={(e) => handleBlur("repasswordHash", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
                 />
+                <FieldError message={errors.repasswordHash} />
               </div>
             </div>
           </div>
