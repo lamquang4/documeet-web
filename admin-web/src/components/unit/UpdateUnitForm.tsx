@@ -6,11 +6,7 @@ import Button from "../ui/Button";
 import Label from "../ui/Label";
 import Select from "../ui/Select";
 import Input from "../ui/Input";
-import {
-  useGetUnitById,
-  useRemoveUserFromUnit,
-  useUpdateUnit,
-} from "../../hooks/queries/useUnits";
+import { useGetUnitById, useUpdateUnit } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUserForUnit } from "../../hooks/queries/useUsers";
 
@@ -23,7 +19,6 @@ function UpdateUnitForm() {
     status: "",
     userIds: [] as string[],
   });
-  const [originalUserIds, setOriginalUserIds] = useState<string[]>([]);
   const [keyword, setKeyword] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
 
@@ -31,8 +26,7 @@ function UpdateUnitForm() {
   const unit = unitRes?.data;
 
   const updateUnit = useUpdateUnit();
-
-  const removeUserFromUnit = useRemoveUserFromUnit();
+  const isLoadingUpdate = updateUnit.isPending;
 
   const {
     data: usersRes,
@@ -65,8 +59,6 @@ function UpdateUnitForm() {
       status: unit.status || "",
       userIds: userIds,
     });
-
-    setOriginalUserIds(userIds);
   }, [isLoading, unitRes, navigate]);
 
   const handleChange = (
@@ -94,34 +86,17 @@ function UpdateUnitForm() {
       return;
     }
 
-    const addedUserIds = data.userIds.filter(
-      (uid) => !originalUserIds.includes(uid),
-    );
-    const removedUserIds = originalUserIds.filter(
-      (uid) => !data.userIds.includes(uid),
-    );
-
-    if (removedUserIds.length > 0) {
-      await Promise.all(
-        removedUserIds.map((userId) =>
-          removeUserFromUnit.mutateAsync({ userId, unitId: id ?? "" }),
-        ),
-      );
-    }
-
-    // Cập nhật unit — với userIds là những user mới thêm vào đơn vị
-    updateUnit.mutate({
+    await updateUnit.mutateAsync({
       id: id ?? "",
       data: {
         unitCode: data.unitCode.trim(),
         unitName: data.unitName.trim(),
         status: data.status as "ACTIVE" | "INACTIVE",
-        userIds: addedUserIds,
+        userIds: data.userIds,
       },
     });
   };
 
-  const isLoadingUpdate = updateUnit.isPending || removeUserFromUnit.isPending;
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-auto">
       <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>

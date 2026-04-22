@@ -162,33 +162,6 @@ export const useUpdateUnitStatus = () => {
   });
 };
 
-export const useRemoveUserFromUnit = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    ApiResponse<null>,
-    AxiosError<ErrorResponse>,
-    { userId: string; unitId: string }
-  >({
-    mutationFn: ({ userId }) => unitApi.removeUserFromUnit(userId),
-
-    onSuccess: (res, variables) => {
-      queryClient.invalidateQueries({ queryKey: unitKeys.lists() });
-      queryClient.invalidateQueries({
-        queryKey: unitKeys.detail(variables.unitId),
-      });
-
-      toast.success(res.message);
-    },
-
-    onError: (error) => {
-      toast.error(
-        error.response?.data?.message ?? "Xóa người dùng khỏi đơn vị thất bại",
-      );
-    },
-  });
-};
-
 export const useDeleteUnit = () => {
   const queryClient = useQueryClient();
 

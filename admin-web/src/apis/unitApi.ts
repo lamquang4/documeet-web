@@ -63,12 +63,6 @@ export const unitApi = {
       .patch<ApiResponse<UnitResponse>>(`${BASE}/${unitId}/status`, data)
       .then((r) => r.data),
 
-  // DELETE /units/remove-user/:userId
-  removeUserFromUnit: (userId: string) =>
-    axiosInstance
-      .delete<ApiResponse<null>>(`${BASE}/remove-user/${userId}`)
-      .then((r) => r.data),
-
   // DELETE /units/:id
   remove: (id: string) =>
     axiosInstance
