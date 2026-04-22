@@ -57,7 +57,7 @@ function UpdateUnitForm() {
       return;
     }
 
-    const userIds = unit.user?.map((u) => u.userId) ?? [];
+    const userIds = unit.users?.map((u) => u.userId) ?? [];
 
     setData({
       unitCode: unit.unitCode.toUpperCase() || "",
