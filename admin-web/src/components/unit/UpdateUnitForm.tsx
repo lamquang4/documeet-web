@@ -10,8 +10,8 @@ import { useGetUnitById, useUpdateUnit } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUserForUnit } from "../../hooks/queries/useUsers";
 import { useFormValidation } from "../../hooks/useFromValidation";
-import { unitRules } from "../../utils/validation/rules/unitRules";
 import FieldError from "../ui/FieldError";
+import { updateUnitRules } from "../../utils/validation/rules/updateUnitRules";
 
 function UpdateUnitForm() {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ function UpdateUnitForm() {
   };
 
   const { errors, handleBlur, clearError, validateAll, resetErrors } =
-    useFormValidation(validateData, unitRules);
+    useFormValidation(validateData, updateUnitRules);
 
   const { data: unitRes, isLoading } = useGetUnitById(id as string);
   const unit = unitRes?.data;

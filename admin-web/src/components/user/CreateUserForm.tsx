@@ -259,6 +259,7 @@ function CreateUserForm() {
                   onChange={handleChange}
                   onBlur={(e) => handleBlur("repasswordHash", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
+                  error={errors.repasswordHash}
                 />
                 <FieldError message={errors.repasswordHash} />
               </div>

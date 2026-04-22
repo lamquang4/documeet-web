@@ -7,9 +7,9 @@ import Input from "../ui/Input";
 import { useCreateUnit } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUserForUnit } from "../../hooks/queries/useUsers";
-import { unitRules } from "../../utils/validation/rules/unitRules";
 import { useFormValidation } from "../../hooks/useFromValidation";
 import FieldError from "../ui/FieldError";
+import { createUnitRules } from "../../utils/validation/rules/createUnitRules";
 
 function CreateUnitForm() {
   const [data, setData] = useState({
@@ -26,7 +26,7 @@ function CreateUnitForm() {
   };
 
   const { errors, handleBlur, clearError, validateAll, resetErrors } =
-    useFormValidation(validateData, unitRules);
+    useFormValidation(validateData, createUnitRules);
 
   const createUnit = useCreateUnit();
   const isLoading = createUnit.isPending;

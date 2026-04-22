@@ -47,7 +47,7 @@ export const createUserRules = {
   },
 
   repasswordHash: (v: string, allValues: { passwordHash: string }) => {
-    if (!v) return "Vui lòng nhập lại mật khẩu";
+    if (!v) return "Mật khẩu nhập lại không được để trống";
     if (v !== allValues.passwordHash) return "Mật khẩu nhập lại không khớp";
     return "";
   },

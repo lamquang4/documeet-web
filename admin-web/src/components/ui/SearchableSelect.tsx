@@ -48,31 +48,32 @@ function SearchableSelect({
     }
   }, [search]);
 
-  // đóng menu khi bấm ngoài
+  const close = () => {
+    setOpen(false);
+    onBlur?.();
+  };
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        setOpen(false);
-        onBlur?.();
+        close();
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onBlur]);
+  }, []);
 
-  // kéo xuống cuối
   const handleScroll = () => {
     if (!listRef.current) return;
 
     const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+    const isBottom = scrollTop + clientHeight >= scrollHeight - 10;
 
-    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
-
-    if (isAtBottom && hasNextPage && !isFetchingNextPage) {
+    if (isBottom && hasNextPage && !isFetchingNextPage) {
       fetchNextPage?.();
     }
   };
@@ -121,8 +122,7 @@ function SearchableSelect({
                     key={opt.value}
                     onClick={() => {
                       onChange(opt.value);
-                      setOpen(false);
-                      onBlur?.();
+                      close();
                     }}
                     className="p-[6px_10px] text-[0.9rem] hover:bg-gray-100 cursor-pointer"
                   >
