@@ -23,16 +23,16 @@ export function useFormValidation<T extends Record<string, string>>(
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // Trả về true nếu hợp lệ
   const validateAll = (): boolean => {
     const newErrors = {} as Record<keyof T, string>;
     let hasError = false;
 
-    for (const key in rules) {
-      const error = validateField(key, data[key] ?? "");
+    (Object.keys(rules) as Array<keyof T>).forEach((key) => {
+      const value = data[key] ?? "";
+      const error = rules[key]?.(value as string, data) ?? "";
       newErrors[key] = error;
       if (error) hasError = true;
-    }
+    });
 
     setErrors(newErrors);
     return !hasError;

@@ -46,12 +46,7 @@ function SearchableSelect({
     if (open) {
       setKeyword(search);
     }
-  }, [search]);
-
-  const close = () => {
-    setOpen(false);
-    onBlur?.();
-  };
+  }, [search, open, setKeyword]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -59,21 +54,23 @@ function SearchableSelect({
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        close();
+        setOpen(false);
+        if (open) onBlur?.();
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [open, onBlur]);
 
   const handleScroll = () => {
     if (!listRef.current) return;
-
     const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-    const isBottom = scrollTop + clientHeight >= scrollHeight - 10;
-
-    if (isBottom && hasNextPage && !isFetchingNextPage) {
+    if (
+      scrollTop + clientHeight >= scrollHeight - 10 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
       fetchNextPage?.();
     }
   };
@@ -88,7 +85,7 @@ function SearchableSelect({
         className={twMerge(
           "border p-[6px_10px] flex items-center justify-between w-full cursor-pointer transition-colors",
           open ? "border-gray-400" : "border-gray-300",
-          error && "border-danger",
+          error ? "border-red-500" : "focus:border-gray-400",
         )}
       >
         <p>{selectedOption ? selectedOption.label : placeholder}</p>
@@ -99,6 +96,7 @@ function SearchableSelect({
         <div className="absolute z-10 w-full bg-white border border-gray-300 shadow-md max-h-60 overflow-y-auto">
           <div>
             <Input
+              autoFocus
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="border-b border-gray-300 p-[6px_10px] w-full"
@@ -120,9 +118,11 @@ function SearchableSelect({
                 options.map((opt) => (
                   <div
                     key={opt.value}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       onChange(opt.value);
-                      close();
+                      setOpen(false);
+                      setSearch("");
                     }}
                     className="p-[6px_10px] text-[0.9rem] hover:bg-gray-100 cursor-pointer"
                   >
