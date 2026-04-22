@@ -62,6 +62,12 @@ function CreateUserForm() {
     clearError(name as keyof typeof data);
   };
 
+  const handleUnitChange = (val: string) => {
+    setData((prev) => ({ ...prev, unitId: val }));
+
+    handleBlur("unitId", val);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -186,9 +192,7 @@ function CreateUserForm() {
 
                 <SearchableSelect
                   value={data.unitId}
-                  onChange={(val) =>
-                    setData((prev) => ({ ...prev, unitId: val }))
-                  }
+                  onChange={handleUnitChange}
                   placeholder="Chọn đơn vị"
                   options={unitOptions}
                   setKeyword={setKeyword}
