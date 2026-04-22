@@ -202,7 +202,9 @@ function UserList() {
 
                   <td className="p-[1rem]  ">{user.unit?.unitName}</td>
 
-                  <td className="p-[1rem]  ">{user.role?.roleName}</td>
+                  <td className="p-[1rem] font-semibold">
+                    {user.role?.roleName}
+                  </td>
 
                   <td className="p-[1rem] font-semibold">
                     {user.status === "ACTIVE" && "Hoạt động"}
