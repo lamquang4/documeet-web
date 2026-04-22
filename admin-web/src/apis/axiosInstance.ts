@@ -10,6 +10,7 @@ const axiosInstance = axios.create({
   timeout: 10000,
   withCredentials: false,
 });
+
 axiosInstance.interceptors.request.use((config) => {
   const accessToken = cookieUtil.get("accessToken");
   if (accessToken) {
@@ -43,6 +44,14 @@ axiosInstance.interceptors.response.use(
     const message = error.response?.data?.message;
 
     if (status === 401 && !originalRequest._retry) {
+      const refreshToken = cookieUtil.get("refreshToken");
+
+      // Không có refreshToken → logout luôn, không thử refresh
+      if (!refreshToken) {
+        logoutAndRedirect();
+        return Promise.reject(error);
+      }
+
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -56,9 +65,6 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshToken = cookieUtil.get("refreshToken");
-        if (!refreshToken) throw new Error("Không có refresh token");
-
         const res = await authApi.refresh({ refreshToken });
         const newAccessToken = res.data.accessToken;
 
@@ -88,7 +94,7 @@ axiosInstance.interceptors.response.use(
     }
 
     if (status === 403) {
-      toast.error(message ?? "Bạn không có quyền thực hiện thao tác này");
+      toast.error("Bạn không có quyền thực hiện thao tác này");
     } else if (status === 500) {
       toast.error("Lỗi server, vui lòng thử lại sau");
     }
