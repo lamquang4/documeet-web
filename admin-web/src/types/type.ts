@@ -170,7 +170,9 @@ export interface UnitDetailResponse {
   unitCode: string;
   unitName: string;
   status: "ACTIVE" | "INACTIVE";
-  userIds: string[];
+  user: {
+    userId: string;
+  }[];
 }
 
 export interface SelectedUnitForUserResponse {

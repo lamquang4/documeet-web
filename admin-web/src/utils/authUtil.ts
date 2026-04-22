@@ -19,4 +19,6 @@ export const logoutAndRedirect = async () => {
       await authApi.logout({ refreshToken, sessionId });
     } catch {}
   }
+
+  clearAuthStorage();
 };

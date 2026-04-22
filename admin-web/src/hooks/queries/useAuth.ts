@@ -95,16 +95,16 @@ export const useLogout = () => {
       const refreshToken = cookieUtil.get("refreshToken") ?? "";
       const sessionId = cookieUtil.get("sessionId") ?? "";
 
+      if (!refreshToken || !sessionId) {
+        clearAuthStorage();
+        return Promise.resolve({} as ApiResponse<null>);
+      }
+
       return authApi.logout({ refreshToken, sessionId });
     },
 
-    onSuccess: () => {
-      queryClient.invalidateQueries();
-      clearAuthStorage();
-    },
-
-    onError: () => {
-      queryClient.invalidateQueries();
+    onSettled: () => {
+      queryClient.clear();
       clearAuthStorage();
     },
   });

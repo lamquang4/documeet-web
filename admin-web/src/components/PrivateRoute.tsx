@@ -2,6 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import { cookieUtil } from "../utils/cookieUtil";
 import { logoutAndRedirect } from "../utils/authUtil";
 import type { AccessTokenPayload } from "../types/type";
+import { Navigate } from "react-router-dom"; // Dùng Navigate thay vì return null
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -9,22 +10,21 @@ interface PrivateRouteProps {
 
 function PrivateRoute({ children }: PrivateRouteProps) {
   const accessToken = cookieUtil.get("accessToken");
+  const refreshToken = cookieUtil.get("refreshToken");
 
-  // Không có token
-  if (!accessToken) {
-    return null;
+  if (!accessToken && !refreshToken) {
+    return <Navigate to="/" replace />;
   }
 
-  // Token không đúng format JWT → có thể bị corrupt hoặc giả mạo
-  // Việc verify signature do backend đảm nhiệm
-  try {
-    jwtDecode<AccessTokenPayload>(accessToken);
-  } catch {
-    logoutAndRedirect();
-    return null;
+  if (accessToken) {
+    try {
+      jwtDecode<AccessTokenPayload>(accessToken);
+    } catch {
+      logoutAndRedirect();
+      return <Navigate to="/" replace />;
+    }
   }
 
-  // Không có user hoặc không phải ADMIN
   let user: { role: string } | null = null;
   try {
     user = JSON.parse(localStorage.getItem("user") || "null");
@@ -34,7 +34,7 @@ function PrivateRoute({ children }: PrivateRouteProps) {
 
   if (!user || user.role !== "ADMIN") {
     logoutAndRedirect();
-    return null;
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

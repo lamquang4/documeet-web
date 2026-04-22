@@ -11,7 +11,7 @@ const queryClient = new QueryClient({
       gcTime: 1000 * 60 * 5, // 5 phút
       retry: false,
       refetchOnWindowFocus: false, // không refetch khi quay lại tab
-      refetchOnMount: false, // không refetch khi chuyển route
+      refetchOnMount: true,
       refetchOnReconnect: false, // không refetch khi mất mạng rồi có lại
     },
     mutations: {

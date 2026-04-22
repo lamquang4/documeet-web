@@ -57,14 +57,16 @@ function UpdateUnitForm() {
       return;
     }
 
+    const userIds = unit.user?.map((u) => u.userId) ?? [];
+
     setData({
       unitCode: unit.unitCode.toUpperCase() || "",
       unitName: unit.unitName || "",
       status: unit.status || "",
-      userIds: unit.userIds || [],
+      userIds: userIds,
     });
 
-    setOriginalUserIds(unit.userIds ?? []);
+    setOriginalUserIds(userIds);
   }, [isLoading, unitRes, navigate]);
 
   const handleChange = (

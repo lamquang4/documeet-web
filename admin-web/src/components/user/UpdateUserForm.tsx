@@ -153,24 +153,29 @@ function UpdateUserForm() {
       return;
     }
 
-    updateUser.mutate({
-      id: id ?? "",
-      data: {
-        fullName: data.fullName.trim(),
-        governmentId: data.governmentId.trim(),
-        email: data.email.trim(),
-        phoneNumber: data.phoneNumber.trim(),
-        unitId: data.unitId,
-        roleId: data.roleId,
-        status: data.status as "ACTIVE" | "LOCKED" | "DISABLED",
-        passwordHash: data.passwordHash,
+    updateUser.mutate(
+      {
+        id: id ?? "",
+        data: {
+          fullName: data.fullName.trim(),
+          governmentId: data.governmentId.trim(),
+          email: data.email.trim(),
+          phoneNumber: data.phoneNumber.trim(),
+          unitId: data.unitId,
+          roleId: data.roleId,
+          status: data.status as "ACTIVE" | "LOCKED" | "DISABLED",
+          passwordHash: data.passwordHash,
+        },
       },
-    });
-
-    setData((prev) => ({
-      ...prev,
-      password: "",
-    }));
+      {
+        onSuccess: () => {
+          setData((prev) => ({
+            ...prev,
+            passwordHash: "",
+          }));
+        },
+      },
+    );
   };
 
   return (
