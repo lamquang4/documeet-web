@@ -143,6 +143,16 @@ export interface UserResponse {
   createdDate: string;
 }
 
+export interface UserProfileResponse {
+  userId: string;
+  unitName: string;
+  governmentId: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  roleCode: string;
+}
+
 export interface SelectedUserForUnitResponse {
   userId: string;
   fullName: string;
@@ -214,7 +224,7 @@ export interface AccessTokenPayload {
   sub: string; // governmentId
   sessionId: string;
   iat: number;
-  exp: number; 
+  exp: number;
 }
 
 export interface RefreshTokenPayload {

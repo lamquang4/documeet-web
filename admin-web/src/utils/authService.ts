@@ -29,10 +29,6 @@ export const saveTokens = (data: {
       expires: COOKIE_EXPIRES.refresh,
     });
   }
-
-  if (data.user) {
-    localStorage.setItem("user", JSON.stringify(data.user));
-  }
 };
 
 export const clearAuthStorage = () => {
@@ -40,7 +36,6 @@ export const clearAuthStorage = () => {
   cookieUtil.remove("refreshToken");
   cookieUtil.remove("mfaToken");
   cookieUtil.remove("sessionId");
-  localStorage.removeItem("user");
 };
 
 export const getRemainingSeconds = (token: string): number => {

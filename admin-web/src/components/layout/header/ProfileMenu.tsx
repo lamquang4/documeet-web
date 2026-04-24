@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Button from "../../ui/Button";
 import { useLogout } from "../../../hooks/queries/useAuth";
 import { CircleUserRound, DoorOpen } from "lucide-react";
-import { useGetUserById } from "../../../hooks/queries/useUsers";
+import { useGetMe } from "../../../hooks/queries/useUsers";
 
 type Props = {
   menuOpen: boolean;
@@ -12,8 +12,7 @@ type Props = {
 };
 
 function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
-  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-  const { data: userRes } = useGetUserById(storedUser?.userId);
+  const { data: userRes } = useGetMe();
   const account = userRes?.data;
 
   const logout = useLogout();

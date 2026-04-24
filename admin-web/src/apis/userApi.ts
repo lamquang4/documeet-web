@@ -5,6 +5,7 @@ import type {
   UpdateUserRequest,
   UserResponse,
   SelectedUserForUnitResponse,
+  UserProfileResponse,
 } from "../types/type";
 import axiosInstance from "./axiosInstance";
 
@@ -79,5 +80,11 @@ export const userApi = {
   activate: (id: string) =>
     axiosInstance
       .post<ApiResponse<null>>(`${BASE}/${id}/activate`)
+      .then((r) => r.data),
+
+  //GET /users/me
+  getMe: () =>
+    axiosInstance
+      .get<ApiResponse<UserProfileResponse>>("/api/auth/me")
       .then((r) => r.data),
 };

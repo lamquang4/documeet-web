@@ -1,10 +1,9 @@
-import { useGetUserById } from "../hooks/queries/useUsers";
+import { useGetMe } from "../hooks/queries/useUsers";
 import Input from "./ui/Input";
 import Label from "./ui/Label";
 
 function Account() {
-  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-  const { data: userRes } = useGetUserById(storedUser?.userId);
+  const { data: userRes } = useGetMe();
   const account = userRes?.data;
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-full">
@@ -80,7 +79,7 @@ function Account() {
                 <Input
                   type="text"
                   name="unitName"
-                  value={account?.unit?.unitName}
+                  value={account?.unitName}
                   readOnly
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
                 />

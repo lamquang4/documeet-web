@@ -13,6 +13,7 @@ import type {
   PageResponse,
   SelectedUserForUnitResponse,
   UpdateUserRequest,
+  UserProfileResponse,
   UserResponse,
 } from "../../types/type";
 import type { AxiosError } from "axios";
@@ -84,6 +85,13 @@ export const useGetUserById = (id: string) => {
     queryKey: userKeys.detail(id),
     queryFn: () => userApi.getById(id),
     enabled: !!id,
+  });
+};
+
+export const useGetMe = () => {
+  return useQuery<ApiResponse<UserProfileResponse>, AxiosError<ErrorResponse>>({
+    queryKey: [...userKeys.all, "me"] as const,
+    queryFn: () => userApi.getMe(),
   });
 };
 

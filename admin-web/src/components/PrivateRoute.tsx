@@ -11,19 +11,11 @@ import {
   startRefreshScheduler,
 } from "../utils/authService";
 import { cookieUtil } from "../utils/cookieUtil";
+import { useGetMe } from "../hooks/queries/useUsers";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
 }
-
-const checkRole = (): boolean => {
-  try {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-    return !!(user && user.role === "ADMIN");
-  } catch {
-    return false;
-  }
-};
 
 const getTokenStatus = (): "valid" | "expired" | "missing" => {
   const accessToken = cookieUtil.get("accessToken");
@@ -41,15 +33,7 @@ function PrivateRoute({ children }: PrivateRouteProps) {
   const refreshToken = cookieUtil.get("refreshToken");
   const tokenStatus = getTokenStatus();
 
-  if (!accessToken && !refreshToken) {
-    logoutAndRedirect();
-    return <Navigate to="/" replace />;
-  }
-
-  if (tokenStatus === "valid" && !checkRole()) {
-    logoutAndRedirect();
-    return <Navigate to="/" replace />;
-  }
+  const { data, isError } = useGetMe();
 
   useEffect(() => {
     const init = async () => {
@@ -71,6 +55,16 @@ function PrivateRoute({ children }: PrivateRouteProps) {
 
     init();
   }, []);
+
+  if (!accessToken && !refreshToken) {
+    logoutAndRedirect();
+    return <Navigate to="/" replace />;
+  }
+
+  if (isError || data?.data?.roleCode !== "ADMIN") {
+    logoutAndRedirect();
+    return <Navigate to="/" replace />;
+  }
 
   return <>{children}</>;
 }
