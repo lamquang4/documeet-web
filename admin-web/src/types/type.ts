@@ -213,8 +213,8 @@ export interface OtpVerifiedResponse {
 export interface AccessTokenPayload {
   sub: string; // governmentId
   sessionId: string;
-  iat: number; // issued at (epoch seconds)
-  exp: number; // expiration (epoch seconds)
+  iat: number;
+  exp: number; 
 }
 
 export interface RefreshTokenPayload {

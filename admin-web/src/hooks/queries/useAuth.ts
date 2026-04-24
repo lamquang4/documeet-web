@@ -33,7 +33,8 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
     mutationFn: (data) => authApi.login(data),
 
     onSuccess: async (res) => {
-      // Yêu cầu MFA → lưu mfaToken rồi chuyển sang bước OTP
+      console.log("[LOGIN] Full response:", res);
+
       if (res.data?.requireMfa) {
         if (res.data?.mfaToken) {
           cookieUtil.set("mfaToken", res.data.mfaToken, {
@@ -45,7 +46,6 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
         return;
       }
 
-      // Không phải ADMIN → revoke token ngay, không lưu gì
       if (res.data?.user?.role !== "ADMIN") {
         toast.error("Bạn không có quyền truy cập hệ thống này");
 
@@ -62,14 +62,12 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
 
       toast.success(res.message);
 
-      // Lưu token + user
       saveTokens(res.data);
       cookieUtil.set("sessionId", res.data.sessionId, {
         ...COOKIE_OPTIONS,
         expires: COOKIE_EXPIRES.session,
       });
 
-      // Khởi động silent refresh timer ngay sau login
       scheduleRefresh(res.data.expiresIn);
       initVisibilityRefresh();
 
@@ -100,7 +98,6 @@ export const useLogout = () => {
     },
 
     onSettled: () => {
-      // Dừng timer khi logout
       stopRefreshScheduler();
       queryClient.clear();
       clearAuthStorage();
@@ -108,7 +105,6 @@ export const useLogout = () => {
   });
 };
 
-// useRefresh vẫn giữ để dùng thủ công nếu cần
 export const useRefresh = () => {
   const queryClient = useQueryClient();
 
@@ -124,7 +120,6 @@ export const useRefresh = () => {
 
     onSuccess: (res) => {
       saveTokens(res.data);
-      // Reset timer sau khi refresh thủ công
       scheduleRefresh(res.data.expiresIn);
       queryClient.invalidateQueries();
     },
