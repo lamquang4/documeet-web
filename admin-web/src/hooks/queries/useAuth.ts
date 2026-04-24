@@ -33,8 +33,6 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
     mutationFn: (data) => authApi.login(data),
 
     onSuccess: async (res) => {
-      console.log("[LOGIN] Full response:", res);
-
       if (res.data?.requireMfa) {
         if (res.data?.mfaToken) {
           cookieUtil.set("mfaToken", res.data.mfaToken, {

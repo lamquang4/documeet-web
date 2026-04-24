@@ -47,22 +47,11 @@ function LoginForm({ onRequireMfa }: Props) {
 
     const deviceIMEI = await getDeviceIMEI();
 
-    login.mutate(
-      {
-        governmentId: data.governmentId.trim(),
-        password: data.password.trim(),
-        deviceIMEI: deviceIMEI,
-      },
-      {
-        onSuccess: () => {
-          setData({
-            governmentId: "",
-            password: "",
-          });
-          navigate("/account/profile", { replace: true });
-        },
-      },
-    );
+    login.mutate({
+      governmentId: data.governmentId.trim(),
+      password: data.password.trim(),
+      deviceIMEI: deviceIMEI,
+    });
   };
 
   return (
