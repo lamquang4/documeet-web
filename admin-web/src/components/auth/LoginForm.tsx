@@ -10,13 +10,12 @@ import { getDeviceIMEI } from "../../utils/deviceUtil";
 import { loginRules } from "../../utils/validation/rules/loginRules";
 import { useFormValidation } from "../../hooks/useFromValidation";
 import FieldError from "../ui/FieldError";
-import { useNavigate } from "react-router-dom";
+
 type Props = {
   onRequireMfa: () => void;
 };
 
 function LoginForm({ onRequireMfa }: Props) {
-  const navigate = useNavigate();
   const [data, setData] = useState({ governmentId: "", password: "" });
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
