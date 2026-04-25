@@ -102,7 +102,6 @@ export const useLogout = () => {
   });
 };
 
-// useRefresh vẫn giữ để dùng thủ công nếu cần
 export const useRefresh = () => {
   const queryClient = useQueryClient();
 
