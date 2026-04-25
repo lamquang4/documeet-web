@@ -85,6 +85,6 @@ export const userApi = {
   //GET /users/me
   getMe: () =>
     axiosInstance
-      .get<ApiResponse<UserProfileResponse>>("/api/auth/me")
+      .get<ApiResponse<UserProfileResponse>>(`${BASE}/me`)
       .then((r) => r.data),
 };
