@@ -24,7 +24,13 @@ export const authKeys = {
   all: ["auth"] as const,
 };
 
-export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
+export const useLogin = ({
+  onRequireMfa,
+  onSuccess: onLoginSuccess,
+}: {
+  onRequireMfa: () => void;
+  onSuccess: () => void;
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -76,7 +82,7 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
         queryFn: () => userApi.getMe(),
       });
 
-      window.location.href = "/account/profile";
+      onLoginSuccess();
     },
 
     onError: (error) => {

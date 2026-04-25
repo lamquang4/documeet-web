@@ -60,12 +60,6 @@ function PrivateRoute({ children }: PrivateRouteProps) {
     init();
   }, []);
 
-  useEffect(() => {
-    if (data?.data?.roleCode === "ADMIN") {
-      navigate("/account/profile", { replace: true });
-    }
-  }, [data]);
-
   if (!accessToken && !refreshToken) {
     logoutAndRedirect();
     return <Navigate to="/" replace />;
