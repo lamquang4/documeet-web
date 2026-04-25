@@ -5,7 +5,6 @@ import type { AccessTokenPayload } from "../types/type";
 import {
   doRefresh,
   getRemainingSeconds,
-  initBeforeUnloadLogout,
   initVisibilityRefresh,
   logoutAndRedirect,
   scheduleRefresh,
@@ -39,24 +38,25 @@ function PrivateRoute({ children }: PrivateRouteProps) {
         const remaining = getRemainingSeconds(accessToken!);
         scheduleRefresh(remaining);
         initVisibilityRefresh();
-        initBeforeUnloadLogout();
         return;
       }
 
       if (refreshToken) {
-        const newToken = await doRefresh();
-        if (!newToken) return;
-        startRefreshScheduler();
-        initVisibilityRefresh();
-        initBeforeUnloadLogout();
+        doRefresh().then((newToken) => {
+          if (!newToken) return;
+          startRefreshScheduler();
+          initVisibilityRefresh();
+        });
+        return;
       }
+
+      logoutAndRedirect();
     };
 
     init();
   }, []);
 
   if (!accessToken && !refreshToken) {
-    logoutAndRedirect();
     return <Navigate to="/" replace />;
   }
 

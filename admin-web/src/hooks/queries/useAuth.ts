@@ -11,7 +11,6 @@ import { authApi } from "../../apis/authApi";
 import { cookieUtil } from "../../utils/cookieUtil";
 import {
   clearAuthStorage,
-  initBeforeUnloadLogout,
   initVisibilityRefresh,
   saveTokens,
   scheduleRefresh,
@@ -64,7 +63,6 @@ export const useLogin = ({
 
       scheduleRefresh(res.data.expiresIn);
       initVisibilityRefresh();
-      initBeforeUnloadLogout();
       onLoginSuccess();
     },
 

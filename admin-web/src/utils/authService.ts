@@ -12,30 +12,6 @@ export const setLogoutCallback = (cb: () => void) => {
   onLogout = cb;
 };
 
-let beforeUnloadListenerAdded = false;
-
-export const initBeforeUnloadLogout = () => {
-  if (beforeUnloadListenerAdded) return;
-  beforeUnloadListenerAdded = true;
-
-  window.addEventListener("beforeunload", () => {
-    const refreshToken = cookieUtil.get("refreshToken");
-    const sessionId = cookieUtil.get("sessionId");
-
-    if (!refreshToken || !sessionId) return;
-
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken, sessionId }),
-      keepalive: true,
-    });
-
-    clearAuthStorage();
-    stopRefreshScheduler();
-  });
-};
-
 export const saveTokens = (data: {
   accessToken: string;
   expiresIn: number;
@@ -97,8 +73,11 @@ export const doRefresh = async (): Promise<string | null> => {
     saveTokens(res.data);
     scheduleRefresh(res.data.expiresIn);
     return res.data.accessToken;
-  } catch {
-    await logoutAndRedirect();
+  } catch (err: any) {
+    const status = err?.response?.status;
+    if (status === 401 || status === 403) {
+      await logoutAndRedirect();
+    }
     return null;
   }
 };
@@ -108,14 +87,11 @@ export const scheduleRefresh = (expiresInSeconds: number) => {
 
   const delay = (expiresInSeconds - 60) * 1000;
 
-  if (delay <= 0) {
-    doRefresh();
-    return;
-  }
+  const safeDelay = Math.max(delay, 5000);
 
   refreshTimer = setTimeout(() => {
     doRefresh();
-  }, delay);
+  }, safeDelay);
 };
 
 export const startRefreshScheduler = () => {
