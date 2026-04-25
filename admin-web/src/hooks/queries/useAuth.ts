@@ -11,6 +11,7 @@ import { authApi } from "../../apis/authApi";
 import { cookieUtil } from "../../utils/cookieUtil";
 import {
   clearAuthStorage,
+  initBeforeUnloadLogout,
   initVisibilityRefresh,
   saveTokens,
   scheduleRefresh,
@@ -63,7 +64,7 @@ export const useLogin = ({
 
       scheduleRefresh(res.data.expiresIn);
       initVisibilityRefresh();
-
+      initBeforeUnloadLogout();
       onLoginSuccess();
     },
 
@@ -89,10 +90,14 @@ export const useLogout = () => {
       return authApi.logout({ refreshToken, sessionId });
     },
 
-    onSettled: () => {
+    onSuccess: () => {
       stopRefreshScheduler();
       queryClient.clear();
       clearAuthStorage();
+    },
+
+    onError: () => {
+      toast.error("Đăng xuất thất bại, vui lòng thử lại");
     },
   });
 };

@@ -12,6 +12,30 @@ export const setLogoutCallback = (cb: () => void) => {
   onLogout = cb;
 };
 
+let beforeUnloadListenerAdded = false;
+
+export const initBeforeUnloadLogout = () => {
+  if (beforeUnloadListenerAdded) return;
+  beforeUnloadListenerAdded = true;
+
+  window.addEventListener("beforeunload", () => {
+    const refreshToken = cookieUtil.get("refreshToken");
+    const sessionId = cookieUtil.get("sessionId");
+
+    if (!refreshToken || !sessionId) return;
+
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken, sessionId }),
+      keepalive: true,
+    });
+
+    clearAuthStorage();
+    stopRefreshScheduler();
+  });
+};
+
 export const saveTokens = (data: {
   accessToken: string;
   expiresIn: number;
