@@ -15,6 +15,12 @@ const axiosInstance = axios.create({
   withCredentials: false,
 });
 
+export const axiosPublic = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_URL,
+  timeout: 10000,
+  withCredentials: false,
+});
+
 let isRefreshing = false;
 let failedQueue: {
   resolve: (token: string) => void;
@@ -33,12 +39,9 @@ axiosInstance.interceptors.request.use(async (config) => {
   const accessToken = cookieUtil.get("accessToken");
   const refreshToken = cookieUtil.get("refreshToken");
 
-  // Token sắp hết hạn → refresh trước khi gửi request
   if (accessToken && refreshToken && isTokenExpiringSoon(accessToken)) {
     if (!isRefreshing) {
       isRefreshing = true;
-
-      console.log("[Request Interceptor] Token sắp hết hạn → bắt đầu refresh");
 
       try {
         const res = await authApi.refresh({ refreshToken });
@@ -49,19 +52,17 @@ axiosInstance.interceptors.request.use(async (config) => {
 
         isRefreshing = false;
         processQueue(null, newAccessToken);
-        console.log("[Request Interceptor] Refresh thành công");
 
         return config;
       } catch (err) {
         isRefreshing = false;
         processQueue(err, null);
-        console.error("[Request Interceptor] Refresh thất bại → logout");
+
         logoutAndRedirect();
         return Promise.reject(err);
       }
     }
 
-    console.log("[Request Interceptor] Đang refresh → đợi queue");
     const token = await new Promise<string>((resolve, reject) => {
       failedQueue.push({ resolve, reject });
     });
@@ -82,20 +83,15 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     const status = error.response?.status;
 
-    // 403 lần đầu → thử refresh (backend dùng 403 cho token hết hạn)
     if (status === 403 && !originalRequest._retry) {
-      console.log("[Response Interceptor] 403 → thử refresh");
-
       const refreshToken = cookieUtil.get("refreshToken");
 
       if (!refreshToken) {
-        console.error("[Response Interceptor] Không có refreshToken → logout");
         logoutAndRedirect();
         return Promise.reject(error);
       }
 
       if (isRefreshing) {
-        console.log("[Response Interceptor] Đang refresh → đợi queue");
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then((token) => {
@@ -110,7 +106,7 @@ axiosInstance.interceptors.response.use(
       const newAccessToken = await doRefresh().catch((err) => {
         isRefreshing = false;
         processQueue(err, null);
-        console.error("[Response Interceptor] Refresh thất bại");
+
         return null;
       });
 
@@ -118,7 +114,7 @@ axiosInstance.interceptors.response.use(
 
       isRefreshing = false;
       processQueue(null, newAccessToken);
-      console.log("[Response Interceptor] Refresh thành công → retry request");
+
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
       return axiosInstance(originalRequest);
     }

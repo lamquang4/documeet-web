@@ -74,13 +74,7 @@ export const getRemainingSeconds = (token: string): number => {
 export const isTokenExpiringSoon = (
   token: string,
   thresholdSeconds = 60,
-): boolean => {
-  const remaining = getRemainingSeconds(token);
-  console.log(
-    `Token còn ${remaining.toFixed(0)}s, threshold ${thresholdSeconds}s, expiringSoon: ${remaining < thresholdSeconds}`,
-  );
-  return remaining < thresholdSeconds;
-};
+): boolean => getRemainingSeconds(token) < thresholdSeconds;
 
 let refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -93,26 +87,17 @@ const clearRefreshTimer = () => {
 
 export const doRefresh = async (): Promise<string | null> => {
   const refreshToken = cookieUtil.get("refreshToken");
-  console.log(
-    "doRefresh called, refreshToken:",
-    refreshToken ? "có" : "KHÔNG CÓ",
-  );
-
   if (!refreshToken) {
-    console.error("Không có refreshToken → logout");
     await logoutAndRedirect();
     return null;
   }
 
   try {
-    console.log("Gọi authApi.refresh...");
     const res = await authApi.refresh({ refreshToken });
-    console.log("authApi.refresh thành công:", res);
     saveTokens(res.data);
     scheduleRefresh(res.data.expiresIn);
     return res.data.accessToken;
-  } catch (err) {
-    console.error("authApi.refresh thất bại:", err);
+  } catch {
     await logoutAndRedirect();
     return null;
   }

@@ -5,26 +5,25 @@ import type {
   LogoutRequest,
   RefreshTokenRequest,
 } from "../types/type";
-import axiosInstance from "./axiosInstance";
+import { axiosPublic } from "./axiosInstance";
 
 const BASE = "/api/auth";
 
 export const authApi = {
-  // POST /auth/login
   login: (data: LoginRequest) =>
-    axiosInstance
+    axiosPublic
       .post<ApiResponse<LoginResponse>>(`${BASE}/login`, data)
       .then((r) => r.data),
 
-  // POST /auth/logout
   logout: (data: LogoutRequest) =>
-    axiosInstance
+    axiosPublic
       .post<ApiResponse<null>>(`${BASE}/logout`, data)
       .then((r) => r.data),
 
-  // POST /auth/refresh
-  refresh: (data: RefreshTokenRequest) =>
-    axiosInstance
+  refresh: (data: RefreshTokenRequest) => {
+    console.log("authApi.refresh gọi tới backend...");
+    return axiosPublic
       .post<ApiResponse<LoginResponse>>(`${BASE}/refresh`, data)
-      .then((r) => r.data),
+      .then((r) => r.data);
+  },
 };
