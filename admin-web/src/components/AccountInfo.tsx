@@ -3,8 +3,8 @@ import Input from "./ui/Input";
 import Label from "./ui/Label";
 
 function Account() {
-  const { data: userRes } = useGetMe();
-  const account = userRes?.data;
+  const { data: accountRes } = useGetMe();
+  const account = accountRes?.data;
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-full">
       <form className="flex flex-col gap-7 w-full">

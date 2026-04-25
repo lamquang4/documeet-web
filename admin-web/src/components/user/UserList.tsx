@@ -15,6 +15,7 @@ import {
   useActivateUser,
   useDeleteUser,
   useGetAllUsers,
+  useGetMe,
   useLockUser,
   useUnlockUser,
 } from "../../hooks/queries/useUsers";
@@ -41,7 +42,8 @@ function UserList() {
     role: searchParams.get("role") ?? undefined,
   };
 
-  const account = JSON.parse(localStorage.getItem("user") || "null");
+  const { data: userRes } = useGetMe();
+  const account = userRes?.data;
 
   const { data: rolesRes } = useGetAllRoles({ page: 0, size: 12 });
   const roles = rolesRes?.data.content ?? [];
@@ -77,7 +79,7 @@ function UserList() {
 
     if (!result.isConfirmed || !userId) return;
 
-    if (userId === account.userId) {
+    if (userId === account?.userId) {
       toast.error("Bạn không thể xóa chính tài khoản của mình");
       return;
     }
@@ -91,7 +93,7 @@ function UserList() {
   ) => {
     if (!userId || !status) return;
 
-    if (status === "LOCKED" && userId === account.userId) {
+    if (status === "LOCKED" && userId === account?.userId) {
       toast.error("Bạn không thể khóa chính tài khoản của mình");
       return;
     }

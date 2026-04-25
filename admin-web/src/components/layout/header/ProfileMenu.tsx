@@ -12,8 +12,8 @@ type Props = {
 };
 
 function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
-  const { data: userRes } = useGetMe();
-  const account = userRes?.data;
+  const { data: accountRes } = useGetMe();
+  const account = accountRes?.data;
 
   const logout = useLogout();
   const isLoading = logout.isPending;

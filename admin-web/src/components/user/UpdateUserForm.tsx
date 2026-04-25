@@ -6,7 +6,11 @@ import Button from "../ui/Button";
 import Select from "../ui/Select";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
-import { useGetUserById, useUpdateUser } from "../../hooks/queries/useUsers";
+import {
+  useGetMe,
+  useGetUserById,
+  useUpdateUser,
+} from "../../hooks/queries/useUsers";
 import { useGetAllRoles } from "../../hooks/queries/useRoles";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUnitForUser } from "../../hooks/queries/useUnits";
@@ -33,7 +37,8 @@ function UpdateUserForm() {
   const { errors, handleBlur, clearError, validateAll, resetErrors } =
     useFormValidation(data, updateUserRules);
 
-  const account = JSON.parse(localStorage.getItem("user") || "null");
+  const { data: accountRes } = useGetMe();
+  const account = accountRes?.data;
 
   const { data: userRes, isLoading } = useGetUserById(id as string);
   const user = userRes?.data;
@@ -102,7 +107,7 @@ function UpdateUserForm() {
 
     if (!validateAll()) return;
 
-    if (data.status === "LOCKED" && user?.userId === account.userId) {
+    if (data.status === "LOCKED" && user?.userId === account?.userId) {
       toast.error("Bạn không thể khóa chính tài khoản của mình");
       return;
     }

@@ -17,6 +17,8 @@ import {
   stopRefreshScheduler,
 } from "../../utils/authService";
 import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../../constant/cookieConstant";
+import { userKeys } from "./useUsers";
+import { userApi } from "../../apis/userApi";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -69,8 +71,10 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
       scheduleRefresh(res.data.expiresIn);
       initVisibilityRefresh();
 
-      queryClient.clear();
-      window.location.href = "/account/profile";
+      await queryClient.prefetchQuery({
+        queryKey: [...userKeys.all, "me"],
+        queryFn: () => userApi.getMe(),
+      });
     },
 
     onError: (error) => {
