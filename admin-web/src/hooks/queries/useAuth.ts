@@ -75,6 +75,8 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
         queryKey: [...userKeys.all, "me"],
         queryFn: () => userApi.getMe(),
       });
+
+      window.location.href = "/account/profile";
     },
 
     onError: (error) => {
