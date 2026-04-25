@@ -37,6 +37,11 @@ export const useLogin = ({
     mutationFn: (data) => authApi.login(data),
 
     onSuccess: async (res) => {
+      if (res.data?.user?.role !== "ADMIN") {
+        toast.error("Bạn không có quyền truy cập hệ thống này");
+        return;
+      }
+
       if (res.data?.requireMfa) {
         if (res.data?.mfaToken) {
           cookieUtil.set("mfaToken", res.data.mfaToken, {
@@ -48,30 +53,14 @@ export const useLogin = ({
         return;
       }
 
-      if (res.data?.user?.role !== "ADMIN") {
-        toast.error("Bạn không có quyền truy cập hệ thống này");
-
-        if (res.data?.refreshToken && res.data?.sessionId) {
-          await authApi
-            .logout({
-              refreshToken: res.data.refreshToken,
-              sessionId: res.data.sessionId,
-            })
-            .catch(() => {});
-        }
-        return;
-      }
-
       toast.success(res.message);
 
-      // Lưu token + user
       saveTokens(res.data);
       cookieUtil.set("sessionId", res.data.sessionId, {
         ...COOKIE_OPTIONS,
         expires: COOKIE_EXPIRES.session,
       });
 
-      // Khởi động silent refresh timer ngay sau login
       scheduleRefresh(res.data.expiresIn);
       initVisibilityRefresh();
 
@@ -124,7 +113,6 @@ export const useRefresh = () => {
 
     onSuccess: (res) => {
       saveTokens(res.data);
-      // Reset timer sau khi refresh thủ công
       scheduleRefresh(res.data.expiresIn);
       queryClient.invalidateQueries();
     },
