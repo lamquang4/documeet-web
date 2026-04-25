@@ -17,8 +17,6 @@ import {
   stopRefreshScheduler,
 } from "../../utils/authService";
 import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../../constant/cookieConstant";
-import { userKeys } from "./useUsers";
-import { userApi } from "../../apis/userApi";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -31,8 +29,6 @@ export const useLogin = ({
   onRequireMfa: () => void;
   onSuccess: () => void;
 }) => {
-  const queryClient = useQueryClient();
-
   return useMutation<
     ApiResponse<LoginResponse>,
     AxiosError<ErrorResponse>,
@@ -68,19 +64,16 @@ export const useLogin = ({
 
       toast.success(res.message);
 
+      // Lưu token + user
       saveTokens(res.data);
       cookieUtil.set("sessionId", res.data.sessionId, {
         ...COOKIE_OPTIONS,
         expires: COOKIE_EXPIRES.session,
       });
 
+      // Khởi động silent refresh timer ngay sau login
       scheduleRefresh(res.data.expiresIn);
       initVisibilityRefresh();
-
-      await queryClient.prefetchQuery({
-        queryKey: [...userKeys.all, "me"],
-        queryFn: () => userApi.getMe(),
-      });
 
       onLoginSuccess();
     },
@@ -115,6 +108,7 @@ export const useLogout = () => {
   });
 };
 
+// useRefresh vẫn giữ để dùng thủ công nếu cần
 export const useRefresh = () => {
   const queryClient = useQueryClient();
 
@@ -130,6 +124,7 @@ export const useRefresh = () => {
 
     onSuccess: (res) => {
       saveTokens(res.data);
+      // Reset timer sau khi refresh thủ công
       scheduleRefresh(res.data.expiresIn);
       queryClient.invalidateQueries();
     },

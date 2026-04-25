@@ -11,9 +11,6 @@ import {
   startRefreshScheduler,
 } from "../utils/authService";
 import { cookieUtil } from "../utils/cookieUtil";
-import { useGetMe } from "../hooks/queries/useUsers";
-import Overplay from "./ui/Overplay";
-import Loading from "./ui/Loading";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -35,8 +32,6 @@ function PrivateRoute({ children }: PrivateRouteProps) {
   const refreshToken = cookieUtil.get("refreshToken");
   const tokenStatus = getTokenStatus();
 
-  const { data, isLoading, isError } = useGetMe();
-
   useEffect(() => {
     const init = async () => {
       if (tokenStatus === "valid") {
@@ -49,7 +44,6 @@ function PrivateRoute({ children }: PrivateRouteProps) {
       if (refreshToken) {
         const newToken = await doRefresh();
         if (!newToken) return;
-
         startRefreshScheduler();
         initVisibilityRefresh();
       }
@@ -59,19 +53,6 @@ function PrivateRoute({ children }: PrivateRouteProps) {
   }, []);
 
   if (!accessToken && !refreshToken) {
-    logoutAndRedirect();
-    return <Navigate to="/" replace />;
-  }
-
-  if (isLoading)
-    return (
-      <Overplay>
-        <Loading height={0} size={55} color="white" thickness={8} />
-        <h4 className="text-white">Vui lòng chờ trong giây lát ...</h4>
-      </Overplay>
-    );
-
-  if (isError || data?.data?.roleCode !== "ADMIN") {
     logoutAndRedirect();
     return <Navigate to="/" replace />;
   }
