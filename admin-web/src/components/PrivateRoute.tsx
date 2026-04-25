@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import type { AccessTokenPayload } from "../types/type";
 import {
   doRefresh,
@@ -31,8 +31,6 @@ const getTokenStatus = (): "valid" | "expired" | "missing" => {
 };
 
 function PrivateRoute({ children }: PrivateRouteProps) {
-  const navigate = useNavigate();
-
   const accessToken = cookieUtil.get("accessToken");
   const refreshToken = cookieUtil.get("refreshToken");
   const tokenStatus = getTokenStatus();
