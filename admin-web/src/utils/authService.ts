@@ -1,8 +1,9 @@
 import { jwtDecode } from "jwt-decode";
 import { authApi } from "../apis/authApi";
-import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../constant/cookieConstant";
+import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../constant/cookie";
 import type { AccessTokenPayload } from "../types/type";
 import { cookieUtil } from "./cookieUtil";
+import { tokenUtil } from "./tokenUtil";
 
 let onLogout: () => void = () => {
   window.location.href = "/";
@@ -24,10 +25,7 @@ export const saveTokens = (data: {
   });
 
   if (data.refreshToken) {
-    cookieUtil.set("refreshToken", data.refreshToken, {
-      ...COOKIE_OPTIONS,
-      expires: COOKIE_EXPIRES.refresh,
-    });
+    tokenUtil.setTokenCookie("refreshToken", data.refreshToken);
   }
 };
 

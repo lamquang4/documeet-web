@@ -5,10 +5,7 @@ import { ChevronDown } from "lucide-react";
 
 type Props = {
   title: string;
-  array: {
-    name: string;
-    value: string | null;
-  }[];
+  array: readonly { readonly name: string; readonly value: string | null }[];
   paramName: string;
 };
 

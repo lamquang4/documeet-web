@@ -9,8 +9,8 @@ import toast from "react-hot-toast";
 import {
   validateOtp,
   validateOtpDigit,
-} from "../../utils/validation/validationOtp";
-import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constant/otpConstant";
+} from "../../utils/validation/validateOtp";
+import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constant/otp";
 
 function OtpForm() {
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));

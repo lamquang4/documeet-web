@@ -1,8 +1,13 @@
 // Request
 export interface LoginRequest {
-  governmentId: string; // cccd
+  governmentId: string;
   password: string;
   deviceIMEI: string;
+  deviceName?: string;
+  platform?: string;
+  osVersion?: string;
+  ipAddress?: string;
+  userAgent?: string;
 }
 
 export interface LogoutRequest {
@@ -251,4 +256,12 @@ export interface CookieOptions {
   domain?: string;
   secure?: boolean;
   sameSite?: "Strict" | "Lax" | "None";
+}
+
+export interface DeviceData {
+  deviceIMEI: string;
+  deviceName: string;
+  platform: string;
+  osVersion: string;
+  userAgent: string;
 }

@@ -16,7 +16,8 @@ import {
   scheduleRefresh,
   stopRefreshScheduler,
 } from "../../utils/authService";
-import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../../constant/cookieConstant";
+import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../../constant/cookie";
+import { tokenUtil } from "../../utils/tokenUtil";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -44,10 +45,7 @@ export const useLogin = ({
 
       if (res.data?.requireMfa) {
         if (res.data?.mfaToken) {
-          cookieUtil.set("mfaToken", res.data.mfaToken, {
-            ...COOKIE_OPTIONS,
-            expires: COOKIE_EXPIRES.mfa,
-          });
+          tokenUtil.setTokenCookie("mfaToken", res.data.mfaToken);
         }
         onRequireMfa();
         return;
@@ -56,6 +54,7 @@ export const useLogin = ({
       toast.success(res.message);
 
       saveTokens(res.data);
+
       cookieUtil.set("sessionId", res.data.sessionId, {
         ...COOKIE_OPTIONS,
         expires: COOKIE_EXPIRES.session,

@@ -107,7 +107,7 @@ function DeviceList() {
                   paramName="isTrusted"
                 />
               </th>
-
+              <th className="p-[1rem]">Ngày đăng ký</th>
               <th className="p-[1rem]">Lần dùng cuối</th>
               <th className="p-[1rem]  ">
                 <FilterDropDownMenu
@@ -150,6 +150,13 @@ function DeviceList() {
                         Chưa xác thực
                       </span>
                     )}
+                  </td>
+
+                  <td className="p-[1rem]">
+                    {device.registeredDate &&
+                      parseSafeDate(device.registeredDate)?.toLocaleString(
+                        "vi-VN",
+                      )}
                   </td>
 
                   <td className="p-[1rem]">

@@ -6,11 +6,11 @@ import Button from "../ui/Button";
 import { useLogin } from "../../hooks/queries/useAuth";
 import Overplay from "../ui/Overplay";
 import Loading from "../ui/Loading";
-import { getDeviceIMEI } from "../../utils/deviceUtil";
 import { loginRules } from "../../utils/validation/rules/loginRules";
 import { useFormValidation } from "../../hooks/useFromValidation";
 import FieldError from "../ui/FieldError";
 import { useNavigate } from "react-router-dom";
+import { getDeviceData } from "../../utils/deviceUtil";
 
 type Props = {
   onRequireMfa: () => void;
@@ -49,12 +49,12 @@ function LoginForm({ onRequireMfa }: Props) {
 
     if (!validateAll()) return;
 
-    const deviceIMEI = await getDeviceIMEI();
+    const deviceData = await getDeviceData();
 
     login.mutate({
       governmentId: data.governmentId.trim(),
       password: data.password.trim(),
-      deviceIMEI: deviceIMEI,
+      ...deviceData,
     });
   };
 

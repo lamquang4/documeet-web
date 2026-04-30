@@ -9,7 +9,8 @@ import type {
 } from "../../types/type";
 import { cookieUtil } from "../../utils/cookieUtil";
 import { otpApi } from "../../apis/otpApi";
-import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../../constant/cookieConstant";
+import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../../constant/cookie";
+import { tokenUtil } from "../../utils/tokenUtil";
 
 export const useVerifyOtp = () => {
   const queryClient = useQueryClient();
@@ -24,24 +25,14 @@ export const useVerifyOtp = () => {
     onSuccess: (res) => {
       toast.success(res.message);
 
-      cookieUtil.set("accessToken", res.data.accessToken, {
-        ...COOKIE_OPTIONS,
-        expires: res.data.expiresIn / 86400,
-      });
+      tokenUtil.setTokenCookie("accessToken", res.data.accessToken);
 
       cookieUtil.set("sessionId", res.data.sessionId, {
         ...COOKIE_OPTIONS,
         expires: COOKIE_EXPIRES.session,
       });
 
-      cookieUtil.set("refreshToken", res.data.refreshToken, {
-        ...COOKIE_OPTIONS,
-        expires: COOKIE_EXPIRES.refresh,
-      });
-
-      if (res.data?.user) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-      }
+      tokenUtil.setTokenCookie("refreshToken", res.data.refreshToken);
 
       cookieUtil.remove("mfaToken");
 
