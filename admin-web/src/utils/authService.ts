@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { authApi } from "../apis/authApi";
-import { COOKIE_EXPIRES, COOKIE_OPTIONS } from "../constant/cookie";
+import { COOKIE_OPTIONS } from "../constant/cookie";
 import type { AccessTokenPayload } from "../types/type";
 import { cookieUtil } from "./cookieUtil";
 import { tokenUtil } from "./tokenUtil";
