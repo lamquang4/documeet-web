@@ -1,20 +1,14 @@
 import { jwtDecode } from "jwt-decode";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import type { AccessTokenPayload } from "../types/type";
 import {
   doRefresh,
   getRemainingSeconds,
   initVisibilityRefresh,
-  logoutAndRedirect,
   scheduleRefresh,
-  startRefreshScheduler,
 } from "../utils/authService";
 import { cookieUtil } from "../utils/cookieUtil";
-
-interface PrivateRouteProps {
-  children: React.ReactNode;
-}
 
 const getTokenStatus = (): "valid" | "expired" | "missing" => {
   const accessToken = cookieUtil.get("accessToken");
@@ -27,39 +21,41 @@ const getTokenStatus = (): "valid" | "expired" | "missing" => {
   }
 };
 
-function PrivateRoute({ children }: PrivateRouteProps) {
-  const accessToken = cookieUtil.get("accessToken");
+function PrivateRoute({ children }: { children: React.ReactNode }) {
   const refreshToken = cookieUtil.get("refreshToken");
   const tokenStatus = getTokenStatus();
 
+  const [authState, setAuthState] = useState<"loading" | "ok" | "fail">(
+    tokenStatus === "valid" ? "ok" : "loading",
+  );
+
   useEffect(() => {
-    const init = async () => {
-      if (tokenStatus === "valid") {
-        const remaining = getRemainingSeconds(accessToken!);
-        scheduleRefresh(remaining);
-        initVisibilityRefresh();
-        return;
-      }
+    if (tokenStatus === "valid") {
+      const accessToken = cookieUtil.get("accessToken")!;
+      const remaining = getRemainingSeconds(accessToken);
+      scheduleRefresh(remaining);
+      initVisibilityRefresh();
+      setAuthState("ok");
+      return;
+    }
 
-      if (refreshToken) {
-        doRefresh().then((newToken) => {
-          if (!newToken) return;
-          startRefreshScheduler();
+    if (refreshToken) {
+      doRefresh().then((newToken) => {
+        if (newToken) {
           initVisibilityRefresh();
-        });
-        return;
-      }
+          setAuthState("ok");
+        } else {
+          setAuthState("fail");
+        }
+      });
+      return;
+    }
 
-      logoutAndRedirect();
-    };
-
-    init();
+    setAuthState("fail");
   }, []);
 
-  if (!accessToken && !refreshToken) {
-    return <Navigate to="/" replace />;
-  }
-
+  if (authState === "loading") return null;
+  if (authState === "fail") return <Navigate to="/" replace />;
   return <>{children}</>;
 }
 
