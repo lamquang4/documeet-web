@@ -1,7 +1,7 @@
 import AuthContainer from "../components/auth/AuthContainer";
 
-function LoginPage() {
+function AuthPage() {
   return <AuthContainer />;
 }
 
-export default LoginPage;
+export default AuthPage;

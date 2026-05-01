@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
+import AuthPage from "./pages/AuthPage";
 import UserListPage from "./pages/UserListPage";
 import UpdateUserPage from "./pages/UpdateUserPage";
 import AccountPage from "./pages/AccountPage";
@@ -21,7 +21,7 @@ function LayoutRoute() {
         path="/"
         element={
           <PublicRoute>
-            <LoginPage />
+            <AuthPage />
           </PublicRoute>
         }
       />
