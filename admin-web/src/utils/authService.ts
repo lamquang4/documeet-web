@@ -19,7 +19,6 @@ export const saveTokens = (data: {
   user?: { role: string };
 }) => {
   tokenUtil.setTokenCookie("accessToken", data.accessToken);
-
   if (data.refreshToken) {
     tokenUtil.setTokenCookie("refreshToken", data.refreshToken);
   }
@@ -55,34 +54,44 @@ const clearRefreshTimer = () => {
   }
 };
 
+let isRefreshing = false;
+let refreshPromise: Promise<string | null> | null = null;
+
 export const doRefresh = async (): Promise<string | null> => {
+  if (isRefreshing && refreshPromise) return refreshPromise;
+
   const refreshToken = cookieUtil.get("refreshToken");
   if (!refreshToken) {
     await logoutAndRedirect();
     return null;
   }
 
-  try {
-    const res = await authApi.refresh({ refreshToken });
-    saveTokens(res.data);
-    scheduleRefresh(res.data.expiresIn);
-    return res.data.accessToken;
-  } catch (err: any) {
-    const status = err?.response?.status;
-    if (status === 401 || status === 403) {
-      await logoutAndRedirect();
+  isRefreshing = true;
+  refreshPromise = (async () => {
+    try {
+      const res = await authApi.refresh({ refreshToken });
+      saveTokens(res.data);
+      scheduleRefresh(res.data.expiresIn);
+      return res.data.accessToken;
+    } catch (err: any) {
+      const status = err?.response?.status;
+      if (status === 401 || status === 403) {
+        await logoutAndRedirect();
+      }
+      return null;
+    } finally {
+      isRefreshing = false;
+      refreshPromise = null;
     }
-    return null;
-  }
+  })();
+
+  return refreshPromise;
 };
 
 export const scheduleRefresh = (expiresInSeconds: number) => {
   clearRefreshTimer();
-
   const delay = (expiresInSeconds - 60) * 1000;
-
   const safeDelay = Math.max(delay, 5000);
-
   refreshTimer = setTimeout(() => {
     doRefresh();
   }, safeDelay);
@@ -91,10 +100,8 @@ export const scheduleRefresh = (expiresInSeconds: number) => {
 export const startRefreshScheduler = () => {
   const accessToken = cookieUtil.get("accessToken");
   if (!accessToken) return;
-
   const remaining = getRemainingSeconds(accessToken);
   if (remaining <= 0) return;
-
   scheduleRefresh(remaining);
 };
 
