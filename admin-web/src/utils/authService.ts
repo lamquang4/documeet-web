@@ -1,6 +1,5 @@
 import { jwtDecode } from "jwt-decode";
 import { authApi } from "../apis/authApi";
-import { COOKIE_OPTIONS } from "../constant/cookie";
 import type { AccessTokenPayload } from "../types/type";
 import { cookieUtil } from "./cookieUtil";
 import { tokenUtil } from "./tokenUtil";
@@ -19,10 +18,7 @@ export const saveTokens = (data: {
   refreshToken?: string;
   user?: { role: string };
 }) => {
-  cookieUtil.set("accessToken", data.accessToken, {
-    ...COOKIE_OPTIONS,
-    expires: data.expiresIn / 86400,
-  });
+  tokenUtil.setTokenCookie("accessToken", data.accessToken);
 
   if (data.refreshToken) {
     tokenUtil.setTokenCookie("refreshToken", data.refreshToken);

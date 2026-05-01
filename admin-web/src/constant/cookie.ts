@@ -1,4 +1,5 @@
 export const COOKIE_OPTIONS = {
+  path: "/",
   secure: true,
   sameSite: "None" as const,
 };
