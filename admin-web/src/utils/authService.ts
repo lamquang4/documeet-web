@@ -4,14 +4,6 @@ import type { AccessTokenPayload } from "../types/type";
 import { cookieUtil } from "./cookieUtil";
 import { tokenUtil } from "./tokenUtil";
 
-let onLogout: () => void = () => {
-  window.location.href = "/";
-};
-
-export const setLogoutCallback = (cb: () => void) => {
-  onLogout = cb;
-};
-
 export const saveTokens = (data: {
   accessToken: string;
   expiresIn: number;
@@ -62,7 +54,8 @@ export const doRefresh = async (): Promise<string | null> => {
 
   const refreshToken = cookieUtil.get("refreshToken");
   if (!refreshToken) {
-    await logoutAndRedirect();
+    clearAuthStorage();
+    window.location.href = "/";
     return null;
   }
 
@@ -73,11 +66,8 @@ export const doRefresh = async (): Promise<string | null> => {
       saveTokens(res.data);
       scheduleRefresh(res.data.expiresIn);
       return res.data.accessToken;
-    } catch (err: any) {
-      const status = err?.response?.status;
-      if (status === 401 || status === 403) {
-        await logoutAndRedirect();
-      }
+    } catch {
+      await logoutAndRedirect();
       return null;
     } finally {
       isRefreshing = false;
@@ -149,5 +139,5 @@ export const logoutAndRedirect = async () => {
   }
 
   clearAuthStorage();
-  onLogout();
+  window.location.href = "/";
 };

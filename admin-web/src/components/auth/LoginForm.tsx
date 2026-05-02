@@ -9,7 +9,6 @@ import Loading from "../ui/Loading";
 import { loginRules } from "../../utils/validation/rules/loginRules";
 import { useFormValidation } from "../../hooks/useFromValidation";
 import FieldError from "../ui/FieldError";
-import { useNavigate } from "react-router-dom";
 import { getDeviceData } from "../../utils/deviceUtil";
 
 type Props = {
@@ -17,7 +16,6 @@ type Props = {
 };
 
 function LoginForm({ onRequireMfa }: Props) {
-  const navigate = useNavigate();
   const [data, setData] = useState({ governmentId: "", password: "" });
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -28,7 +26,6 @@ function LoginForm({ onRequireMfa }: Props) {
 
   const login = useLogin({
     onRequireMfa,
-    onSuccess: () => navigate("/account/profile", { replace: true }),
   });
   const isLoading = login.isPending;
 

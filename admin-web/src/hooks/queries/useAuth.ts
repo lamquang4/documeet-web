@@ -24,13 +24,9 @@ export const authKeys = {
   all: ["auth"] as const,
 };
 
-export const useLogin = ({
-  onRequireMfa,
-  onSuccess: onLoginSuccess,
-}: {
-  onRequireMfa: () => void;
-  onSuccess: () => void;
-}) => {
+export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
+  const navigate = useNavigate();
+
   return useMutation<
     ApiResponse<LoginResponse>,
     AxiosError<ErrorResponse>,
@@ -63,7 +59,7 @@ export const useLogin = ({
 
       scheduleRefresh(res.data.expiresIn);
       initVisibilityRefresh();
-      onLoginSuccess();
+      navigate("/account/profile", { replace: true });
     },
 
     onError: (error) => {
@@ -93,7 +89,7 @@ export const useLogout = () => {
       stopRefreshScheduler();
       queryClient.clear();
       clearAuthStorage();
-      navigate("/");
+      navigate("/", { replace: true });
     },
 
     onError: () => {
