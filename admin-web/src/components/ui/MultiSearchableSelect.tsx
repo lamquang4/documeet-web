@@ -32,20 +32,9 @@ function MultiSearchableSelect({
 }: Props) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [cachedSelectedOptions, setCachedSelectedOptions] = useState<Option[]>(
-    [],
-  );
 
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setCachedSelectedOptions((prev) => {
-      const prevMap = new Map(prev.map((o) => [o.value, o]));
-      options.forEach((o) => prevMap.set(o.value, o));
-      return Array.from(prevMap.values());
-    });
-  }, [options]);
 
   // Click outside
   useEffect(() => {
@@ -93,9 +82,7 @@ function MultiSearchableSelect({
     );
   };
 
-  const selectedOptions = cachedSelectedOptions.filter((opt) =>
-    value.includes(opt.value),
-  );
+  const selectedOptions = options.filter((opt) => value.includes(opt.value));
 
   const handleScroll = () => {
     if (!listRef.current) return;
