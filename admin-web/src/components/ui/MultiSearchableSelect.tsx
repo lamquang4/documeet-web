@@ -32,7 +32,9 @@ function MultiSearchableSelect({
 }: Props) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-
+  const [cachedSelectedOptions, setCachedSelectedOptions] = useState<Option[]>(
+    [],
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -49,6 +51,28 @@ function MultiSearchableSelect({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    setCachedSelectedOptions((prev) => {
+      const prevMap = new Map(prev.map((o) => [o.value, o]));
+      options.forEach((o) => prevMap.set(o.value, o));
+      return Array.from(prevMap.values());
+    });
+  }, [options]);
+
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+    if (value.length === 0) return;
+    if (search) return;
+
+    const allValuesCovered = value.every((v) =>
+      options.some((opt) => opt.value === v),
+    );
+
+    if (!allValuesCovered) {
+      fetchNextPage?.();
+    }
+  }, [options, value, hasNextPage, isFetchingNextPage, search]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -82,8 +106,6 @@ function MultiSearchableSelect({
     );
   };
 
-  const selectedOptions = options.filter((opt) => value.includes(opt.value));
-
   const handleScroll = () => {
     if (!listRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = listRef.current;
@@ -92,6 +114,10 @@ function MultiSearchableSelect({
       fetchNextPage?.();
     }
   };
+
+  const selectedOptions = cachedSelectedOptions.filter((opt) =>
+    value.includes(opt.value),
+  );
 
   return (
     <div className="cursor-pointer relative w-full" ref={containerRef}>

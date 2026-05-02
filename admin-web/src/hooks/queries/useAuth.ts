@@ -73,6 +73,7 @@ export const useLogin = ({
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation<ApiResponse<null>, AxiosError<ErrorResponse>, void>({
     mutationFn: () => {
@@ -91,6 +92,7 @@ export const useLogout = () => {
       stopRefreshScheduler();
       queryClient.clear();
       clearAuthStorage();
+      navigate("/");
     },
 
     onError: () => {

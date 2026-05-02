@@ -51,7 +51,6 @@ axiosInstance.interceptors.response.use(
     }
 
     if (status === 403) {
-      toast.error("Bạn không có quyền thực hiện thao tác này");
     } else if (status === 500) {
       toast.error("Lỗi server, vui lòng thử lại sau");
     }
