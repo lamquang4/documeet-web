@@ -68,6 +68,11 @@ function UserList() {
   ];
 
   const handleDelete = async (userId: string) => {
+    if (userId === account?.userId) {
+      toast.error("Bạn không thể xóa chính tài khoản của mình");
+      return;
+    }
+
     const result = await Swal.fire({
       title: `Xác nhận xóa?`,
       text: `Bạn có chắc muốn xóa người dùng này không?`,
@@ -78,11 +83,6 @@ function UserList() {
     });
 
     if (!result.isConfirmed || !userId) return;
-
-    if (userId === account?.userId) {
-      toast.error("Bạn không thể xóa chính tài khoản của mình");
-      return;
-    }
 
     deleteUser.mutate(userId);
   };
