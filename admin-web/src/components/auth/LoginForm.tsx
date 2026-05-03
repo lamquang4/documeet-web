@@ -57,7 +57,7 @@ function LoginForm({ onRequireMfa }: Props) {
 
   return (
     <>
-      <div className="w-full px-4 sm:px-8 bg-white">
+      <div className="w-full px-[15px] md:px-[30px] bg-white">
         <h1 className="relative text-center uppercase mb-6">Đăng nhập</h1>
 
         <form className="space-y-[15px]" onSubmit={handleSubmit}>

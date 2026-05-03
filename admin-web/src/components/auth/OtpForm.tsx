@@ -104,14 +104,14 @@ function OtpForm() {
 
   return (
     <>
-      <div className="w-full px-4 sm:px-8 bg-white space-y-4">
+      <div className="w-full px-[15px] md:px-[30px] bg-white space-y-4">
         <h1 className="relative text-center uppercase">Xác thực OTP</h1>
 
         <p className="text-center text-neutral">
           Vui lòng nhập mã OTP vừa gửi đến email
         </p>
 
-        <form className="space-y-[20px]" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit}>
           <div className="flex justify-center gap-[10px]">
             {otp.map((digit, index) => (
               <Input
@@ -127,7 +127,7 @@ function OtpForm() {
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={handlePaste}
-                className={`w-[50px] h-[50px] text-center text-[1rem] font-semibold border rounded-md transition-colors
+                className={`w-[45px] h-[45px] text-center text-[1rem] font-semibold border rounded-md transition-colors
                           ${digit ? "border-success text-success" : "border-gray-300"}
                           focus:border-success`}
               />
