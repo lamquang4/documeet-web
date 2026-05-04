@@ -14,6 +14,9 @@ import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constant/otp";
 
 function OtpForm() {
   const [isTimerActive, setIsTimerActive] = useState<boolean>(true);
+  const [endTime, setEndTime] = useState<number>(
+    Date.now() + OTP_EXPIRE_SECONDS * 1000,
+  );
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(OTP_EXPIRE_SECONDS);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -22,6 +25,8 @@ function OtpForm() {
   const isLoadingVerify = verifyOtp.isPending;
 
   const reset = () => {
+    const newEndTime = Date.now() + OTP_EXPIRE_SECONDS * 1000;
+    setEndTime(newEndTime);
     setTimeLeft(OTP_EXPIRE_SECONDS);
     setOtp(Array(OTP_LENGTH).fill(""));
     setIsTimerActive(true);
@@ -35,18 +40,20 @@ function OtpForm() {
     if (!isTimerActive) return;
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          setIsTimerActive(false);
-          return 0;
-        }
-        return prev - 1;
-      });
+      const remaining = Math.round((endTime - Date.now()) / 1000);
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        setTimeLeft(0);
+        setIsTimerActive(false);
+        return;
+      }
+
+      setTimeLeft(remaining);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isTimerActive]);
+  }, [isTimerActive, endTime]);
 
   useEffect(() => {
     inputRefs.current[0]?.focus();
