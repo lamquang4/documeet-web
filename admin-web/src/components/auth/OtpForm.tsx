@@ -13,6 +13,7 @@ import {
 import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constant/otp";
 
 function OtpForm() {
+  const [isTimerActive, setIsTimerActive] = useState<boolean>(true);
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(OTP_EXPIRE_SECONDS);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -23,6 +24,7 @@ function OtpForm() {
   const reset = () => {
     setTimeLeft(OTP_EXPIRE_SECONDS);
     setOtp(Array(OTP_LENGTH).fill(""));
+    setIsTimerActive(true);
   };
 
   const resendOtp = useResendOtp(reset);
@@ -30,10 +32,13 @@ function OtpForm() {
 
   // Đếm ngược
   useEffect(() => {
+    if (!isTimerActive) return;
+
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
+          setIsTimerActive(false);
           return 0;
         }
         return prev - 1;
@@ -41,7 +46,7 @@ function OtpForm() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isTimerActive]);
 
   useEffect(() => {
     inputRefs.current[0]?.focus();
