@@ -5,6 +5,8 @@ import type {
   ApiResponse,
   ErrorResponse,
   LoginResponse,
+  OtpResponse,
+  SendOtpRequest,
   VerifyOtpRequest,
 } from "../../types/type";
 import { cookieUtil } from "../../utils/cookieUtil";
@@ -45,4 +47,29 @@ export const useVerifyOtp = () => {
       toast.error(error.response?.data?.message ?? "Xác thực OTP thất bại");
     },
   });
+};
+
+export const useResendOtp = (onSuccess?: () => void) => {
+  return useMutation<ApiResponse<OtpResponse>, AxiosError<ErrorResponse>, void>(
+    {
+      mutationFn: () => {
+        const mfaToken = cookieUtil.get("mfaToken");
+
+        if (!mfaToken) {
+          return Promise.reject(new Error("Phiên xác thực đã hết hạn"));
+        }
+
+        return otpApi.resendOtp({ mfaToken });
+      },
+
+      onSuccess: (res) => {
+        toast.success(res.message);
+        onSuccess?.();
+      },
+
+      onError: (error) => {
+        toast.error(error.response?.data?.message ?? "Gửi lại OTP thất bại");
+      },
+    },
+  );
 };

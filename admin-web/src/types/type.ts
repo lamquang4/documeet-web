@@ -20,6 +20,10 @@ export interface VerifyOtpRequest {
   otp: string;
 }
 
+export interface SendOtpRequest {
+  mfaToken: string;
+}
+
 export interface RefreshTokenRequest {
   refreshToken: string;
 }

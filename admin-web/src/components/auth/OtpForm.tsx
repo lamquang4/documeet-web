@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Button from "../ui/Button";
 import Loading from "../ui/Loading";
 import Overplay from "../ui/Overplay";
-import { useVerifyOtp } from "../../hooks/queries/useOtp";
+import { useResendOtp, useVerifyOtp } from "../../hooks/queries/useOtp";
 import { cookieUtil } from "../../utils/cookieUtil";
 import Input from "../ui/Input";
 import toast from "react-hot-toast";
@@ -18,7 +18,15 @@ function OtpForm() {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const verifyOtp = useVerifyOtp();
-  const isLoading = verifyOtp.isPending;
+  const isLoadingVerify = verifyOtp.isPending;
+
+  const reset = () => {
+    setTimeLeft(OTP_EXPIRE_SECONDS);
+    setOtp(Array(OTP_LENGTH).fill(""));
+  };
+
+  const resendOtp = useResendOtp(reset);
+  const isLoadingResend = resendOtp.isPending;
 
   // Đếm ngược
   useEffect(() => {
@@ -87,6 +95,10 @@ function OtpForm() {
     inputRefs.current[OTP_LENGTH - 1]?.focus();
   };
 
+  const handleResendOtp = () => {
+    resendOtp.mutate();
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const otpValue = otp.join("");
@@ -136,10 +148,8 @@ function OtpForm() {
 
           <div className="flex items-center justify-between">
             <Button
-              onClick={() => {
-                toast("OTP đã gửi");
-              }}
-              disabled={timeLeft > 0}
+              onClick={handleResendOtp}
+              disabled={timeLeft > 0 || isLoadingResend}
               className={`font-medium ${timeLeft <= 0 ? "text-success" : "text-neutral"}`}
             >
               Gửi lại mã
@@ -159,7 +169,7 @@ function OtpForm() {
 
           <Button
             disabled={
-              isLoading ||
+              isLoadingVerify ||
               !validateOtp(otp.join(""), OTP_LENGTH) ||
               timeLeft <= 0
             }
@@ -171,7 +181,7 @@ function OtpForm() {
         </form>
       </div>
 
-      {isLoading && (
+      {isLoadingVerify && (
         <Overplay>
           <Loading height={0} size={55} color="white" thickness={8} />
           <h4 className="text-white">Vui lòng chờ trong giây lát ...</h4>
