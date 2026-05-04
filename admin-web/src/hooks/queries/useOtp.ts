@@ -6,7 +6,6 @@ import type {
   ErrorResponse,
   LoginResponse,
   OtpResponse,
-  SendOtpRequest,
   VerifyOtpRequest,
 } from "../../types/type";
 import { cookieUtil } from "../../utils/cookieUtil";
