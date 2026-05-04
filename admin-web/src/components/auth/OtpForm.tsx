@@ -148,6 +148,7 @@ function OtpForm() {
 
           <div className="flex items-center justify-between">
             <Button
+              type="button"
               onClick={handleResendOtp}
               disabled={timeLeft > 0 || isLoadingResend}
               className={`font-medium ${timeLeft <= 0 ? "text-success" : "text-neutral"}`}
