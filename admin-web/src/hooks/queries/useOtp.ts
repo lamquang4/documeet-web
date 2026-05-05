@@ -39,7 +39,7 @@ export const useVerifyOtp = () => {
 
       queryClient.clear();
 
-      window.location.href = "/account/profile";
+      window.location.href = "/users";
     },
 
     onError: (error) => {

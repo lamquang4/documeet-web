@@ -17,7 +17,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     doRefresh().then((newToken) => {
       if (newToken) {
         initVisibilityRefresh();
-        setAuthState("redirect"); 
+        setAuthState("redirect");
       } else {
         setAuthState("ok");
       }
@@ -25,8 +25,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (authState === "loading") return null;
-  if (authState === "redirect")
-    return <Navigate to="/account/profile" replace />;
+  if (authState === "redirect") return <Navigate to="/users" replace />;
   return <>{children}</>;
 }
 

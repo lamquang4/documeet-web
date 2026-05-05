@@ -59,7 +59,7 @@ export const useLogin = ({ onRequireMfa }: { onRequireMfa: () => void }) => {
 
       scheduleRefresh(res.data.expiresIn);
       initVisibilityRefresh();
-      navigate("/account/profile", { replace: true });
+      navigate("/users", { replace: true });
     },
 
     onError: (error) => {
