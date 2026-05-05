@@ -62,7 +62,7 @@ function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
               >
                 <div className="flex items-center gap-[8px] font-normal">
                   <DoorOpen size={18} />
-                  <p>Thoa</p>
+                  <p>Thoát</p>
                 </div>
               </Button>
             </div>
