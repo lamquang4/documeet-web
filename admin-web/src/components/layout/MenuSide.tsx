@@ -1,6 +1,5 @@
 import { memo, useState, type ReactNode } from "react";
 import Overplay from "../ui/Overplay";
-import Image from "../ui/Image";
 import { Link, useLocation } from "react-router-dom";
 import Button from "../ui/Button";
 import {
