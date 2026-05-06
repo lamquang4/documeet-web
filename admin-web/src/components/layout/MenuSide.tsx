@@ -116,12 +116,10 @@ function MenuSide({ menuOpen, onToggleMenu }: Props) {
         } custom-scroll fixed border top-0 h-screen w-[320px] pb-5 bg-white transition-all duration-350 ease-in-out z-100 xl:sticky overflow-y-auto border-b border-gray-200`}
       >
         <div className="mb-[20px] flex justify-center sticky top-0 bg-white px-3.5 py-4.5">
-          <Image
-            source={"/assets/logo.png"}
-            alt=""
-            className="w-[80px]"
-            loading="eager"
-          />
+          <div className="flex items-center">
+            <h1>Docu</h1>
+            <h1 className="text-primary">Meet</h1>
+          </div>
         </div>
 
         <ul className="flex flex-col gap-[15px] px-3.5 font-medium">
