@@ -197,7 +197,7 @@ function MenuSide({ menuOpen, onToggleMenu }: Props) {
         </ul>
       </nav>
 
-      {menuOpen && <Overplay onClose={onToggleMenu} />}
+      {menuOpen && <Overplay className="xl:hidden" onClose={onToggleMenu} />}
     </>
   );
 }

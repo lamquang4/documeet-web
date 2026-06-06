@@ -209,7 +209,7 @@ function DeviceTable({ devices, isLoading }: Props) {
             <td colSpan={8} className="w-full h-[70vh]">
               <div className="flex justify-center items-center">
                 <Image
-                  source={"/assets/notfound1.webp"}
+                  src={"/assets/notfound1.webp"}
                   alt={""}
                   className={"w-[135px]"}
                   loading="lazy"

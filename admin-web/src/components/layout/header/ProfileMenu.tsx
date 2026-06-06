@@ -28,7 +28,7 @@ function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
           <div className="flex cursor-pointer items-center gap-2">
             <div className="w-[34px] h-[34px] p-1 rounded-full border border-gray-300 overflow-hidden">
               <Image
-                source="/assets/user.png"
+                src="/assets/user.png"
                 alt=""
                 className="w-full h-full object-contain"
                 loading="eager"

@@ -1,11 +1,15 @@
-type Props = {
-  source: string;
-  alt: string;
-  className: string;
-  loading: "lazy" | "eager";
-};
-function Image({ source, alt, className, loading }: Props) {
-  return <img src={source} alt={alt} className={className} loading={loading} />;
+type Props = React.ImgHTMLAttributes<HTMLImageElement>;
+
+function Image({ src, alt, className, loading = "lazy", ...rest }: Props) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      loading={loading}
+      {...rest}
+    />
+  );
 }
 
 export default Image;

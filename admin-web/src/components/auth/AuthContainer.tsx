@@ -17,7 +17,7 @@ function AuthContainer() {
 
             <div className="hidden md:block border-l-2 border-gray-200 md:px-2">
               <Image
-                source={"/assets/hero1.webp"}
+                src={"/assets/hero1.webp"}
                 alt={""}
                 className={"w-auto"}
                 loading="eager"
