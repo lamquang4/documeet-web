@@ -81,7 +81,7 @@ function DeviceTable({ devices, isLoading }: Props) {
           </th>
           <th className="p-[1rem]">Ngày đăng ký</th>
           <th className="p-[1rem]">Lần dùng cuối</th>
-          <th className="p-[1rem]  ">
+          <th className="p-[1rem]">
             <FilterDropDownMenu
               title="Tình trạng"
               array={DEVICE_STATUS_OPTIONS}

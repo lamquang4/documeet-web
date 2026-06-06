@@ -3,85 +3,85 @@
 
 @theme {
   --color-primary: #74c69d;
-
   --color-success: #74c69d;
   --color-info: #0088ff;
   --color-danger: #ed3241;
   --color-neutral: #8f9098;
 
-  --color-text-primary: #444;
-  --color-bg-primary: #f1f4f9;
+  --font-family: "Quicksand", sans-serif;
 }
 
-.hover-scale {
-  @apply transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98];
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-family text-[#444] bg-[#f1f4f9];
+  }
+
+  a,
+  img {
+    @apply block;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  h1 {
+    @apply text-[1.8rem] font-bold;
+  }
+  h2 {
+    @apply text-[1.6rem] font-bold;
+  }
+  h3 {
+    @apply text-[1.4rem] font-bold;
+  }
+  h4 {
+    @apply text-[1.2rem] font-bold;
+  }
+  h5 {
+    @apply text-[1rem] font-semibold;
+  }
+
+  p,
+  span,
+  input,
+  select,
+  label,
+  textarea,
+  button,
+  a {
+    @apply text-[0.9rem];
+  }
+
+  small {
+    @apply text-[0.75rem];
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  table thead tr {
+    @apply bg-[#f1f4f9];
+  }
+  table thead tr th {
+    font-weight: 650;
+  }
+  table td:first-child {
+    font-weight: 600;
+  }
 }
 
-* {
-  scroll-behavior: smooth;
-  font-family: "Quicksand", sans-serif;
+@layer components {
+  .hover-scale {
+    @apply transition-all duration-200 ease-out hover:scale-[1.02] active:scale-[0.98];
+  }
 }
 
-body {
-  color: var(--color-text-primary);
-}
-
-table thead tr {
-  background-color: var(--color-bg-primary);
-}
-
-table thead tr th {
-  font-weight: 650;
-}
-
-.custom-scroll::-webkit-scrollbar {
-  width: 0px;
-}
-
-a,
-img {
-  display: block;
-}
-
-button {
-  cursor: pointer;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-}
-
-h2 {
-  font-size: 1.6rem;
-  font-weight: 700;
-}
-
-h3 {
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-h4 {
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-h5 {
-  font-size: 1rem;
-}
-
-p,
-span {
-  font-size: 0.9rem;
-}
-
-table td:first-child {
-  font-weight: 600;
+@layer utilities {
 }
