@@ -6,7 +6,7 @@ function AuthContainer() {
   const [showOtp, setShowOtp] = useState<boolean>(false);
   return (
     <section className="bg-[#F1F4F9] w-full">
-      <div className="flex justify-center items-center h-screen px-[15px]">
+      <div className="flex justify-center items-center h-screen">
         <div className="relative bg-white rounded-lg shadow-md border border-gray-300 max-w-[850px] w-full h-[500px]">
           <div className="h-full grid grid-cols-1 md:grid-cols-2 items-center">
             {showOtp ? (
@@ -15,11 +15,11 @@ function AuthContainer() {
               <LoginForm onRequireMfa={() => setShowOtp(true)} />
             )}
 
-            <div className="hidden md:block border-l-2 border-gray-200 md:px-2">
+            <div className="hidden md:block border-l-2 border-gray-200">
               <Image
                 src={"/assets/hero1.webp"}
-                alt={""}
-                className={"w-auto"}
+                alt={"hero"}
+                className={"w-full h-full object-cover"}
                 loading="eager"
               />
             </div>
