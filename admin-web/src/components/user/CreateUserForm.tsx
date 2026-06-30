@@ -15,7 +15,7 @@ import FieldError from "../ui/FieldError";
 import {
   createUserSchema,
   type CreateUserData,
-} from "../../schemas/createUserSchema";
+} from "../../schemas/userSchema";
 
 function CreateUserForm() {
   const [keyword, setKeyword] = useState("");

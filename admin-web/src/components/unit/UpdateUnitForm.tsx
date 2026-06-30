@@ -15,7 +15,7 @@ import FieldError from "../ui/FieldError";
 import {
   updateUnitSchema,
   type UpdateUnitData,
-} from "../../schemas/updateUnitSchema";
+} from "../../schemas/unitSchema";
 
 function UpdateUnitForm() {
   const navigate = useNavigate();

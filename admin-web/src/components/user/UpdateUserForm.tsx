@@ -20,7 +20,7 @@ import FieldError from "../ui/FieldError";
 import {
   updateUserSchema,
   type UpdateUserData,
-} from "../../schemas/updateUserSchema";
+} from "../../schemas/userSchema";
 
 function UpdateUserForm() {
   const navigate = useNavigate();

@@ -13,7 +13,7 @@ import FieldError from "../ui/FieldError";
 import {
   createUnitSchema,
   type CreateUnitData,
-} from "../../schemas/createUnitSchema";
+} from "../../schemas/unitSchema";
 
 function CreateUnitForm() {
   const [keyword, setKeyword] = useState("");
