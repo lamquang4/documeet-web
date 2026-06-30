@@ -1,46 +1,33 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../ui/Button";
 import Label from "../ui/Label";
 import Input from "../ui/Input";
 import { useCreateRole } from "../../hooks/queries/useRoles";
-import { useFormValidation } from "../../hooks/useFromValidation";
-import { roleRules } from "../../utils/validation/rules/roleRules";
 import FieldError from "../ui/FieldError";
+import { roleSchema, type RoleFormData } from "../../schemas/roleSchema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 function CreateRoleForm() {
-  const [data, setData] = useState({
-    roleCode: "",
-    roleName: "",
-    description: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<RoleFormData>({
+    resolver: zodResolver(roleSchema),
+    mode: "onBlur",
+    defaultValues: {
+      roleCode: "",
+      roleName: "",
+      description: "",
+    },
   });
-
-  const { errors, handleBlur, clearError, validateAll, resetErrors } =
-    useFormValidation(data, roleRules);
 
   const createRole = useCreateRole();
   const isLoading = createRole.isPending;
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-
-    setData({
-      ...data,
-      [name]: name === "roleCode" ? value.toUpperCase().trim() : value,
-    });
-
-    clearError(name as keyof typeof data);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateAll()) return;
-
+  const onSubmit = async (data: RoleFormData) => {
     createRole.mutate(
       {
         roleCode: data.roleCode.trim(),
@@ -49,8 +36,7 @@ function CreateRoleForm() {
       },
       {
         onSuccess: () => {
-          setData({ roleCode: "", roleName: "", description: "" });
-          resetErrors();
+          reset();
         },
       },
     );
@@ -58,7 +44,10 @@ function CreateRoleForm() {
 
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-full">
-      <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col gap-7 w-full"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <h2 className="text-neutral">Thêm chức vụ</h2>
 
         <div className="flex gap-[25px] w-full flex-col">
@@ -73,14 +62,15 @@ function CreateRoleForm() {
               <Input
                 type="text"
                 id="roleCode"
-                name="roleCode"
-                value={data.roleCode}
-                onChange={handleChange}
-                onBlur={(e) => handleBlur("roleCode", e.target.value)}
                 className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                error={errors.roleCode}
+                error={errors.roleCode?.message}
+                {...register("roleCode", {
+                  onChange: (e) => {
+                    e.target.value = e.target.value.toUpperCase().trim();
+                  },
+                })}
               />
-              <FieldError message={errors.roleCode} />
+              <FieldError message={errors.roleCode?.message} />
             </div>
 
             <div className="flex flex-col gap-1">
@@ -91,14 +81,11 @@ function CreateRoleForm() {
               <Input
                 type="text"
                 id="roleName"
-                name="roleName"
-                value={data.roleName}
-                onChange={handleChange}
-                onBlur={(e) => handleBlur("roleName", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
-                error={errors.roleName}
+                error={errors.roleName?.message}
+                {...register("roleName")}
               />
-              <FieldError message={errors.roleName} />
+              <FieldError message={errors.roleName?.message} />
             </div>
 
             <div className="flex flex-col gap-1 w-full">
@@ -109,14 +96,11 @@ function CreateRoleForm() {
               <Input
                 type="text"
                 id="description"
-                name="description"
-                value={data.description}
-                onChange={handleChange}
-                onBlur={(e) => handleBlur("description", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
-                error={errors.description}
+                error={errors.description?.message}
+                {...register("description")}
               />
-              <FieldError message={errors.description} />
+              <FieldError message={errors.description?.message} />
             </div>
           </div>
         </div>

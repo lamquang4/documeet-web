@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import MultiSearchableSelect from "../ui/MultiSearchableSelect";
 import Button from "../ui/Button";
 import Label from "../ui/Label";
@@ -9,30 +11,34 @@ import Input from "../ui/Input";
 import { useGetUnitById, useUpdateUnit } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUserForUnit } from "../../hooks/queries/useUsers";
-import { useFormValidation } from "../../hooks/useFromValidation";
 import FieldError from "../ui/FieldError";
-import { updateUnitRules } from "../../utils/validation/rules/updateUnitRules";
+import {
+  updateUnitSchema,
+  type UpdateUnitData,
+} from "../../schemas/updateUnitSchema";
 
 function UpdateUnitForm() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [data, setData] = useState({
-    unitCode: "",
-    unitName: "",
-    status: "",
-    userIds: [] as string[],
-  });
   const [keyword, setKeyword] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
 
-  const validateData = {
-    unitCode: data.unitCode,
-    unitName: data.unitName,
-    status: data.status,
-  };
-
-  const { errors, handleBlur, clearError, validateAll, resetErrors } =
-    useFormValidation(validateData, updateUnitRules);
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<UpdateUnitData>({
+    resolver: zodResolver(updateUnitSchema),
+    mode: "onBlur",
+    defaultValues: {
+      unitCode: "",
+      unitName: "",
+      status: "",
+      userIds: [],
+    },
+  });
 
   const { data: unitRes, isLoading } = useGetUnitById(id as string);
   const unit = unitRes?.data;
@@ -65,54 +71,32 @@ function UpdateUnitForm() {
 
     const userIds = unit.users?.map((u) => u.userId) ?? [];
 
-    setData({
+    reset({
       unitCode: unit.unitCode.toUpperCase() || "",
       unitName: unit.unitName || "",
       status: unit.status || "",
-      userIds: userIds,
+      userIds,
     });
-  }, [isLoading, unit, navigate]);
+  }, [isLoading, unit, navigate, reset]);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-    setData({
-      ...data,
-      [name]: name === "unitCode" ? value.toUpperCase().trim() : value,
+  const onSubmit = async (data: UpdateUnitData) => {
+    await updateUnit.mutateAsync({
+      id: id ?? "",
+      data: {
+        unitCode: data.unitCode.trim(),
+        unitName: data.unitName.trim(),
+        status: data.status as "ACTIVE" | "INACTIVE",
+        userIds: data.userIds,
+      },
     });
-
-    clearError(name as keyof typeof validateData);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateAll()) return;
-
-    await updateUnit.mutateAsync(
-      {
-        id: id ?? "",
-        data: {
-          unitCode: data.unitCode.trim(),
-          unitName: data.unitName.trim(),
-          status: data.status as "ACTIVE" | "INACTIVE",
-          userIds: data.userIds,
-        },
-      },
-      {
-        onSuccess: () => {
-          resetErrors();
-        },
-      },
-    );
   };
 
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-auto">
-      <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col gap-7 w-full"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <h2 className="text-neutral">Chỉnh sửa đơn vị</h2>
 
         <div className="flex gap-[25px] w-full flex-col">
@@ -127,14 +111,15 @@ function UpdateUnitForm() {
               <Input
                 type="text"
                 id="unitCode"
-                name="unitCode"
-                value={data.unitCode}
-                onChange={handleChange}
-                onBlur={(e) => handleBlur("unitCode", e.target.value)}
                 className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                error={errors.unitCode}
+                error={errors.unitCode?.message}
+                {...register("unitCode", {
+                  onChange: (e) => {
+                    e.target.value = e.target.value.toUpperCase().trim();
+                  },
+                })}
               />
-              <FieldError message={errors.unitCode} />
+              <FieldError message={errors.unitCode?.message} />
             </div>
 
             <div className="flex flex-col gap-1">
@@ -145,14 +130,11 @@ function UpdateUnitForm() {
               <Input
                 type="text"
                 id="unitName"
-                name="unitName"
-                value={data.unitName}
-                onChange={handleChange}
-                onBlur={(e) => handleBlur("unitName", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                error={errors.unitName}
+                error={errors.unitName?.message}
+                {...register("unitName")}
               />
-              <FieldError message={errors.unitName} />
+              <FieldError message={errors.unitName?.message} />
             </div>
 
             <div className="flex flex-col gap-1 w-full">
@@ -161,19 +143,16 @@ function UpdateUnitForm() {
               </Label>
 
               <Select
-                name="status"
                 id="status"
-                value={data.status}
-                onChange={handleChange}
-                onBlur={(e) => handleBlur("status", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                error={errors.status}
+                error={errors.status?.message}
+                {...register("status")}
               >
                 <option value="">Chọn tình trạng</option>
                 <option value="ACTIVE">Hoạt động</option>
                 <option value="INACTIVE">Không hoạt động</option>
               </Select>
-              <FieldError message={errors.status} />
+              <FieldError message={errors.status?.message} />
             </div>
           </div>
 
@@ -185,16 +164,22 @@ function UpdateUnitForm() {
             <div className="flex flex-col gap-1 w-full">
               <Label htmlFor="">Người dùng trong đơn vị</Label>
 
-              <MultiSearchableSelect
-                value={data.userIds}
-                onChange={(val) => setData((p) => ({ ...p, userIds: val }))}
-                placeholder="Chọn người dùng"
-                options={userOptions}
-                setKeyword={setKeyword}
-                isLoading={isLoadingUsers}
-                fetchNextPage={fetchNextPage}
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
+              <Controller
+                name="userIds"
+                control={control}
+                render={({ field }) => (
+                  <MultiSearchableSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Chọn người dùng"
+                    options={userOptions}
+                    setKeyword={setKeyword}
+                    isLoading={isLoadingUsers}
+                    fetchNextPage={fetchNextPage}
+                    hasNextPage={hasNextPage}
+                    isFetchingNextPage={isFetchingNextPage}
+                  />
+                )}
               />
             </div>
           </div>

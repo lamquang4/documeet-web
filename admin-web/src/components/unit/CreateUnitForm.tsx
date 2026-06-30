@@ -1,5 +1,7 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import MultiSearchableSelect from "../ui/MultiSearchableSelect";
 import Button from "../ui/Button";
 import Label from "../ui/Label";
@@ -7,26 +9,31 @@ import Input from "../ui/Input";
 import { useCreateUnit } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
 import { useGetSelectedUserForUnit } from "../../hooks/queries/useUsers";
-import { useFormValidation } from "../../hooks/useFromValidation";
 import FieldError from "../ui/FieldError";
-import { createUnitRules } from "../../utils/validation/rules/createUnitRules";
+import {
+  createUnitSchema,
+  type CreateUnitData,
+} from "../../schemas/createUnitSchema";
 
 function CreateUnitForm() {
-  const [data, setData] = useState({
-    unitCode: "",
-    unitName: "",
-    userIds: [] as string[],
-  });
   const [keyword, setKeyword] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
 
-  const validateData = {
-    unitCode: data.unitCode,
-    unitName: data.unitName,
-  };
-
-  const { errors, handleBlur, clearError, validateAll, resetErrors } =
-    useFormValidation(validateData, createUnitRules);
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<CreateUnitData>({
+    resolver: zodResolver(createUnitSchema),
+    mode: "onBlur",
+    defaultValues: {
+      unitCode: "",
+      unitName: "",
+      userIds: [],
+    },
+  });
 
   const createUnit = useCreateUnit();
   const isLoading = createUnit.isPending;
@@ -45,42 +52,27 @@ function CreateUnitForm() {
     label: `${u.fullName}${u.unitName ? ` - ${u.unitName}` : ""}`,
   }));
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-    setData({
-      ...data,
-      [name]: name === "unitCode" ? value.toUpperCase().trim() : value,
-    });
-
-    clearError(name as keyof typeof validateData);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateAll()) return;
-
+  const onSubmit = async (data: CreateUnitData) => {
     createUnit.mutate(
       {
         unitCode: data.unitCode.trim(),
         unitName: data.unitName.trim(),
-        userIds: data.userIds,
+        userIds: data.userIds ?? [],
       },
       {
         onSuccess: () => {
-          setData({ unitCode: "", unitName: "", userIds: [] });
-          resetErrors();
+          reset({ unitCode: "", unitName: "", userIds: [] });
         },
       },
     );
   };
+
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-auto">
-      <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col gap-7 w-full"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <h2 className="text-neutral">Thêm đơn vị</h2>
 
         <div className="flex gap-[25px] w-full flex-col">
@@ -95,14 +87,15 @@ function CreateUnitForm() {
               <Input
                 type="text"
                 id="unitCode"
-                name="unitCode"
-                value={data.unitCode}
-                onChange={handleChange}
-                onBlur={(e) => handleBlur("unitCode", e.target.value)}
                 className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
-                error={errors.unitCode}
+                error={errors.unitCode?.message}
+                {...register("unitCode", {
+                  onChange: (e) => {
+                    e.target.value = e.target.value.toUpperCase().trim();
+                  },
+                })}
               />
-              <FieldError message={errors.unitCode} />
+              <FieldError message={errors.unitCode?.message} />
             </div>
 
             <div className="flex flex-col gap-1">
@@ -113,14 +106,11 @@ function CreateUnitForm() {
               <Input
                 type="text"
                 id="unitName"
-                name="unitName"
-                value={data.unitName}
-                onChange={handleChange}
-                onBlur={(e) => handleBlur("unitName", e.target.value)}
                 className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
-                error={errors.unitName}
+                error={errors.unitName?.message}
+                {...register("unitName")}
               />
-              <FieldError message={errors.unitName} />
+              <FieldError message={errors.unitName?.message} />
             </div>
           </div>
 
@@ -132,16 +122,22 @@ function CreateUnitForm() {
             <div className="flex flex-col gap-1 w-full">
               <Label htmlFor="">Người dùng trong đơn vị</Label>
 
-              <MultiSearchableSelect
-                value={data.userIds}
-                onChange={(val) => setData((p) => ({ ...p, userIds: val }))}
-                placeholder="Chọn người dùng"
-                options={userOptions}
-                setKeyword={setKeyword}
-                isLoading={isLoadingUsers}
-                fetchNextPage={fetchNextPage}
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
+              <Controller
+                name="userIds"
+                control={control}
+                render={({ field }) => (
+                  <MultiSearchableSelect
+                    value={field.value ?? []}
+                    onChange={field.onChange}
+                    placeholder="Chọn người dùng"
+                    options={userOptions}
+                    setKeyword={setKeyword}
+                    isLoading={isLoadingUsers}
+                    fetchNextPage={fetchNextPage}
+                    hasNextPage={hasNextPage}
+                    isFetchingNextPage={isFetchingNextPage}
+                  />
+                )}
               />
             </div>
           </div>

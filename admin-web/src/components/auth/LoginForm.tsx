@@ -6,23 +6,30 @@ import Button from "../ui/Button";
 import { useLogin } from "../../hooks/queries/useAuth";
 import Overplay from "../ui/Overplay";
 import Loading from "../ui/Loading";
-import { loginRules } from "../../utils/validation/rules/loginRules";
-import { useFormValidation } from "../../hooks/useFromValidation";
 import FieldError from "../ui/FieldError";
 import { getDeviceData } from "../../utils/deviceUtil";
-
+import { loginSchema, type LoginFormData } from "../../schemas/loginSchema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 type Props = {
   onRequireMfa: () => void;
 };
 
 function LoginForm({ onRequireMfa }: Props) {
-  const [data, setData] = useState({ governmentId: "", password: "" });
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const { errors, handleBlur, clearError, validateAll } = useFormValidation(
-    data,
-    loginRules,
-  );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: "onBlur",
+    defaultValues: {
+      governmentId: "",
+      password: "",
+    },
+  });
 
   const login = useLogin({
     onRequireMfa,
@@ -33,19 +40,7 @@ function LoginForm({ onRequireMfa }: Props) {
     setShowPassword((prev) => !prev);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-    clearError(name as keyof typeof data);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateAll()) return;
-
+  const onSubmit = async (data: LoginFormData) => {
     const deviceData = await getDeviceData();
 
     login.mutate({
@@ -60,7 +55,7 @@ function LoginForm({ onRequireMfa }: Props) {
       <div className="w-full px-[15px] md:px-[30px] bg-white">
         <h1 className="relative text-center uppercase mb-6">Đăng nhập</h1>
 
-        <form className="space-y-[15px]" onSubmit={handleSubmit}>
+        <form className="space-y-[15px]" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-[5px]">
             <Label htmlFor="governmentId" required>
               Số định danh cá nhân
@@ -69,15 +64,12 @@ function LoginForm({ onRequireMfa }: Props) {
             <Input
               type="text"
               id="governmentId"
-              name="governmentId"
-              value={data.governmentId}
-              onChange={handleChange}
-              onBlur={(e) => handleBlur("governmentId", e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300"
               placeholder="Nhập số định danh cá nhân"
-              error={errors.governmentId}
+              error={errors.governmentId?.message}
+              {...register("governmentId")}
             />
-            <FieldError message={errors.governmentId} />
+            <FieldError message={errors.governmentId?.message} />
           </div>
 
           <div className="space-y-[5px]">
@@ -89,13 +81,10 @@ function LoginForm({ onRequireMfa }: Props) {
               <Input
                 type={!showPassword ? "password" : "text"}
                 id="password"
-                name="password"
-                value={data.password}
-                onChange={handleChange}
-                onBlur={(e) => handleBlur("password", e.target.value)}
                 placeholder="Nhập mật khẩu"
                 className="block w-full px-3 pr-12 py-2 border border-gray-300"
-                error={errors.password}
+                error={errors.password?.message}
+                {...register("password")}
               />
 
               <Button
@@ -107,7 +96,7 @@ function LoginForm({ onRequireMfa }: Props) {
               </Button>
             </div>
 
-            <FieldError message={errors.password} />
+            <FieldError message={errors.password?.message} />
           </div>
 
           <Button

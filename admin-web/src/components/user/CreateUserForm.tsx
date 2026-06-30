@@ -1,5 +1,7 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import SearchableSelect from "../ui/SearchableSelect";
 import Button from "../ui/Button";
 import Select from "../ui/Select";
@@ -9,26 +11,36 @@ import { useGetAllRoles } from "../../hooks/queries/useRoles";
 import { useCreateUser } from "../../hooks/queries/useUsers";
 import { useGetSelectedUnitForUser } from "../../hooks/queries/useUnits";
 import useDebounce from "../../hooks/useDebounce";
-import { createUserRules } from "../../utils/validation/rules/createUserRules";
-import { useFormValidation } from "../../hooks/useFromValidation";
 import FieldError from "../ui/FieldError";
+import {
+  createUserSchema,
+  type CreateUserData,
+} from "../../schemas/createUserSchema";
 
 function CreateUserForm() {
-  const [data, setData] = useState({
-    fullName: "",
-    governmentId: "",
-    email: "",
-    phoneNumber: "",
-    unitId: "",
-    roleId: "",
-    passwordHash: "",
-    repasswordHash: "",
-  });
   const [keyword, setKeyword] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
 
-  const { errors, handleBlur, clearError, validateAll, resetErrors } =
-    useFormValidation(data, createUserRules);
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<CreateUserData>({
+    resolver: zodResolver(createUserSchema),
+    mode: "onBlur",
+    defaultValues: {
+      fullName: "",
+      governmentId: "",
+      email: "",
+      phoneNumber: "",
+      unitId: "",
+      roleId: "",
+      passwordHash: "",
+      repasswordHash: "",
+    },
+  });
 
   const createUser = useCreateUser();
   const isLoading = createUser.isPending;
@@ -50,29 +62,7 @@ function CreateUserForm() {
     label: unit.unitName,
   }));
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setData((prev) => ({
-      ...prev,
-      [name]: name === "email" ? value.toLowerCase() : value,
-    }));
-
-    clearError(name as keyof typeof data);
-  };
-
-  const handleUnitChange = (val: string) => {
-    setData((prev) => ({ ...prev, unitId: val }));
-
-    handleBlur("unitId", val);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateAll()) return;
-
+  const onSubmit = async (data: CreateUserData) => {
     createUser.mutate(
       {
         ...data,
@@ -83,17 +73,7 @@ function CreateUserForm() {
       },
       {
         onSuccess: () => {
-          setData({
-            fullName: "",
-            governmentId: "",
-            email: "",
-            phoneNumber: "",
-            unitId: "",
-            roleId: "",
-            passwordHash: "",
-            repasswordHash: "",
-          });
-          resetErrors();
+          reset();
         },
       },
     );
@@ -101,7 +81,10 @@ function CreateUserForm() {
 
   return (
     <div className="py-[30px] sm:px-[25px] px-[15px] h-auto">
-      <form className="flex flex-col gap-7 w-full" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col gap-7 w-full"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <h2 className="text-neutral">Thêm người dùng</h2>
 
         <div className="flex gap-[25px] w-full flex-col">
@@ -117,14 +100,11 @@ function CreateUserForm() {
                 <Input
                   type="text"
                   id="governmentId"
-                  name="governmentId"
-                  value={data.governmentId}
-                  onChange={handleChange}
-                  onBlur={(e) => handleBlur("governmentId", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.governmentId}
+                  error={errors.governmentId?.message}
+                  {...register("governmentId")}
                 />
-                <FieldError message={errors.governmentId} />
+                <FieldError message={errors.governmentId?.message} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -135,14 +115,11 @@ function CreateUserForm() {
                 <Input
                   type="text"
                   id="phoneNumber"
-                  name="phoneNumber"
-                  value={data.phoneNumber}
-                  onChange={handleChange}
-                  onBlur={(e) => handleBlur("phoneNumber", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.phoneNumber}
+                  error={errors.phoneNumber?.message}
+                  {...register("phoneNumber")}
                 />
-                <FieldError message={errors.phoneNumber} />
+                <FieldError message={errors.phoneNumber?.message} />
               </div>
             </div>
 
@@ -155,14 +132,11 @@ function CreateUserForm() {
                 <Input
                   type="text"
                   id="fullName"
-                  name="fullName"
-                  value={data.fullName}
-                  onChange={handleChange}
-                  onBlur={(e) => handleBlur("fullName", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.fullName}
+                  error={errors.fullName?.message}
+                  {...register("fullName")}
                 />
-                <FieldError message={errors.fullName} />
+                <FieldError message={errors.fullName?.message} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -173,14 +147,15 @@ function CreateUserForm() {
                 <Input
                   type="text"
                   id="email"
-                  name="email"
-                  value={data.email}
-                  onChange={handleChange}
-                  onBlur={(e) => handleBlur("email", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.email}
+                  error={errors.email?.message}
+                  {...register("email", {
+                    onChange: (e) => {
+                      e.target.value = e.target.value.toLowerCase();
+                    },
+                  })}
                 />
-                <FieldError message={errors.email} />
+                <FieldError message={errors.email?.message} />
               </div>
             </div>
 
@@ -190,20 +165,26 @@ function CreateUserForm() {
                   Đơn vị
                 </Label>
 
-                <SearchableSelect
-                  value={data.unitId}
-                  onChange={handleUnitChange}
-                  placeholder="Chọn đơn vị"
-                  options={unitOptions}
-                  setKeyword={setKeyword}
-                  isLoading={isLoadingUnits}
-                  fetchNextPage={fetchNextPage}
-                  hasNextPage={hasNextPage}
-                  isFetchingNextPage={isFetchingNextPage}
-                  onBlur={() => handleBlur("unitId", data.unitId)}
-                  error={errors.unitId}
+                <Controller
+                  name="unitId"
+                  control={control}
+                  render={({ field }) => (
+                    <SearchableSelect
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Chọn đơn vị"
+                      options={unitOptions}
+                      setKeyword={setKeyword}
+                      isLoading={isLoadingUnits}
+                      fetchNextPage={fetchNextPage}
+                      hasNextPage={hasNextPage}
+                      isFetchingNextPage={isFetchingNextPage}
+                      onBlur={field.onBlur}
+                      error={errors.unitId?.message}
+                    />
+                  )}
                 />
-                <FieldError message={errors.unitId} />
+                <FieldError message={errors.unitId?.message} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -213,12 +194,9 @@ function CreateUserForm() {
 
                 <Select
                   id="roleId"
-                  name="roleId"
-                  value={data.roleId}
-                  onChange={handleChange}
-                  onBlur={(e) => handleBlur("roleId", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
-                  error={errors.roleId}
+                  error={errors.roleId?.message}
+                  {...register("roleId")}
                 >
                   <option value="">Chọn chức vụ</option>
                   {roles.map((role) => (
@@ -227,7 +205,7 @@ function CreateUserForm() {
                     </option>
                   ))}
                 </Select>
-                <FieldError message={errors.roleId} />
+                <FieldError message={errors.roleId?.message} />
               </div>
             </div>
 
@@ -240,14 +218,11 @@ function CreateUserForm() {
                 <Input
                   type="password"
                   id="passwordHash"
-                  name="passwordHash"
-                  value={data.passwordHash}
-                  onChange={handleChange}
-                  onBlur={(e) => handleBlur("passwordHash", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.passwordHash}
+                  error={errors.passwordHash?.message}
+                  {...register("passwordHash")}
                 />
-                <FieldError message={errors.passwordHash} />
+                <FieldError message={errors.passwordHash?.message} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
@@ -258,14 +233,11 @@ function CreateUserForm() {
                 <Input
                   id="repasswordHash"
                   type="password"
-                  name="repasswordHash"
-                  value={data.repasswordHash}
-                  onChange={handleChange}
-                  onBlur={(e) => handleBlur("repasswordHash", e.target.value)}
                   className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.repasswordHash}
+                  error={errors.repasswordHash?.message}
+                  {...register("repasswordHash")}
                 />
-                <FieldError message={errors.repasswordHash} />
+                <FieldError message={errors.repasswordHash?.message} />
               </div>
             </div>
           </div>
