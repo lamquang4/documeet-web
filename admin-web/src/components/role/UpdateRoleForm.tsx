@@ -7,14 +7,14 @@ import Button from "../ui/Button";
 import { useGetRoleById, useUpdateRole } from "../../hooks/queries/useRoles";
 import FieldError from "../ui/FieldError";
 import { roleSchema, type RoleFormData } from "../../schemas/roleSchema";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 function UpdateRoleForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const {
-    register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -78,16 +78,21 @@ function UpdateRoleForm() {
                 Mã chức vụ
               </Label>
 
-              <Input
-                type="text"
-                id="roleCode"
-                className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                error={errors.roleCode?.message}
-                {...register("roleCode", {
-                  onChange: (e) => {
-                    e.target.value = e.target.value.toUpperCase().trim();
-                  },
-                })}
+              <Controller
+                name="roleCode"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="text"
+                    id="roleCode"
+                    className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                    error={errors.roleCode?.message}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e.target.value.toUpperCase().trim());
+                    }}
+                  />
+                )}
               />
               <FieldError message={errors.roleCode?.message} />
             </div>
@@ -97,12 +102,18 @@ function UpdateRoleForm() {
                 Tên chức vụ
               </Label>
 
-              <Input
-                type="text"
-                id="roleName"
-                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                error={errors.roleName?.message}
-                {...register("roleName")}
+              <Controller
+                name="roleName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="text"
+                    id="roleName"
+                    className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                    error={errors.roleName?.message}
+                    {...field}
+                  />
+                )}
               />
               <FieldError message={errors.roleName?.message} />
             </div>
@@ -112,12 +123,18 @@ function UpdateRoleForm() {
                 Mô tả
               </Label>
 
-              <Input
-                type="text"
-                id="description"
-                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
-                error={errors.description?.message}
-                {...register("description")}
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="text"
+                    id="description"
+                    className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                    error={errors.description?.message}
+                    {...field}
+                  />
+                )}
               />
               <FieldError message={errors.description?.message} />
             </div>

@@ -24,9 +24,8 @@ function UpdateUnitForm() {
   const debouncedKeyword = useDebounce(keyword, 400);
 
   const {
-    register,
-    handleSubmit,
     control,
+    handleSubmit,
     reset,
     formState: { errors },
   } = useForm<UpdateUnitData>({
@@ -108,16 +107,21 @@ function UpdateUnitForm() {
                 Mã đơn vị
               </Label>
 
-              <Input
-                type="text"
-                id="unitCode"
-                className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                error={errors.unitCode?.message}
-                {...register("unitCode", {
-                  onChange: (e) => {
-                    e.target.value = e.target.value.toUpperCase().trim();
-                  },
-                })}
+              <Controller
+                name="unitCode"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="text"
+                    id="unitCode"
+                    className="uppercase border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                    error={errors.unitCode?.message}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e.target.value.toUpperCase().trim());
+                    }}
+                  />
+                )}
               />
               <FieldError message={errors.unitCode?.message} />
             </div>
@@ -127,12 +131,18 @@ function UpdateUnitForm() {
                 Tên đơn vị
               </Label>
 
-              <Input
-                type="text"
-                id="unitName"
-                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                error={errors.unitName?.message}
-                {...register("unitName")}
+              <Controller
+                name="unitName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="text"
+                    id="unitName"
+                    className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                    error={errors.unitName?.message}
+                    {...field}
+                  />
+                )}
               />
               <FieldError message={errors.unitName?.message} />
             </div>
@@ -142,16 +152,22 @@ function UpdateUnitForm() {
                 Tình trạng
               </Label>
 
-              <Select
-                id="status"
-                className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                error={errors.status?.message}
-                {...register("status")}
-              >
-                <option value="">Chọn tình trạng</option>
-                <option value="ACTIVE">Hoạt động</option>
-                <option value="INACTIVE">Không hoạt động</option>
-              </Select>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    id="status"
+                    className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                    error={errors.status?.message}
+                    {...field}
+                  >
+                    <option value="">Chọn tình trạng</option>
+                    <option value="ACTIVE">Hoạt động</option>
+                    <option value="INACTIVE">Không hoạt động</option>
+                  </Select>
+                )}
+              />
               <FieldError message={errors.status?.message} />
             </div>
           </div>

@@ -29,7 +29,6 @@ function UpdateUserForm() {
   const debouncedKeyword = useDebounce(keyword, 400);
 
   const {
-    register,
     handleSubmit,
     control,
     reset,
@@ -142,12 +141,18 @@ function UpdateUserForm() {
                   Số định danh cá nhân
                 </Label>
 
-                <Input
-                  type="text"
-                  id="governmentId"
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.governmentId?.message}
-                  {...register("governmentId")}
+                <Controller
+                  name="governmentId"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="text"
+                      id="governmentId"
+                      className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                      error={errors.governmentId?.message}
+                      {...field}
+                    />
+                  )}
                 />
                 <FieldError message={errors.governmentId?.message} />
               </div>
@@ -157,12 +162,18 @@ function UpdateUserForm() {
                   Số điện thoại
                 </Label>
 
-                <Input
-                  type="text"
-                  id="phoneNumber"
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.phoneNumber?.message}
-                  {...register("phoneNumber")}
+                <Controller
+                  name="phoneNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="text"
+                      id="phoneNumber"
+                      className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                      error={errors.phoneNumber?.message}
+                      {...field}
+                    />
+                  )}
                 />
                 <FieldError message={errors.phoneNumber?.message} />
               </div>
@@ -174,12 +185,18 @@ function UpdateUserForm() {
                   Họ tên
                 </Label>
 
-                <Input
-                  type="text"
-                  id="fullName"
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.fullName?.message}
-                  {...register("fullName")}
+                <Controller
+                  name="fullName"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="text"
+                      id="fullName"
+                      className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                      error={errors.fullName?.message}
+                      {...field}
+                    />
+                  )}
                 />
                 <FieldError message={errors.fullName?.message} />
               </div>
@@ -189,16 +206,21 @@ function UpdateUserForm() {
                   Email
                 </Label>
 
-                <Input
-                  type="text"
-                  id="email"
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.email?.message}
-                  {...register("email", {
-                    onChange: (e) => {
-                      e.target.value = e.target.value.toLowerCase();
-                    },
-                  })}
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="text"
+                      id="email"
+                      className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                      error={errors.email?.message}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.toLowerCase());
+                      }}
+                    />
+                  )}
                 />
                 <FieldError message={errors.email?.message} />
               </div>
@@ -237,19 +259,25 @@ function UpdateUserForm() {
                   Chức vụ
                 </Label>
 
-                <Select
-                  id="roleId"
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
-                  error={errors.roleId?.message}
-                  {...register("roleId")}
-                >
-                  <option value="">Chọn chức vụ</option>
-                  {roles.map((role) => (
-                    <option key={role.roleId} value={role.roleId}>
-                      {role.roleName}
-                    </option>
-                  ))}
-                </Select>
+                <Controller
+                  name="roleId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="roleId"
+                      className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                      error={errors.roleId?.message}
+                      {...field}
+                    >
+                      <option value="">Chọn chức vụ</option>
+                      {roles.map((role) => (
+                        <option key={role.roleId} value={role.roleId}>
+                          {role.roleName}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
+                />
                 <FieldError message={errors.roleId?.message} />
               </div>
             </div>
@@ -260,29 +288,41 @@ function UpdateUserForm() {
                   Tình trạng
                 </Label>
 
-                <Select
-                  id="status"
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
-                  error={errors.status?.message}
-                  {...register("status")}
-                >
-                  <option value="">Chọn tình trạng</option>
-                  <option value="ACTIVE">Hoạt động</option>
-                  <option value="LOCKED">Bị khóa</option>
-                  <option value="DISABLED">Vô hiệu hóa</option>
-                </Select>
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="status"
+                      className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                      error={errors.status?.message}
+                      {...field}
+                    >
+                      <option value="">Chọn tình trạng</option>
+                      <option value="ACTIVE">Hoạt động</option>
+                      <option value="LOCKED">Bị khóa</option>
+                      <option value="DISABLED">Vô hiệu hóa</option>
+                    </Select>
+                  )}
+                />
                 <FieldError message={errors.status?.message} />
               </div>
 
               <div className="flex flex-col gap-1 w-full">
                 <Label htmlFor="passwordHash">Mật khẩu mới</Label>
 
-                <Input
-                  type="password"
-                  id="passwordHash"
-                  className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400  "
-                  error={errors.passwordHash?.message}
-                  {...register("passwordHash")}
+                <Controller
+                  name="passwordHash"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="password"
+                      id="passwordHash"
+                      className="border border-gray-300 p-[6px_10px] w-full focus:border-gray-400"
+                      error={errors.passwordHash?.message}
+                      {...field}
+                    />
+                  )}
                 />
                 <FieldError message={errors.passwordHash?.message} />
               </div>
