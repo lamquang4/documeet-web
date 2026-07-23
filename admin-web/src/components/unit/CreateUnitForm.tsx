@@ -16,7 +16,7 @@ import {
 } from "../../schemas/unitSchema";
 
 function CreateUnitForm() {
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState<string>("");
   const debouncedKeyword = useDebounce(keyword, 400);
 
   const {

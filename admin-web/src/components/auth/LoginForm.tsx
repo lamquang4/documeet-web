@@ -11,9 +11,9 @@ import { getDeviceData } from "../../utils/deviceUtil";
 import { loginSchema, type LoginFormData } from "../../schemas/loginSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-type Props = {
+interface Props {
   onRequireMfa: () => void;
-};
+}
 
 function LoginForm({ onRequireMfa }: Props) {
   const [showPassword, setShowPassword] = useState<boolean>(false);

@@ -1,3 +1,8 @@
+export type UserStatus = "ACTIVE" | "LOCKED" | "DISABLED";
+export type UnitStatus = "ACTIVE" | "INACTIVE";
+export type DeviceStatus = "ACTIVE" | "REVOKED" | "WIPED";
+export type SameSitePolicy = "Strict" | "Lax" | "None";
+
 // Request
 export interface LoginRequest {
   governmentId: string;
@@ -46,7 +51,7 @@ export interface UpdateUserRequest {
   fullName: string;
   email: string;
   phoneNumber: string;
-  status: "ACTIVE" | "LOCKED" | "DISABLED";
+  status: UserStatus;
   passwordHash?: string;
 }
 
@@ -71,12 +76,12 @@ export interface CreateUnitRequest {
 export interface UpdatedUnitRequest {
   unitCode: string;
   unitName: string;
-  status: "ACTIVE" | "INACTIVE";
+  status: UnitStatus;
   userIds?: string[];
 }
 
 export interface UpdateUnitStatusRequest {
-  status: string;
+  status: UnitStatus;
 }
 
 // Response
@@ -145,7 +150,7 @@ export interface UserResponse {
   fullName: string;
   email: string;
   phoneNumber: string;
-  status: "ACTIVE" | "LOCKED" | "DISABLED";
+  status: UserStatus;
   failedLoginCount: number;
   lastLoginDate?: string;
   lockoutEndTime?: string;
@@ -181,14 +186,14 @@ export interface UnitResponse {
   unitId: string;
   unitCode: string;
   unitName: string;
-  status: "ACTIVE" | "INACTIVE";
+  status: UnitStatus;
 }
 
 export interface UnitDetailResponse {
   unitId: string;
   unitCode: string;
   unitName: string;
-  status: "ACTIVE" | "INACTIVE";
+  status: UnitStatus;
   users: {
     userId: string;
   }[];
@@ -212,7 +217,7 @@ export interface DeviceResponse {
   platform: string;
   osVersion: string;
   trusted: boolean;
-  status: "ACTIVE" | "REVOKED" | "WIPED";
+  status: DeviceStatus;
   lastUsedDate: string;
   registeredDate: string;
 }
@@ -259,7 +264,7 @@ export interface CookieOptions {
   path?: string;
   domain?: string;
   secure?: boolean;
-  sameSite?: "Strict" | "Lax" | "None";
+  sameSite?: SameSitePolicy;
 }
 
 export interface DeviceData {

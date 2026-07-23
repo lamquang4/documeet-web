@@ -18,7 +18,7 @@ import {
 } from "../../schemas/userSchema";
 
 function CreateUserForm() {
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState<string>("");
   const debouncedKeyword = useDebounce(keyword, 400);
 
   const {

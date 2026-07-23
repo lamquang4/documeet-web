@@ -25,7 +25,7 @@ import {
 function UpdateUserForm() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState<string>("");
   const debouncedKeyword = useDebounce(keyword, 400);
 
   const {

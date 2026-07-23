@@ -3,12 +3,12 @@ import Input from "./Input";
 import { ChevronDown } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
-type Option = {
+interface Option {
   value: string;
   label: string;
-};
+}
 
-type Props = {
+interface Props {
   value: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
@@ -20,7 +20,7 @@ type Props = {
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
   error?: string;
-};
+}
 
 function SearchableSelect({
   value,

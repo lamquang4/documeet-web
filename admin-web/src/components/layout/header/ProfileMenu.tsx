@@ -6,10 +6,10 @@ import { useLogout } from "../../../hooks/queries/useAuth";
 import { CircleUserRound, DoorOpen } from "lucide-react";
 import { useGetMe } from "../../../hooks/queries/useUsers";
 
-type Props = {
+interface Props {
   menuOpen: boolean;
   onToggleMenu: () => void;
-};
+}
 
 function ProfileMenu({ menuOpen, onToggleMenu }: Props) {
   const { data: accountRes } = useGetMe();

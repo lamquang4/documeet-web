@@ -1,8 +1,8 @@
 import { memo, useLayoutEffect, useRef, useState } from "react";
 
-type Props = {
+interface Props {
   text: string;
-};
+}
 
 function ToolTip({ text }: Props) {
   const ref = useRef<HTMLDivElement>(null);

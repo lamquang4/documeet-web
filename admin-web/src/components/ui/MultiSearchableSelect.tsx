@@ -2,12 +2,12 @@ import { useState, useRef, useEffect, memo } from "react";
 import Input from "./Input";
 import { ChevronDown } from "lucide-react";
 
-type Option = {
+interface Option {
   value: string;
   label: string;
-};
+}
 
-type Props = {
+interface Props {
   value: string[];
   onChange: (value: string[]) => void;
   placeholder?: string;
@@ -17,7 +17,7 @@ type Props = {
   fetchNextPage?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
-};
+}
 
 function MultiSearchableSelect({
   value,

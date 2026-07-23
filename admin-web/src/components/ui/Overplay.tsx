@@ -1,8 +1,8 @@
-type Props = {
+interface Props {
   onClose?: () => void;
   children?: React.ReactNode;
   className?: string;
-};
+}
 function Overplay({ onClose, children, className }: Props) {
   const handleOverlayClick = () => {
     if (onClose) onClose();

@@ -17,7 +17,7 @@ import {
   useWipeDevice,
 } from "../../hooks/queries/useDevices";
 
-type Props = {
+interface Props  {
   devices: DeviceResponse[];
   isLoading: boolean;
 };

@@ -13,10 +13,10 @@ import { LockKeyhole, LockKeyholeOpen, SquarePen, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { UnitResponse } from "../../types/type";
 
-type Props = {
+interface Props {
   units: UnitResponse[];
   isLoading: boolean;
-};
+}
 
 function UnitTable({ units, isLoading }: Props) {
   const deleteUnit = useDeleteUnit();

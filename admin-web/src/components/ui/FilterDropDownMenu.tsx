@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { ChevronDown } from "lucide-react";
 
-type Props = {
+interface Props  {
   title: string;
   array: readonly { readonly name: string; readonly value: string | null }[];
   paramName: string;

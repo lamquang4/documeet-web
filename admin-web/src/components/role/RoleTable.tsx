@@ -8,10 +8,10 @@ import { SquarePen, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { RoleResponse } from "../../types/type";
 
-type Props = {
+interface Props {
   roles: RoleResponse[];
   isLoading: boolean;
-};
+}
 
 function RoleTable({ roles, isLoading }: Props) {
   const deleteRole = useDeleteRole();

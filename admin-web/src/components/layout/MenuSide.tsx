@@ -10,39 +10,40 @@ import {
   UserRoundKey,
   Users,
 } from "lucide-react";
-type Props = {
+
+interface Props {
   menuOpen: boolean;
   onToggleMenu: () => void;
-};
+}
 
-type MenuChild = {
+interface MenuChild {
   label: string;
   path: string;
-};
+}
 
-type MenuItemBase = {
+interface MenuItemBase {
   icon: ReactNode;
   label: string;
-};
+}
 
-type MenuItemWithChildren = MenuItemBase & {
+interface MenuItemWithChildren extends MenuItemBase {
   key: string;
   children: MenuChild[];
   path?: never;
-};
+}
 
-type MenuItemSingle = MenuItemBase & {
+interface MenuItemSingle extends MenuItemBase {
   path: string;
   children?: never;
   key?: never;
-};
+}
 
 type MenuItem = MenuItemWithChildren | MenuItemSingle;
 
-type MenuGroup = {
+interface MenuGroup {
   title?: string;
   items: MenuItem[];
-};
+}
 
 const menuData: MenuGroup[] = [
   {
