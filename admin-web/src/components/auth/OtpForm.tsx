@@ -6,11 +6,8 @@ import { useResendOtp, useVerifyOtp } from "../../hooks/queries/useOtp";
 import { cookieUtil } from "../../utils/cookieUtil";
 import Input from "../ui/Input";
 import toast from "react-hot-toast";
-import {
-  validateOtp,
-  validateOtpDigit,
-} from "../../utils/validation/validateOtp";
 import { OTP_EXPIRE_SECONDS, OTP_LENGTH } from "../../constant/otp";
+import { validateOtp, validateOtpDigit } from "../../utils/validators";
 
 function OtpForm() {
   const [isTimerActive, setIsTimerActive] = useState<boolean>(true);

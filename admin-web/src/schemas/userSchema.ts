@@ -1,7 +1,9 @@
 import { z } from "zod";
-import { validateGovernmentId } from "../utils/validation/validateGovermentId";
-import { validatePhone } from "../utils/validation/validatePhone";
-import { validatePassword } from "../utils/validation/validatePassword";
+import {
+  validateGovernmentId,
+  validatePassword,
+  validatePhone,
+} from "../utils/validators";
 
 export const createUserSchema = z
   .object({

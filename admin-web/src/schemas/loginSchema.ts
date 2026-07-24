@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { validateGovernmentId } from "../utils/validation/validateGovermentId";
+import { validateGovernmentId } from "../utils/validators";
 
 export const loginSchema = z.object({
   governmentId: z

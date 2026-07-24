@@ -135,7 +135,9 @@ export const logoutAndRedirect = async () => {
   if (refreshToken && sessionId) {
     try {
       await authApi.logout({ refreshToken, sessionId });
-    } catch {}
+    } catch (err) {
+      console.debug("logout failed:", err);
+    }
   }
 
   clearAuthStorage();

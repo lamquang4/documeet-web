@@ -50,8 +50,7 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    if (status === 403) {
-    } else if (status === 500) {
+    if (status === 500) {
       toast.error("Lỗi server, vui lòng thử lại sau");
     }
 
